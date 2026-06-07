@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 수업안 · 고르기 + 환경 정리 + 이미지 맛보기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --paper-2:#efe5d2; --card:#fffaf0;
+    --ink:#23201a; --ink-soft:#5a5347; --line:#d8cbb1;
+    --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a;
+    --teal:#3f6b63; --teal-soft:#e4ece8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.02rem;margin-top:3px;line-height:1.35;}
+
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:14px;}
+
+  .checkgroup{margin-bottom:18px;}
+  .checkgroup h3{font-family:'Hahmlet',serif;font-size:1.05rem;color:var(--clay-deep);margin-bottom:8px;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;}
+  .check .warn{color:var(--clay-deep);font-weight:600;}
+
+  .timeline{position:relative;}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--amber);}
+  .block .time{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.92rem;letter-spacing:.02em;}
+  .block .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.15rem;margin:3px 0 8px;}
+  .block ul{margin:0 0 0 18px;padding:0;}
+  .block li{font-size:.92rem;color:var(--ink-soft);margin-bottom:4px;}
+  .block li b{color:var(--ink);font-weight:600;}
+  .block.spine{border-left-color:var(--teal);}
+  .spine-tag{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 8px;font-weight:600;margin-left:6px;}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;}
+  .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">1주차 상세 수업안 · 일요일 2시간</div>
+    <h1>W1 — 고르기 + 환경 정리 + 이미지 맛보기</h1>
+    <p class="sub">첫 시간의 진짜 목표는 '내가 고른 걸 만든다'는 자립의 첫 근육과, 앞으로 8주를 받쳐줄 작업 환경을 세우는 것. 이미지(Gemini)는 가볍게 맛만 본다.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">자립 스킬</div><div class="v">고르기</div></div>
+      <div class="ag"><div class="l">새 도구</div><div class="v">Gemini 이미지</div></div>
+      <div class="ag"><div class="l">방식</div><div class="v">가이드형 · 공용 화면</div></div>
+      <div class="ag"><div class="l">집 미션</div><div class="v">내가 고른 것 1개</div></div>
+    </div>
+  </header>
+
+  <!-- PREP -->
+  <section>
+    <div class="sec-head">사전 준비 · 수업 전에 끝내둘 것</div>
+    <h2 class="sec-title">준비 체크리스트</h2>
+
+    <div class="checkgroup">
+      <h3>계정</h3>
+      <div class="check"><span class="box"></span><div><b>교사 Claude Pro 구독 확인</b> — Claude Code 공용 빌드용. 아이들은 Claude 본인 계정 불가(18세 이상)이라, 항상 교사 계정으로 함께 사용.</div></div>
+      <div class="check"><span class="box"></span><div><b>이미지 생성 테스트</b> — 교사/공용 계정에서 Gemini 이미지가 실제로 만들어지는지 미리 한 번. <span class="warn">감독 자녀 계정엔 이미지 생성이 아직 없을 수 있음</span> → W1 이미지는 공용 화면으로.</div></div>
+      <div class="check"><span class="box"></span><div><b>중2 — Gemini 사용 확인</b>(만 13세 이상, 부모 동의·감독). 이미지 생성은 18세 미만 제한(후속 수정만 가능, 직접 편집·업로드 이미지 생성 불가)일 수 있음.</div></div>
+      <div class="check"><span class="box"></span><div><b>초4 — Family Link에서 Gemini 앱 '켜기'</b>(기본 꺼짐). 자녀 선택 → 설정 → Gemini → 켜기. 한국은 지원 지역(EEA·영국·스위스 미지원), 순차 출시라 안 켜지면 몇 시간 뒤 재시도.</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>기기 · 환경</h3>
+      <div class="check"><span class="box"></span><div><b>공용 작업 기기 1대 + 큰 화면/프로젝터</b> — 이미지 생성과 Claude Code 시연용.</div></div>
+      <div class="check"><span class="box"></span><div><b>저장소 통일</b> — 아이패드·맥이 섞여 막혔던 문제 해결책: 작품은 <b>공용 클라우드 폴더 하나</b>(예: 공유 드라이브)로 모은다. 기기가 달라도 저장 위치는 같게.</div></div>
+      <div class="check"><span class="box"></span><div><b>종이 '프로젝트 노트' 인원수만큼</b> — 화면 밖 자립용(고르기·계획·막힘 기록).</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>수업 자료</h3>
+      <div class="check"><span class="box"></span><div><b>학생용 슬라이드</b> 띄울 준비 (아래 링크).</div></div>
+      <div class="check"><span class="box"></span><div><b>'프롬프트 3요소' 카드</b> 인쇄(선택): 무엇 + 분위기 + 스타일.</div></div>
+      <div class="check"><span class="box"></span><div><b>빈 '우리 규칙' 포스터</b> 게시 — 실제 작성은 W4, 오늘은 자리만.</div></div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section>
+    <div class="sec-head">수업 흐름 · 2시간</div>
+    <h2 class="sec-title">분 단위 진행</h2>
+    <div class="timeline">
+
+      <div class="block">
+        <div class="time">0:00 – 0:15</div>
+        <div class="bt">오프닝 · 새 출발 선언</div>
+        <ul>
+          <li>환영 + "오늘부터 우리가 만드는 건 <b>내가 고른 것</b>"이라고 분위기 잡기.</li>
+          <li>북극성 한 문장 보여주기(슬라이드): "AI는 도구, 주인공은 나."</li>
+          <li>오늘의 약속 3개 예고 — ①내가 고른다 ②막히면 시도한다 ③수업 밖에서도 한다.</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="time">0:15 – 0:35</div>
+        <div class="bt">돌아보기 · 내 작품 자랑 + 포트폴리오 만들기</div>
+        <ul>
+          <li>지난에 만든 게임·앱·음악 중 하나씩 1분 자랑.</li>
+          <li><b>'내 작품' 폴더</b>를 공용 클라우드에 만들고 지난 작품을 모은다 → 기기 차이 문제를 여기서 정리.</li>
+          <li>"앞으로 만든 건 다 여기 쌓인다"고 의미 부여.</li>
+        </ul>
+      </div>
+
+      <div class="block spine">
+        <div class="time">0:35 – 0:50</div>
+        <div class="bt">자립 스킬 #1 · 고르기 <span class="spine-tag">자립 스핀</span></div>
+        <ul>
+          <li>미니 레슨: "오늘부터 뭘 만들지는 선생님이 안 정해. <b>네가 고른다.</b>"</li>
+          <li>고르기 도구(노트에): 관심사 3개 적기 → 그중 하나로 "만들고 싶은 것 한 줄".</li>
+          <li>크면 줄이는 법: "전체 게임" 말고 "캐릭터 하나"처럼 <b>작게 시작</b>.</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="time">0:50 – 1:30</div>
+        <div class="bt">Gemini 이미지 맛보기 · 가이드형(공용 화면)</div>
+        <ul>
+          <li>교사가 공용 화면에서 Gemini 이미지 생성을 시연 (감독 계정 이미지 제한 때문에 공용으로).</li>
+          <li><b>프롬프트 3요소</b>: 무엇 + 분위기 + 스타일. 같이 한 문장 만들어 생성.</li>
+          <li>각자 '고른 것'에 어울리는 이미지 1~2개를 교사 도움으로 만들어 포트폴리오에 저장.</li>
+          <li>안전 한마디: <b>진짜 사람 얼굴 ✕, 내 정보 ✕</b> (깊은 윤리는 W4).</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="time">1:30 – 1:45</div>
+        <div class="bt">나눔</div>
+        <ul>
+          <li>각자 오늘 만든 이미지 + "내가 고른 것" 한 줄 공유.</li>
+          <li>서로 한마디 — 칭찬 1개 + 궁금한 것 1개.</li>
+        </ul>
+      </div>
+
+      <div class="block spine">
+        <div class="time">1:45 – 2:00</div>
+        <div class="bt">첫 집 미션 · 스스로 정하기 <span class="spine-tag">수업 밖이 무대</span></div>
+        <ul>
+          <li>틀: "이번 주에 <b>[내가 고른 것]</b>을 위해 집에서 <b>[한 가지]</b>를 해온다."</li>
+          <li>화면 밖 버전(누구나): 프로젝트 노트에 아이디어·계획 그리기.</li>
+          <li>화면 버전(가능하면): Gemini로 이미지 한 컷 더 — <b>초4는 부모와 함께</b>.</li>
+          <li>"다음 주 첫 순서는 <b>집에서 한 것 자랑</b>"이라고 예고 → 돌아올 이유 만들기.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LEVELS -->
+  <section>
+    <div class="sec-head">수준별</div>
+    <h2 class="sec-title">초4 / 중2 다르게</h2>
+    <div class="two">
+      <div class="lvl a"><h4>초4</h4><p>'고르기'는 빈 선택지 메뉴(예: 동물·게임·우주 중에서)로 도와주기. 이미지·집 미션은 부모 동반이 기본. 작게, 한 컷씩.</p></div>
+      <div class="lvl b"><h4>중2</h4><p>고르기는 완전히 자유. 가능하면 본인의 연구·관심 주제와 연결. 집 미션도 스스로 범위를 정하게.</p></div>
+    </div>
+  </section>
+
+  <!-- SAFETY / NOTE -->
+  <section>
+    <div class="sec-head">기억할 것</div>
+    <h2 class="sec-title">오늘의 안전·태도 메모</h2>
+    <div class="callout">
+      <b>Gemini는 사람이 아니고, 틀릴 수 있다</b>를 특히 초4에게 한 번 짚어주세요. 이미지엔 진짜 사람 얼굴·개인정보를 넣지 않기. 그리고 첫 시간이라 설정이 많지만, 두 가지만은 꼭 살리세요 — <b>아이가 '스스로 골랐다'는 경험</b>과 <b>집으로 가져갈 작은 미션 하나</b>. 이 둘이 자립의 출발점입니다.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w1-slides.html">🖥️ 학생용 수업 자료(슬라이드) 열기 →</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>W1 상세 수업안 · 우리 교실 AI 커리큘럼 · 자립 최우선 · 초4·중2 혼합</footer>
+</div>
+</body>
+</html>

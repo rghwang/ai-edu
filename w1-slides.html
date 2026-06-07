@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 수업 자료 · 학생용</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --card:#fffaf0; --ink:#23201a; --ink-soft:#5a5347;
+    --line:#d8cbb1; --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a; --teal:#3f6b63; --teal-soft:#e4ece8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);overflow:hidden;
+    background-image:radial-gradient(circle at 12% 10%, rgba(216,151,58,.12), transparent 40%),radial-gradient(circle at 88% 88%, rgba(63,107,99,.10), transparent 42%);}
+
+  .stage{height:100vh;width:100%;position:relative;}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6vh 7vw;}
+  .slide.active{display:flex;animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+  .tag{font-size:clamp(.8rem,2vw,1rem);letter-spacing:.28em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:24px;}
+  h1{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(2.2rem,7vw,4.4rem);line-height:1.15;letter-spacing:-.02em;}
+  h2{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.8rem,5.4vw,3.2rem);line-height:1.2;margin-bottom:28px;}
+  p.big{font-size:clamp(1.1rem,3vw,1.7rem);color:var(--ink-soft);max-width:22ch;line-height:1.5;}
+  .accent{color:var(--clay-deep);}
+  .teal{color:var(--teal);}
+
+  .cards3{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;max-width:900px;}
+  .c3{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:24px 22px;min-width:200px;flex:1;}
+  .c3 .n{font-family:'Hahmlet',serif;font-size:1.5rem;color:var(--amber);font-weight:800;}
+  .c3 .t{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.1rem,2.6vw,1.5rem);margin:6px 0;}
+  .c3 .d{font-size:clamp(.9rem,2vw,1.05rem);color:var(--ink-soft);}
+
+  .pill-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+  .pill{background:var(--teal-soft);color:var(--teal);border-radius:30px;padding:12px 26px;font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1rem,2.6vw,1.5rem);border:2px solid #c7d8d2;}
+
+  .vs{display:flex;gap:22px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+  .vbox{border-radius:18px;padding:22px 28px;font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.1rem,3vw,1.7rem);}
+  .vno{background:#f6e3d6;border:2px solid #e0b89c;color:var(--clay-deep);}
+  .vyes{background:var(--teal-soft);border:2px solid #b9d0c9;color:var(--teal);}
+  .arrow{font-size:2rem;color:var(--ink-soft);}
+
+  .example{background:var(--card);border:2px dashed var(--clay);border-radius:16px;padding:20px 26px;margin-top:22px;font-size:clamp(1rem,2.6vw,1.45rem);max-width:24ch;color:var(--ink);}
+  .example b{color:var(--clay-deep);}
+
+  .mission{background:var(--card);border:2px solid var(--teal);border-radius:18px;padding:26px 28px;font-size:clamp(1.15rem,3.2vw,1.9rem);font-family:'Hahmlet',serif;font-weight:700;line-height:1.5;max-width:20ch;}
+  .mission .blank{display:inline-block;min-width:90px;border-bottom:3px solid var(--amber);}
+
+  /* nav */
+  .nav{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:10;}
+  .nav button{background:var(--card);border:2px solid var(--line);color:var(--ink);width:48px;height:48px;border-radius:50%;font-size:1.4rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .nav button:hover{border-color:var(--clay);color:var(--clay-deep);}
+  .nav button:disabled{opacity:.35;cursor:default;}
+  .counter{font-family:'Hahmlet',serif;font-weight:700;color:var(--ink-soft);font-size:.95rem;min-width:54px;text-align:center;}
+  .dots{position:fixed;top:20px;left:0;right:0;display:flex;gap:8px;justify-content:center;z-index:10;}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .2s,transform .2s;}
+  .dots i.on{background:var(--clay);transform:scale(1.25);}
+  .hint{position:fixed;bottom:24px;right:22px;font-size:.74rem;color:#a89c83;z-index:10;}
+  .home{position:fixed;top:16px;right:18px;font-size:.78rem;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:10;}
+  @media(max-width:560px){.hint{display:none;}}
+</style>
+</head>
+<body>
+
+<a class="home" href="w1.html">수업안 ↗</a>
+<div class="dots" id="dots"></div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide active">
+    <div class="tag">W1 · 오늘의 수업</div>
+    <h1>오늘부터,<br><span class="accent">내가 고른 걸</span><br>만든다 🚀</h1>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <div class="tag">우리의 북극성</div>
+    <h2>AI는 <span class="accent">도구</span> 🔧<br>주인공은 <span class="teal">나</span> ⭐</h2>
+    <p class="big">AI한테 시키는 게 아니라, 내가 만들고 싶은 걸 AI로 만드는 거야.</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <div class="tag">오늘의 약속 3가지</div>
+    <div class="cards3">
+      <div class="c3"><div class="n">1</div><div class="t">내가 고른다</div><div class="d">뭘 만들지 내가 정해</div></div>
+      <div class="c3"><div class="n">2</div><div class="t">막히면 시도</div><div class="d">바로 포기하지 않기</div></div>
+      <div class="c3"><div class="n">3</div><div class="t">집에서도</div><div class="d">수업 밖에서도 한 번</div></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="tag">먼저, 돌아보기</div>
+    <h2>내가 만든 것<br><span class="accent">자랑하기</span> 🎉</h2>
+    <p class="big">게임 · 앱 · 음악… 그동안 만든 것 중 하나를 1분씩 보여주자.</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <div class="tag">내 작품 모으기</div>
+    <h2><span class="teal">'내 작품' 폴더</span><br>만들기 📁</h2>
+    <p class="big">앞으로 만드는 건 전부 한곳에 쌓을 거야. 폴더가 두툼해지는 걸 보자!</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <div class="tag">자립 스킬 #1</div>
+    <h2><span class="accent">고르기</span> ✋</h2>
+    <div class="vs">
+      <div class="vbox vyes">관심사 3개 쓰기</div>
+      <span class="arrow">→</span>
+      <div class="vbox vyes">만들고 싶은 것 1개</div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <div class="tag">비법 · 작게 시작</div>
+    <h2>크면 <span class="accent">줄이자</span></h2>
+    <div class="vs">
+      <div class="vbox vno">게임 전체 ✕</div>
+      <span class="arrow">→</span>
+      <div class="vbox vyes">캐릭터 하나 ⭕</div>
+    </div>
+    <p class="big" style="margin-top:24px">작게 시작하면 끝까지 만들 수 있어.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <div class="tag">Gemini로 그림 만들기</div>
+    <h2>프롬프트 <span class="teal">3요소</span> 🎨</h2>
+    <div class="pill-row">
+      <span class="pill">무엇</span>
+      <span class="pill">분위기</span>
+      <span class="pill">스타일</span>
+    </div>
+    <div class="example">예: <b>우주를 나는 고양이</b>를, <b>신나는 분위기로</b>, <b>그림책 스타일로</b></div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <div class="tag">꼭 지키기</div>
+    <h2>안전 약속 🛡️</h2>
+    <div class="cards3">
+      <div class="c3"><div class="t">진짜 얼굴 ✕</div><div class="d">실제 사람 얼굴은 만들지 않기</div></div>
+      <div class="c3"><div class="t">내 정보 ✕</div><div class="d">이름·주소는 입력 금지</div></div>
+      <div class="c3"><div class="t">틀릴 수 있어</div><div class="d">Gemini도 사람 아니야</div></div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <div class="tag">오늘의 집 미션</div>
+    <div class="mission">이번 주에<br><span class="blank"></span>를 위해<br>집에서 <span class="blank"></span>를<br>해오기!</div>
+    <p class="big" style="margin-top:24px">다음 주 첫 순서는 <span class="accent">집에서 한 것 자랑</span> 🎤</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="이전">‹</button>
+  <span class="counter"><span id="cur">1</span> / <span id="tot">10</span></span>
+  <button id="next" aria-label="다음">›</button>
+</div>
+<div class="hint">← → 방향키 · 클릭으로 넘기기</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0, n = slides.length;
+  var cur = document.getElementById('cur'), tot = document.getElementById('tot');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  var dotsWrap = document.getElementById('dots');
+  tot.textContent = n;
+
+  slides.forEach(function(_,k){
+    var d = document.createElement('i');
+    d.addEventListener('click', function(){ go(k); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function go(k){
+    if(k<0||k>=n) return;
+    slides[i].classList.remove('active');
+    i = k;
+    slides[i].classList.add('active');
+    cur.textContent = i+1;
+    dots.forEach(function(d,j){ d.classList.toggle('on', j===i); });
+    prev.disabled = (i===0);
+    next.disabled = (i===n-1);
+  }
+  function step(d){ go(i+d); }
+
+  prev.addEventListener('click', function(e){ e.stopPropagation(); step(-1); });
+  next.addEventListener('click', function(e){ e.stopPropagation(); step(1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key===' ') step(1);
+    else if(e.key==='ArrowLeft') step(-1);
+  });
+  document.getElementById('stage').addEventListener('click', function(){ step(1); });
+
+  go(0);
+})();
+</script>
+</body>
+</html>

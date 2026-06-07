@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 교실 AI 수업 현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --paper-2:#efe5d2; --card:#fffaf0;
+    --ink:#23201a; --ink-soft:#5a5347; --line:#d8cbb1;
+    --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a;
+    --teal:#3f6b63; --teal-soft:#e4ece8;
+    --todo:#b9ac92; --doing:#d8973a; --done:#3f6b63;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);
+    line-height:1.7;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:
+      radial-gradient(circle at 10% 6%, rgba(216,151,58,.10), transparent 36%),
+      radial-gradient(circle at 90% 18%, rgba(63,107,99,.08), transparent 40%);
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+
+  header{padding:54px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:16px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-.01em;line-height:1.25;}
+  .north{font-family:'Hahmlet',serif;color:var(--ink-soft);font-size:clamp(.95rem,2.4vw,1.1rem);margin-top:10px;}
+  .north b{color:var(--clay-deep);font-weight:700;}
+
+  .progress-box{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;}
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;}
+  .progress-top .label{font-family:'Hahmlet',serif;font-weight:700;font-size:1.05rem;}
+  .progress-top .count{font-size:.9rem;color:var(--ink-soft);}
+  .progress-top .count b{font-family:'Hahmlet',serif;font-size:1.45rem;color:var(--teal);}
+  .bar{height:12px;background:var(--paper-2);border-radius:20px;margin-top:14px;overflow:hidden;border:1px solid var(--line);}
+  .bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--teal));border-radius:20px;transition:width .6s cubic-bezier(.2,.7,.3,1);}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:.78rem;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dotc{width:10px;height:10px;border-radius:50%;display:inline-block;}
+
+  section{padding:40px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.4vw,1.8rem);margin-bottom:6px;}
+  .sec-lead{color:var(--ink-soft);font-size:.92rem;margin-bottom:20px;}
+  .phase-bar{display:flex;align-items:center;gap:10px;margin:24px 0 12px;font-family:'Hahmlet',serif;font-weight:700;font-size:1.1rem;}
+  .phase-bar .pdot{width:10px;height:10px;border-radius:50%;background:var(--clay);}
+  .phase-bar .pw{font-size:.74rem;font-weight:600;color:var(--ink-soft);background:var(--paper-2);border-radius:20px;padding:2px 10px;letter-spacing:.03em;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;position:relative;border-left:4px solid var(--line);transition:border-color .3s;}
+  .card.s-doing{border-left-color:var(--doing);}
+  .card.s-done{border-left-color:var(--done);}
+  .card .row1{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .card .ttl{font-family:'Hahmlet',serif;font-weight:700;font-size:1.12rem;line-height:1.35;}
+  .card .ttl .wk{color:var(--clay-deep);margin-right:8px;}
+  .card .desc{font-size:.9rem;color:var(--ink-soft);margin-top:5px;}
+  .card .mission{font-size:.85rem;color:var(--teal);margin-top:8px;background:var(--teal-soft);border-radius:8px;padding:7px 11px;display:inline-block;}
+  .card .mission b{font-weight:600;}
+  .tag{display:inline-block;font-size:.7rem;letter-spacing:.04em;border-radius:20px;padding:2px 10px;font-weight:600;margin-top:8px;}
+  .tag.good{background:var(--teal-soft);color:var(--teal);}
+  .tag.fix{background:#f4e3d4;color:var(--clay-deep);}
+  .tag.base{background:var(--paper-2);color:var(--ink-soft);}
+
+  .chip{flex:none;border:none;cursor:pointer;font-family:'IBM Plex Sans KR';font-weight:600;font-size:.78rem;letter-spacing:.02em;border-radius:20px;padding:6px 14px;color:#fff;background:var(--todo);transition:transform .1s,background .25s;white-space:nowrap;}
+  .chip:active{transform:scale(.94);}
+  .chip.doing{background:var(--doing);}
+  .chip.done{background:var(--done);}
+  .chip::before{content:"● ";font-size:.6rem;vertical-align:1px;}
+
+  .cardlinks{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;}
+  .cardlinks a{text-decoration:none;font-size:.8rem;font-weight:600;color:var(--clay-deep);background:var(--paper-2);border:1px solid var(--line);border-radius:20px;padding:5px 13px;}
+  .cardlinks a:hover{border-color:var(--clay);background:#f4e3d4;}
+  .note{margin-top:10px;width:100%;border:1px dashed var(--line);background:transparent;border-radius:8px;padding:8px 11px;font-family:'IBM Plex Sans KR';font-size:.85rem;color:var(--ink);resize:vertical;min-height:38px;}
+  .note:focus{outline:none;border-color:var(--clay);border-style:solid;}
+  .note::placeholder{color:#b3a78d;}
+
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:18px;font-size:.78rem;color:var(--ink-soft);}
+  .reset{margin-top:14px;background:transparent;border:1px solid var(--line);color:var(--ink-soft);border-radius:20px;padding:6px 14px;font-family:'IBM Plex Sans KR';font-size:.78rem;cursor:pointer;}
+  .reset:hover{border-color:var(--clay);color:var(--clay-deep);}
+  .save-hint{font-size:.74rem;color:#a89c83;margin-top:6px;}
+
+  @media(max-width:560px){
+    .card .row1{flex-direction:column;}
+    .chip{align-self:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">우리 교실 AI 수업 현황 ✦</div>
+    <h1>수업 진척 대시보드</h1>
+    <p class="north">북극성 — AI를 <b>지렛대 삼아 스스로 배우고 만들어가는 아이</b>. 성공의 척도는 "수업 밖에서 스스로 무엇을 했나".</p>
+
+    <div class="progress-box">
+      <div class="progress-top">
+        <span class="label">전체 진행률</span>
+        <span class="count"><b id="doneCount">0</b> / <span id="totalCount">0</span> 완료 · <span id="pctText">0%</span></span>
+      </div>
+      <div class="bar"><div id="barFill"></div></div>
+      <div class="legend">
+        <span><i class="dotc" style="background:var(--todo)"></i>예정</span>
+        <span><i class="dotc" style="background:var(--doing)"></i>진행중</span>
+        <span><i class="dotc" style="background:var(--done)"></i>완료</span>
+        <span style="color:#a89c83">· 상태를 누르면 바뀝니다 (예정→진행중→완료)</span>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">지난 수업 · 이미 다진 토대</div>
+    <h2 class="sec-title">지금까지 해온 것</h2>
+    <p class="sec-lead">반응이 좋았던 만들기(Claude Code·음악)는 살리고, 아쉬웠던 부분은 새 커리큘럼에서 메운다.</p>
+    <div id="pastList"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">현재 커리큘럼 · 4주 × 2단계</div>
+    <h2 class="sec-title">자립을 키우는 8주</h2>
+    <p class="sec-lead">매주 중심은 '자립 스킬' 하나와 그걸 시험하는 수업 밖 '집 미션'이다.</p>
+
+    <div class="phase-bar"><span class="pdot"></span>1단계 · 자립 근육 만들기<span class="pw">1–4주</span></div>
+    <div id="phase1List"></div>
+
+    <div class="phase-bar"><span class="pdot" style="background:var(--teal)"></span>2단계 · 스스로 굴러가기<span class="pw">5–8주</span></div>
+    <div id="phase2List"></div>
+  </section>
+
+  <footer>
+    <div>우리 교실 AI 수업 현황 · 매주 일요일 2시간 · 초4·중2 혼합 · 자립 최우선</div>
+    <div class="save-hint">진행 상황과 메모는 이 브라우저에 저장됩니다(기기마다 따로). 같은 기기·브라우저로 열면 그대로 이어집니다.</div>
+    <button class="reset" id="resetBtn">진행 상황 초기화</button>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- data ----
+  var past = [
+    {id:'p1', title:'AI 개념', note:'AI가 무엇인지 기초 개념 도입', tag:'base', tagText:'완료'},
+    {id:'p2', title:'Claude Code로 게임·앱 만들기', note:'각자 게임·앱 제작 — 반응 매우 좋음', tag:'good', tagText:'반응 좋음'},
+    {id:'p3', title:'음악 만들기', note:'시끄러웠지만 반응 좋음', tag:'good', tagText:'반응 좋음'},
+    {id:'p4', title:'일상 앱 만들기 (투두리스트)', note:'틀을 주면 됨 · "알아서 만들어봐"는 어려웠음', tag:'fix', tagText:'보완 포인트'},
+    {id:'p5', title:'방탈출 게임 만들기', note:'1차 제작은 됨 · 개선·반복이 어려웠음', tag:'fix', tagText:'보완 포인트'},
+    {id:'p6', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'}
+  ];
+  var phase1 = [
+    {id:'w1', wk:'W1', skill:'고르기', desc:'내가 만들 걸 스스로 정하기 (+환경 정리·이미지 맛보기)', mission:'내가 고른 작은 것 1개 + 집에서 한 컷 더 만들어 오기', links:[{label:'📋 상세 수업안', href:'w1.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w1-slides.html'}]},
+    {id:'w2', wk:'W2', skill:'막힘 뚫기', desc:'선생님 없이 막혔을 때 5가지 시도 (+영상 입문)', mission:'영상 만들다 막힌 것 스스로 기록·시도해 오기'},
+    {id:'w3', wk:'W3', skill:'스스로 찾기', desc:'도구·정보·방법 직접 찾기 (+진짜/가짜 윤리)', mission:'필요한 것 하나를 스스로 검색해 적용해 오기'},
+    {id:'w4', wk:'W4', skill:'스스로 점검·고치기', desc:'내 작품 직접 평가하고 한 번 더 고치기 (+윤리 자기점검)', mission:'고쳐서 가족에게 보여주기(첫 쇼케이스) + 우리 규칙 정하기'}
+  ];
+  var phase2 = [
+    {id:'w5', wk:'W5', skill:'내 프로젝트의 주인 되기', desc:'틀 없이 스스로 기획', mission:'내가 정한 프로젝트의 첫 조각을 집에서 만들어 오기'},
+    {id:'w6', wk:'W6', skill:'한 주를 스스로 끌고 오기', desc:'수업은 점검만, 진행은 집에서', mission:'수업 없이 한 단계 전진시켜 오기'},
+    {id:'w7', wk:'W7', skill:'스스로 써먹기', desc:'공부·일상·다른 주제에 적용', mission:'한 가지 직접 적용 + 효과 한 줄 + 새 주제 살짝'},
+    {id:'w8', wk:'W8', skill:'혼자서도 계속', desc:'다음 사이클을 스스로 설계 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
+  ];
+
+  var ALL_IDS = past.map(function(x){return x.id;})
+    .concat(phase1.map(function(x){return x.id;}))
+    .concat(phase2.map(function(x){return x.id;}));
+
+  // ---- storage (graceful: persists where localStorage works, in-memory otherwise) ----
+  var KEY = 'aiclass_progress_v1';
+  var state = { status:{}, notes:{} };
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw){ var p = JSON.parse(raw); state.status = p.status||{}; state.notes = p.notes||{}; }
+    }catch(e){ /* sandboxed: keep in-memory */ }
+    // defaults
+    past.forEach(function(it){ if(!state.status[it.id]) state.status[it.id]='done'; });
+    phase1.concat(phase2).forEach(function(it){ if(!state.status[it.id]) state.status[it.id]='todo'; });
+  }
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){ /* ignore */ }
+  }
+
+  var ORDER = ['todo','doing','done'];
+  var LABEL = {todo:'예정', doing:'진행중', done:'완료'};
+
+  function chipEl(id){
+    var st = state.status[id] || 'todo';
+    var b = document.createElement('button');
+    b.className = 'chip' + (st==='doing'?' doing':st==='done'?' done':'');
+    b.textContent = LABEL[st];
+    b.setAttribute('aria-label','상태 변경');
+    b.addEventListener('click', function(){
+      var cur = state.status[id] || 'todo';
+      var next = ORDER[(ORDER.indexOf(cur)+1) % ORDER.length];
+      state.status[id] = next;
+      save();
+      render();
+    });
+    return b;
+  }
+
+  function noteEl(id){
+    var ta = document.createElement('textarea');
+    ta.className = 'note';
+    ta.placeholder = '이번 주 기록 (무엇을 했는지, 막힌 점, 집 미션 결과…)';
+    ta.value = state.notes[id] || '';
+    ta.addEventListener('input', function(){
+      state.notes[id] = ta.value; save();
+    });
+    return ta;
+  }
+
+  function cardStatusClass(id){
+    var st = state.status[id]||'todo';
+    return st==='doing'?' s-doing':st==='done'?' s-done':'';
+  }
+
+  function renderPast(){
+    var c = document.getElementById('pastList'); c.innerHTML='';
+    past.forEach(function(it){
+      var card = document.createElement('div'); card.className='card'+cardStatusClass(it.id);
+      var r1 = document.createElement('div'); r1.className='row1';
+      var left = document.createElement('div');
+      left.innerHTML = '<div class="ttl">'+it.title+'</div><div class="desc">'+it.note+'</div>'
+        + '<span class="tag '+it.tag+'">'+it.tagText+'</span>';
+      r1.appendChild(left);
+      r1.appendChild(chipEl(it.id));
+      card.appendChild(r1);
+      c.appendChild(card);
+    });
+  }
+
+  function renderWeeks(listId, arr){
+    var c = document.getElementById(listId); c.innerHTML='';
+    arr.forEach(function(it){
+      var card = document.createElement('div'); card.className='card'+cardStatusClass(it.id);
+      var r1 = document.createElement('div'); r1.className='row1';
+      var left = document.createElement('div');
+      left.innerHTML = '<div class="ttl"><span class="wk">'+it.wk+'</span>'+it.skill+'</div>'
+        + '<div class="desc">'+it.desc+'</div>'
+        + '<div class="mission"><b>집 미션</b> · '+it.mission+'</div>';
+      r1.appendChild(left);
+      r1.appendChild(chipEl(it.id));
+      card.appendChild(r1);
+      if(it.links && it.links.length){
+        var lr = document.createElement('div'); lr.className='cardlinks';
+        it.links.forEach(function(lk){
+          var a = document.createElement('a');
+          a.href = lk.href; a.textContent = lk.label;
+          lr.appendChild(a);
+        });
+        card.appendChild(lr);
+      }
+      card.appendChild(noteEl(it.id));
+      c.appendChild(card);
+    });
+  }
+
+  function renderProgress(){
+    var done = ALL_IDS.filter(function(id){return state.status[id]==='done';}).length;
+    var total = ALL_IDS.length;
+    var pct = total ? Math.round(done/total*100) : 0;
+    document.getElementById('doneCount').textContent = done;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('pctText').textContent = pct + '%';
+    document.getElementById('barFill').style.width = pct + '%';
+  }
+
+  function render(){
+    renderPast();
+    renderWeeks('phase1List', phase1);
+    renderWeeks('phase2List', phase2);
+    renderProgress();
+  }
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if(!confirm('진행 상황과 메모를 모두 초기화할까요?')) return;
+    state = { status:{}, notes:{} };
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    load(); render();
+  });
+
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
