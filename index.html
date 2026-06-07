@@ -32,6 +32,10 @@
   .north{font-family:'Hahmlet',serif;color:var(--ink-soft);font-size:clamp(.95rem,2.4vw,1.1rem);margin-top:10px;}
   .north b{color:var(--clay-deep);font-weight:700;}
 
+  .topnav{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+  .topnav a{text-decoration:none;font-weight:600;font-size:.86rem;border-radius:20px;padding:8px 16px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .topnav a:hover{background:#f4e3d4;}
+
   .progress-box{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;}
   .progress-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;}
   .progress-top .label{font-family:'Hahmlet',serif;font-weight:700;font-size:1.05rem;}
@@ -97,6 +101,11 @@
     <h1>수업 진척 대시보드</h1>
     <p class="north">북극성 — AI를 <b>지렛대 삼아 스스로 배우고 만들어가는 아이</b>. 성공의 척도는 "수업 밖에서 스스로 무엇을 했나".</p>
 
+    <div class="topnav">
+      <a href="vision.html">✦ 비전 &amp; 커리큘럼</a>
+      <a href="gemini.html">🎨 Gemini 이미지·영상 가이드</a>
+    </div>
+
     <div class="progress-box">
       <div class="progress-top">
         <span class="label">전체 진행률</span>
@@ -153,8 +162,8 @@
     {id:'p6', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'}
   ];
   var phase1 = [
-    {id:'w1', wk:'W1', skill:'고르기', desc:'Gemini 이미지로 손풀기 → 내가 만들 걸 스스로 정하기', mission:'내가 고른 작은 것 1개 + 집에서 한 컷 더 만들어 오기', links:[{label:'📋 상세 수업안', href:'w1.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w1-slides.html'}]},
-    {id:'w2', wk:'W2', skill:'막힘 뚫기', desc:'선생님 없이 막혔을 때 5가지 시도 (+영상 입문)', mission:'영상 만들다 막힌 것 스스로 기록·시도해 오기'},
+    {id:'w1', wk:'W1', skill:'고르기', desc:'Gemini 이미지로 손풀기 → 내가 만들 걸 스스로 정하기', mission:'내가 고른 작은 것 1개 + 집에서 한 컷 더 만들어 오기', links:[{label:'📋 상세 수업안', href:'w1.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w1-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]},
+    {id:'w2', wk:'W2', skill:'막힘 뚫기', desc:'선생님 없이 막혔을 때 5가지 시도 (+Gemini 영상 입문)', mission:'Gemini로 영상 만들다 막힌 것 스스로 기록·시도해 오기', links:[{label:'🎬 Gemini 가이드(영상)', href:'gemini.html'}]},
     {id:'w3', wk:'W3', skill:'스스로 찾기', desc:'도구·정보·방법 직접 찾기 (+진짜/가짜 윤리)', mission:'필요한 것 하나를 스스로 검색해 적용해 오기'},
     {id:'w4', wk:'W4', skill:'스스로 점검·고치기', desc:'내 작품 직접 평가하고 한 번 더 고치기 (+윤리 자기점검)', mission:'고쳐서 가족에게 보여주기(첫 쇼케이스) + 우리 규칙 정하기'}
   ];

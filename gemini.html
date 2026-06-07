@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini 이미지·영상 만들기 · 교사 실전 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --paper-2:#efe5d2; --card:#fffaf0;
+    --ink:#23201a; --ink-soft:#5a5347; --line:#d8cbb1;
+    --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a;
+    --teal:#3f6b63; --teal-soft:#e4ece8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.02rem;margin-top:3px;line-height:1.35;}
+
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:8px;}
+  .sec-lead{color:var(--ink-soft);font-size:.93rem;margin-bottom:18px;max-width:64ch;}
+
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;}
+  .check .warn{color:var(--clay-deep);font-weight:600;}
+
+  .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 16px;margin-bottom:11px;border-left:4px solid var(--amber);display:flex;gap:14px;align-items:flex-start;}
+  .step.teal{border-left-color:var(--teal);}
+  .step .num{flex:none;font-family:'Hahmlet',serif;font-weight:800;font-size:1.4rem;color:var(--amber);line-height:1.1;min-width:26px;}
+  .step.teal .num{color:var(--teal);}
+  .step .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.08rem;margin-bottom:3px;}
+  .step p{font-size:.92rem;color:var(--ink-soft);}
+  .step p b{color:var(--ink);font-weight:600;}
+
+  .promptbox{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:12px;padding:13px 16px;margin:4px 0 0;font-size:.9rem;color:var(--ink);}
+  .promptbox .lbl{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;}
+  .promptbox b{color:var(--clay-deep);}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:6px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;}
+  .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+
+  .fix{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:6px;}
+  .fixcard{background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:.88rem;color:var(--ink-soft);}
+  .fixcard b{color:var(--clay-deep);font-weight:700;display:block;font-family:'Hahmlet',serif;margin-bottom:2px;}
+
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}.fix{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">도구 가이드 · 교사용</div>
+    <h1>Gemini로 이미지·영상 만들기</h1>
+    <p class="sub">수업에서 Gemini를 어떻게 굴릴지 단계별로. 핵심은 도구 사용법 암기가 아니라, 아이가 <b>프롬프트를 고쳐가며 원하는 걸 스스로 만들어내는 경험</b>이다. 이미지는 W1, 영상은 W2부터.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">이미지</div><div class="v">W1 · 맛보기</div></div>
+      <div class="ag"><div class="l">영상(Veo)</div><div class="v">W2~ · 막힘 뚫기</div></div>
+      <div class="ag"><div class="l">방식</div><div class="v">공용 화면 가이드형</div></div>
+      <div class="ag"><div class="l">저장</div><div class="v">구글 드라이브</div></div>
+    </div>
+  </header>
+
+  <!-- 시작 전 -->
+  <section>
+    <div class="sec-head">시작 전 · 계정과 제한 먼저</div>
+    <h2 class="sec-title">수업 전에 확인할 것</h2>
+    <p class="sec-lead">아이 계정은 막히는 게 많다. 이미지·영상 모두 <b>교사/공용 계정 + 공용 화면</b>으로 진행하는 것을 기본으로 잡는다. 플랜·제공 범위는 자주 바뀌니, 수업 전에 <b>공용 계정에서 직접 한 번씩 만들어 보고</b> 들어간다.</p>
+
+    <div class="check"><span class="box"></span><div><b>교사/공용 Gemini 계정 로그인</b> — 이미지·영상의 공용 작업 계정. 큰 화면/프로젝터에 띄울 준비.</div></div>
+    <div class="check"><span class="box"></span><div><b>이미지는 보통 무료로도 가능</b> — Gemini 앱(웹/모바일)에서 바로 그림 생성. 수업 전 캐릭터 1장 테스트.</div></div>
+    <div class="check"><span class="box"></span><div><b>영상(Veo)은 보통 유료 플랜 + 횟수 제한</b> — Google AI Pro/Ultra 등에서 제공되고 하루 생성 수에 한도가 있을 수 있음. <span class="warn">영상은 교사 공용(유료) 계정으로 시연 위주</span>, 수업 전 1편 테스트.</div></div>
+    <div class="check"><span class="box"></span><div><b>18세 미만 계정 제한</b> — 사람(실제 인물) 이미지·영상 생성이 막히거나 제한될 수 있음. <span class="warn">사람 얼굴 대신 캐릭터·동물·사물·풍경</span>으로. 그래서 공용 화면 진행.</div></div>
+    <div class="check"><span class="box"></span><div><b>구글 드라이브 공유 폴더 열어두기</b> — 만든 이미지·영상을 바로 여기에 저장(기기 달라도 같은 곳).</div></div>
+  </section>
+
+  <!-- 이미지 -->
+  <section>
+    <div class="sec-head">이미지 만들기 · W1</div>
+    <h2 class="sec-title">이미지 — 4단계로 진행</h2>
+    <p class="sec-lead">교사가 공용 화면에서 한 번 시연하고, 같이 한 문장을 만든 뒤, 각자 자기 것으로 고쳐 나간다. 3번 '고쳐가며 만들기'가 이번 수업의 진짜 알맹이다.</p>
+
+    <div class="step"><div class="num">1</div><div><div class="bt">열기</div><p>Gemini 앱을 열고 <b>"~를 그려줘 / 이미지로 만들어줘"</b>라고 말한다. (별도 버튼이 있으면 '이미지 만들기'.) 큰 화면으로 다 같이 본다.</p></div></div>
+
+    <div class="step"><div class="num">2</div><div><div class="bt">프롬프트 3요소로 한 문장</div><p><b>무엇</b> + <b>분위기</b> + <b>스타일</b>. 다 같이 한 문장을 만들어 첫 그림을 뽑는다.</p>
+      <div class="promptbox"><span class="lbl">예시</span><br><b>우주를 나는 고양이</b>를, <b>신나는 분위기로</b>, <b>그림책 스타일로</b> 그려줘.</div></div></div>
+
+    <div class="step"><div class="num">3</div><div><div class="bt">대화로 고쳐가기 — 핵심</div><p>한 번에 완성되지 않는다. <b>한 번에 한 가지씩</b> 바꿔 달라고 말한다. "고양이를 파란색으로", "배경을 더 밝게", "별을 더 많이". 마음에 들 때까지 반복하는 이 과정이 곧 자립 훈련이다.</p></div></div>
+
+    <div class="step"><div class="num">4</div><div><div class="bt">저장</div><p>마음에 드는 이미지를 <b>내려받아 구글 드라이브 공유 폴더</b>에 저장. "앞으로 만든 건 다 여기 쌓인다."</p></div></div>
+
+    <h3 style="font-family:'Hahmlet',serif;font-size:1.02rem;color:var(--clay-deep);margin:22px 0 8px;">잘 안 나올 때 — 아이에게 줄 4가지 수</h3>
+    <div class="fix">
+      <div class="fixcard"><b>더 구체적으로</b>"고양이" → "주황색 줄무늬 아기 고양이"</div>
+      <div class="fixcard"><b>한 가지만 바꾸기</b>여러 개 동시에 말고 하나씩</div>
+      <div class="fixcard"><b>예시 보여주기</b>비슷한 그림을 올려 "이런 느낌으로"</div>
+      <div class="fixcard"><b>다른 말로</b>안 통하면 표현을 바꿔 다시</div>
+    </div>
+
+    <h3 style="font-family:'Hahmlet',serif;font-size:1.02rem;color:var(--clay-deep);margin:22px 0 8px;">안전 약속 (이미지·영상 공통)</h3>
+    <div class="check"><span class="box"></span><div><b>진짜 사람 얼굴 ✕ · 내 정보(이름·주소·학교) ✕ · 무섭거나 폭력적인 것 ✕</b>. Gemini도 사람이 아니라 <b>틀릴 수 있다</b>는 걸 특히 초4에게 짚어준다. (깊은 윤리는 W3·W4)</div></div>
+
+    <div class="two">
+      <div class="lvl a"><h4>초4</h4><p>선택지 메뉴로 도와주기(동물·우주·게임 중에서). 공용 화면·부모 도움 기본. 작게, 한 컷씩.</p></div>
+      <div class="lvl b"><h4>중2</h4><p>주제 자유. 프롬프트를 직접 여러 번 고쳐보게. 본인 관심·연구 주제와 연결.</p></div>
+    </div>
+  </section>
+
+  <!-- 영상 -->
+  <section>
+    <div class="sec-head">영상 만들기 · W2부터</div>
+    <h2 class="sec-title">영상 — 짧게, 신중하게, 고쳐가며</h2>
+    <p class="sec-lead">Veo로 몇 초짜리 짧은 영상을 만든다. 생성에 시간이 걸리고 횟수 한도가 있어 <b>한 문장을 신중히</b> 쓰는 게 중요하다. 그래서 영상은 W2 '막힘 뚫기' 스킬을 연습할 최고의 재료다.</p>
+
+    <div class="step teal"><div class="num">1</div><div><div class="bt">두 가지 방법 중 고르기</div><p><b>글 → 영상</b>: 장면을 글로 설명. &nbsp;<b>이미지 → 영상</b>: <b>W1에서 만든 내 그림을 움직이게</b> 한다(연결 포인트!). 둘 다 공용 화면으로 시연.</p></div></div>
+
+    <div class="step teal"><div class="num">2</div><div><div class="bt">영상 프롬프트 = 무엇 + 움직임 + 분위기</div><p>이미지 3요소에 <b>'어떻게 움직이는지'</b>를 더한다. 카메라 움직임("천천히 다가가며")도 말할 수 있다.</p>
+      <div class="promptbox"><span class="lbl">예시</span><br><b>우주를 나는 고양이</b>가 <b>꼬리를 흔들며 별 사이를 천천히 날아가는</b>, <b>그림책 같은 신나는</b> 짧은 영상.</div></div></div>
+
+    <div class="step teal"><div class="num">3</div><div><div class="bt">기다리고, 고치고, 저장</div><p>생성에 시간이 걸린다. 안 되면 <b>막힘 뚫기 5가지</b>(다시 묻기·쪼개기·검색·예시·잠깐 멈춤)로 다시 시도. 마음에 들면 내려받아 <b>공유 폴더</b>에 저장.</p></div></div>
+
+    <h3 style="font-family:'Hahmlet',serif;font-size:1.02rem;color:var(--clay-deep);margin:22px 0 8px;">영상에서 더 챙길 것</h3>
+    <div class="check"><span class="box"></span><div><b>횟수·시간 제한</b> — 한도가 있으니 아무거나 막 누르지 않기. "한 문장을 잘 쓰자"가 규칙.</div></div>
+    <div class="check"><span class="box"></span><div><b>진짜처럼 보이는 영상 주의</b> — 진짜와 헷갈릴 수 있는 영상은 만들지 않기·퍼뜨리지 않기. <span class="warn">'진짜/가짜' 윤리는 W3, 자기 점검은 W4</span>로 이어진다.</div></div>
+
+    <div class="two">
+      <div class="lvl a"><h4>초4</h4><p>교사가 대신 생성, 아이는 "무엇이 어떻게 움직이면 좋을지" 말로 정한다. 짧게 한 편.</p></div>
+      <div class="lvl b"><h4>중2</h4><p>직접 프롬프트를 쓰고 고쳐보게. W1 이미지를 영상으로 잇는 작은 작품에 도전.</p></div>
+    </div>
+  </section>
+
+  <!-- 수업 흐름 -->
+  <section>
+    <div class="sec-head">어떻게 가르치나</div>
+    <h2 class="sec-title">수업에 녹이는 5단계 흐름</h2>
+    <p class="sec-lead">이미지든 영상이든 흐름은 같다. 교사는 답을 주는 사람이 아니라 <b>질문하는 사람</b>이다.</p>
+
+    <div class="step"><div class="num">①</div><div><div class="bt">시연</div><p>교사가 공용 화면에서 한 번 만들어 보인다.</p></div></div>
+    <div class="step"><div class="num">②</div><div><div class="bt">같이 한 문장</div><p>3요소로 다 같이 프롬프트 한 문장을 만든다.</p></div></div>
+    <div class="step"><div class="num">③</div><div><div class="bt">각자 시도</div><p>각자 '고른 것'으로 자기 프롬프트를 낸다.</p></div></div>
+    <div class="step"><div class="num">④</div><div><div class="bt">고치기</div><p>한 가지씩 바꿔가며 원하는 것에 가까이.</p></div></div>
+    <div class="step"><div class="num">⑤</div><div><div class="bt">나눔·저장</div><p>만든 것 공유 + 공유 폴더에 저장.</p></div></div>
+
+    <div class="callout" style="margin-top:18px">
+      <b>교사의 입버릇 3가지</b> — "어떤 분위기였으면 좋겠어?" · "한 가지만 바꿔볼까?" · "막히면 뭘 해볼 수 있을까?" 답을 대신 주는 순간 자립 훈련이 멈춘다. 아이가 다음 한 수를 스스로 고르게 둔다.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w1.html">📋 W1 수업안(이미지)</a>
+    <a href="vision.html">✦ 비전 &amp; 커리큘럼</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>Gemini 이미지·영상 교사 가이드 · 우리 교실 AI 커리큘럼 · 공용 화면 가이드형 · 자립 최우선 · 초4·중2 혼합</footer>
+</div>
+</body>
+</html>

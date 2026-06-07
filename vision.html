@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 교실 AI 비전 &amp; 커리큘럼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1;
+    --paper-2:#efe5d2;
+    --ink:#23201a;
+    --ink-soft:#5a5347;
+    --line:#d8cbb1;
+    --clay:#bd5a32;
+    --clay-deep:#9c4622;
+    --amber:#d8973a;
+    --teal:#3f6b63;
+    --teal-soft:#e4ece8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'IBM Plex Sans KR',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.75;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(216,151,58,.10), transparent 38%),
+      radial-gradient(circle at 88% 22%, rgba(63,107,99,.08), transparent 40%);
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 26px 90px;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:74px 0 40px;border-bottom:2px solid var(--ink);position:relative;}
+  .kicker{
+    font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--clay-deep);font-weight:600;margin-bottom:22px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .kicker::before{content:"";width:34px;height:1.5px;background:var(--clay);}
+  .star{
+    font-family:'Hahmlet',serif;font-size:1.4rem;color:var(--amber);
+    display:inline-block;transform:translateY(2px);
+  }
+  .hero h1{
+    font-family:'Hahmlet',serif;font-weight:500;
+    font-size:clamp(1.55rem,5.4vw,3.05rem);
+    line-height:1.32;letter-spacing:-.01em;color:var(--ink);
+    margin-bottom:18px;
+  }
+  .hero h1 b{font-weight:800;color:var(--clay-deep);}
+  .hero .sub{font-size:1.02rem;color:var(--ink-soft);max-width:60ch;}
+  .meta{
+    margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 26px;
+    font-size:.82rem;color:var(--ink-soft);letter-spacing:.02em;
+  }
+  .meta span b{color:var(--ink);font-weight:600;}
+
+  /* ---------- SECTION ---------- */
+  section{padding:54px 0 8px;}
+  .sec-head{
+    font-family:'Hahmlet',serif;font-size:.82rem;font-weight:700;
+    letter-spacing:.26em;text-transform:uppercase;color:var(--teal);
+    margin-bottom:8px;
+  }
+  .sec-title{
+    font-family:'Hahmlet',serif;font-weight:600;
+    font-size:clamp(1.4rem,3.6vw,2rem);line-height:1.3;
+    margin-bottom:10px;letter-spacing:-.01em;
+  }
+  .sec-lead{color:var(--ink-soft);font-size:.98rem;max-width:64ch;margin-bottom:28px;}
+
+  /* ---------- CAPABILITY CARDS ---------- */
+  .caps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .cap{
+    background:linear-gradient(180deg,#fffaf0,var(--paper-2));
+    border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;
+    position:relative;overflow:hidden;
+  }
+  .cap::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--clay);
+  }
+  .cap .n{
+    font-family:'Hahmlet',serif;font-size:.95rem;font-weight:700;color:var(--amber);
+    letter-spacing:.05em;
+  }
+  .cap h3{font-family:'Hahmlet',serif;font-size:1.22rem;font-weight:700;margin:2px 0 7px;}
+  .cap p{font-size:.92rem;color:var(--ink-soft);line-height:1.62;}
+  .cap.added::before{background:var(--teal);}
+  .cap.added .n{color:var(--teal);}
+  .tagline{
+    display:inline-block;margin-top:9px;font-size:.72rem;letter-spacing:.06em;
+    color:var(--clay-deep);background:#f4e3d4;border-radius:20px;padding:3px 11px;font-weight:600;
+  }
+  .cap.added .tagline{color:var(--teal);background:var(--teal-soft);}
+
+  /* ---------- PROMISE BOX ---------- */
+  .promise{
+    margin-top:26px;border:1.5px dashed var(--clay);border-radius:14px;
+    padding:24px 26px;background:#fbf3e6;
+  }
+  .promise h4{font-family:'Hahmlet',serif;font-size:1.1rem;margin-bottom:8px;}
+  .promise p{font-size:.92rem;color:var(--ink-soft);}
+  .promise .blanks{margin-top:14px;display:grid;gap:11px;}
+  .promise .blanks div{border-bottom:1.5px solid var(--line);height:30px;position:relative;}
+  .promise .blanks div::before{
+    content:attr(data-l);position:absolute;left:0;top:-2px;font-size:.8rem;color:var(--clay-deep);font-weight:600;
+  }
+
+  /* ---------- PRINCIPLES ---------- */
+  .princ{display:grid;gap:0;border-top:1px solid var(--line);}
+  .princ .row{
+    display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:18px;
+    padding:18px 4px;border-bottom:1px solid var(--line);align-items:baseline;
+  }
+  .princ .row .lbl{font-family:'Hahmlet',serif;font-weight:700;font-size:1.05rem;color:var(--clay-deep);}
+  .princ .row p{font-size:.93rem;color:var(--ink-soft);}
+
+  /* ---------- RHYTHM ---------- */
+  .rhythm{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .slot{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:16px 15px;}
+  .slot .t{font-family:'Hahmlet',serif;font-weight:700;color:var(--teal);font-size:.95rem;letter-spacing:.02em;}
+  .slot .h{font-weight:600;font-size:.95rem;margin:4px 0 5px;}
+  .slot p{font-size:.84rem;color:var(--ink-soft);line-height:1.55;}
+
+  /* ---------- CURRICULUM TABLE ---------- */
+  .phase{margin-top:30px;}
+  .phase-h{
+    display:flex;align-items:center;gap:12px;margin-bottom:12px;
+    font-family:'Hahmlet',serif;font-weight:700;font-size:1.18rem;
+  }
+  .phase-h .dot{width:11px;height:11px;border-radius:50%;background:var(--clay);flex:none;}
+  .phase-h .wk{font-size:.8rem;font-weight:600;color:var(--ink-soft);letter-spacing:.04em;background:#efe5d2;padding:2px 10px;border-radius:20px;}
+  .ctable{width:100%;border-collapse:collapse;font-size:.88rem;}
+  .ctable th{
+    text-align:left;font-family:'IBM Plex Sans KR';font-weight:600;font-size:.74rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--teal);
+    padding:8px 12px;border-bottom:1.5px solid var(--ink);
+  }
+  .ctable td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);}
+  .ctable td.wkn{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);white-space:nowrap;font-size:.95rem;}
+  .ctable td.found{color:var(--ink);font-weight:500;}
+  .ctable td b{color:var(--ink);font-weight:600;}
+  .pill{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 7px;font-weight:600;margin-top:5px;}
+
+  /* ---------- CLOSING ---------- */
+  .close{margin-top:48px;border-top:2px solid var(--ink);padding-top:30px;}
+  .close p{color:var(--ink-soft);font-size:.95rem;max-width:66ch;margin-bottom:12px;}
+  .close .big{font-family:'Hahmlet',serif;color:var(--ink);font-size:1.15rem;font-weight:600;line-height:1.5;}
+  .foot{margin-top:40px;font-size:.76rem;color:var(--ink-soft);letter-spacing:.02em;border-top:1px solid var(--line);padding-top:16px;}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  @media(max-width:640px){
+    .caps{grid-template-columns:1fr;}
+    .rhythm{grid-template-columns:1fr 1fr;}
+    .princ .row{grid-template-columns:1fr;gap:4px;}
+    .ctable thead{display:none;}
+    .ctable,.ctable tbody,.ctable tr,.ctable td{display:block;width:100%;}
+    .ctable tr{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:6px 8px;background:var(--paper-2);}
+    .ctable td{border:none;padding:6px 8px;}
+    .ctable td.wkn{font-size:1.05rem;padding-top:10px;}
+    .ctable td::before{content:attr(data-l);display:block;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:2px;}
+    .ctable td.wkn::before{display:none;}
+  }
+  @media print{
+    body{background:#fff;}
+    .rv{opacity:1;transform:none;animation:none;}
+    section{padding:26px 0 4px;break-inside:avoid;}
+    .cap,.slot,.phase{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" style="display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;">← 수업 현황 대시보드로</a>
+
+  <!-- HERO -->
+  <header class="hero rv">
+    <div class="kicker">우리 교실 AI 비전 &amp; 커리큘럼 <span class="star">✦</span></div>
+    <h1>AI를 <i>잘 다루는</i> 아이가 아니라,<br><b>AI를 지렛대 삼아 스스로<br>배우고 만들어가는 아이.</b></h1>
+    <p class="sub">도구는 계속 바뀌어도 이 인물상은 낡지 않는다. 주인공은 늘 아이이고, AI는 그 손에 쥐어진 지렛대다. 이 문서는 그 도착점(비전)과 거기로 가는 길(구상·커리큘럼)을 한 장에 담는다.</p>
+    <div class="meta">
+      <span><b>대상</b> 초4 · 중2 혼합 소그룹</span>
+      <span><b>일정</b> 매주 일요일 2시간</span>
+      <span><b>도구</b> Claude Code(앱·게임) · 음악 · Gemini 이미지/영상 · 챗봇</span>
+      <span><b>분량</b> 4주 × 2단계 (총 8주)</span>
+    </div>
+  </header>
+
+  <!-- VISION: capabilities -->
+  <section class="rv">
+    <div class="sec-head">Part 1 · 비전</div>
+    <h2 class="sec-title">졸업할 때, 아이는 이런 사람이 되어 있다</h2>
+    <p class="sec-lead">여섯 가지 '할 수 있는 모습'. 한 번에 도달하는 기준선이 아니라, 초4는 입문 높이로 · 중2는 심화 높이로 같은 목표를 향해 자라는 방향이다.</p>
+    <div class="caps">
+      <div class="cap"><div class="n">01</div><h3>만드는 힘</h3><p>실용적이든 실험적이든, 하고 싶은 걸 스스로 기획하고 끝까지 완성한다.</p><span class="tagline">기획 · 완성</span></div>
+      <div class="cap"><div class="n">02</div><h3>배우는 힘</h3><p>필요한 지식·자료·도구를 직접 찾아 익히고, 처음 보는 최신 기술도 두려움 없이 따라잡는다.</p><span class="tagline">자기주도 학습</span></div>
+      <div class="cap"><div class="n">03</div><h3>써먹는 힘</h3><p>배운 걸 공부·숙제·취미 등 실제 생활에, 함께 정한 규칙 안에서 적용해 진짜 효과를 본다.</p><span class="tagline">실생활 전이</span></div>
+      <div class="cap"><div class="n">04</div><h3>나만의 무기</h3><p>이게 자기 주특기가 되고, 동시에 다른 관심 분야를 깊이 파고들 때도 무기로 쓴다.</p><span class="tagline">주특기 · 응용</span></div>
+      <div class="cap added"><div class="n">05</div><h3>나누는 힘</h3><p>만든 것을 다른 사람에게 보여주고 나누며, 피드백을 받아 함께 발전시킨다.</p><span class="tagline">+ 더한 사회적 차원</span></div>
+      <div class="cap"><div class="n">06</div><h3>책임지는 힘</h3><p>스스로 윤리·가치 기준을 세우고, 잘못된 사용이나 문제를 미리 알아채 막는다.</p><span class="tagline">자기 규율</span></div>
+    </div>
+
+    <div class="promise">
+      <h4>우리의 약속 (아이들과 함께 채운다)</h4>
+      <p>3번 '써먹는 힘'의 "허용 범위"는 어른이 정해주는 게 아니라 아이들과 함께 적어 내려간다. 직접 만든 규칙을 지킬 때 6번 '책임지는 힘'이 그 자리에서 자란다.</p>
+      <div class="blanks">
+        <div data-l="숙제·공부에서 AI는 여기까지 OK →"></div>
+        <div data-l="이건 하지 않는다 →"></div>
+        <div data-l="막혔을 때 / 의심될 때 우리는 →"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part 2: 구상 -->
+  <section class="rv">
+    <div class="sec-head">Part 2 · 교육 구상</div>
+    <h2 class="sec-title">어떻게 가르칠 것인가</h2>
+    <p class="sec-lead">모든 원칙 위에 하나가 선다: <b>자립이 최우선</b>. 나머지는 그걸 키우기 위한 수단이다. 단, 자립은 시키는 게 아니라 <b>훈련하는</b> 것이다.</p>
+    <div class="princ">
+      <div class="row" style="background:#fbf0e6;border-radius:12px;padding:18px 16px;margin-bottom:2px;"><div class="lbl" style="color:var(--clay-deep)">◆ 자립이 최우선</div><p>모든 활동의 진짜 목표는 '스스로 하는 힘'을 키우는 것. 성공의 척도는 <b>"무엇을 가르쳤나"가 아니라 "수업 밖에서 아이가 스스로 무엇을 했나"</b>. 잘 되면 이 커리큘럼은 점점 덜 필요해진다 — 그게 목표다.</p></div>
+      <div class="row"><div class="lbl" style="color:var(--clay-deep)">수업 밖이 무대</div><p>진짜 자립은 선생님이 없을 때 일어난다. 그래서 1주차부터 작은 '집 미션'을 둔다. 수업은 그걸 응원하고, 막힌 걸 풀고, 한 단계 올려주는 코칭 자리다.</p></div>
+      <div class="row"><div class="lbl" style="color:var(--clay-deep)">비계 → 자립</div><p>"알아서 만들어봐"는 한 번에 실패했다(지난 교훈). 주도권을 <b>빠르되 단계적으로</b> 넘긴다. 고르기·막힘 뚫기·찾기·자기 점검을 각각 따로 훈련한다.</p></div>
+      <div class="row"><div class="lbl">만들기 → 고치기</div><p>한 번 만들면 못 고쳤던 게 큰 빈틈이었다. 스스로 개선·확장·디버그하는 힘 자체가 자립의 핵심 근육이다.</p></div>
+      <div class="row"><div class="lbl">관심사에 얹기</div><p>각자 좋아하는 소재 위에 같은 토대를 얹는다. 내가 아끼고 내가 고른 것이라야 수업 밖에서도 스스로 이어간다.</p></div>
+      <div class="row"><div class="lbl">툴보다 토대</div><p>도구는 낡지만 사고 습관은 남는다. 새 기능이 아니라 'AI와 일하는 법'을, 그것도 스스로 익히는 법을 가르친다.</p></div>
+      <div class="row"><div class="lbl">몰입 장치</div><p>포트폴리오(쌓이는 게 보이게) · 진짜 관객 앞 공유 · 일부러 안 끝내기 — 수업 밖에서 다시 손이 가게 만드는 장치를 매주 작동시킨다.</p></div>
+    </div>
+  </section>
+
+  <!-- Part 3: 주간 리듬 -->
+  <section class="rv">
+    <div class="sec-head">Part 3 · 주간 리듬</div>
+    <h2 class="sec-title">매주 일요일 2시간 — 수업 밖을 돌리는 엔진</h2>
+    <p class="sec-lead">흐름 자체가 자립을 떠받친다. 수업의 절반은 '혼자 한 것'에서 시작하고, 끝은 아이가 <b>스스로</b> 다음 주를 계획하며 닫는다. 선생님의 개입은 주차가 갈수록 줄어든다.</p>
+    <div class="rhythm">
+      <div class="slot"><div class="t">0:00–0:30</div><div class="h">혼자 한 것 나누기</div><p>집에서 한 것 자랑 + 막혔던 것 같이 풀기 (수업의 심장)</p></div>
+      <div class="slot"><div class="t">0:30–0:45</div><div class="h">자립 스킬</div><p>오늘의 '스스로 하는 법' 한 조각 (고르기·찾기·점검 등)</p></div>
+      <div class="slot"><div class="t">0:45–1:45</div><div class="h">내 프로젝트</div><p>내 작업, 선생님은 점점 덜 끼어든다 (답 대신 질문)</p></div>
+      <div class="slot"><div class="t">1:45–2:00</div><div class="h">스스로 계획</div><p>내가 직접 다음 주 집 미션을 정한다 (선생님이 정해주지 않음)</p></div>
+    </div>
+  </section>
+
+  <!-- Part 4: Curriculum -->
+  <section class="rv">
+    <div class="sec-head">Part 4 · 커리큘럼 (4주 × 2단계)</div>
+    <h2 class="sec-title">4주씩 두 단계 — 자립 근육 만들기 → 스스로 굴러가기</h2>
+    <p class="sec-lead">매주의 중심은 '자립 스킬' 하나와 그걸 시험하는 <b>수업 밖 집 미션</b>이다. 새 도구(Gemini 이미지·영상)와 만들기는 그 스킬을 연습할 재료로 쓴다 — <a href="gemini.html" style="color:var(--clay-deep);font-weight:600;">Gemini 이미지·영상 교사 가이드 →</a>. 핵심 질문은 늘 같다 — <b>"이번 주, 수업 없이 스스로 무엇을 했나?"</b></p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 30px;">
+      <div style="background:var(--teal-soft);border:1px solid #c7d8d2;border-radius:14px;padding:18px 20px;">
+        <div style="font-family:'Hahmlet',serif;font-weight:700;color:var(--teal);font-size:.95rem;margin-bottom:8px;">살린다 · 통했던 것</div>
+        <p style="font-size:.86rem;color:var(--ink-soft);line-height:1.6;">Claude Code로 앱·게임 만들기(반응 좋음), 음악 만들기(반응 좋음), 틀을 정해준 만들기(투두리스트). → 창작 중심축으로 유지.</p>
+      </div>
+      <div style="background:#fbf0e6;border:1px solid #e6cdb4;border-radius:14px;padding:18px 20px;">
+        <div style="font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.95rem;margin-bottom:8px;">메운다 · 빈틈</div>
+        <p style="font-size:.86rem;color:var(--ink-soft);line-height:1.6;">이미지/영상, 스스로 도구 찾기, 수업 밖 프로젝트, 공부·실생활·다른 주제 활용, 윤리·리스크·가치관. + 디바이스(아이패드·맥) 차이 정리.</p>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-h"><span class="dot"></span>1단계 · 자립 근육 만들기<span class="wk">1–4주</span></div>
+      <table class="ctable">
+        <thead><tr><th>주차</th><th>키우는 자립 스킬 (수업서 훈련)</th><th>수업 밖 '집 미션'</th><th>초4 / 중2</th></tr></thead>
+        <tbody>
+          <tr><td class="wkn" data-l="주차">W1</td><td class="found" data-l="자립 스킬"><b>이미지 맛보기 → 고르기</b> — Gemini 이미지로 손풀고, 내가 만들 걸 스스로 정한다 <span class="pill">새 도구</span></td><td data-l="집 미션">내가 고른 작은 것 1개 + 집에서 한 컷 더 만들어 오기</td><td data-l="초4/중2">초4: 선택지 메뉴 · 중2: 자유</td></tr>
+          <tr><td class="wkn" data-l="주차">W2</td><td class="found" data-l="자립 스킬"><b>막힘 뚫기</b> — 선생님 없이 막혔을 때 5가지 시도(다시 묻기·쪼개기·검색·예시·잠깐 멈춤) <span class="pill">Gemini 영상</span></td><td data-l="집 미션">Gemini로 영상 하나 만들다 막힌 것 스스로 기록·시도해 오기</td><td data-l="초4/중2">초4: '막힘 일기' · 중2: 자력 해결</td></tr>
+          <tr><td class="wkn" data-l="주차">W3</td><td class="found" data-l="자립 스킬"><b>스스로 찾기</b> — 도구·정보·방법 직접 찾기 (+진짜/가짜·윤리 한 입) <span class="pill">새 도구</span></td><td data-l="집 미션">필요한 것 하나를 스스로 검색해 찾아 적용해 오기</td><td data-l="초4/중2">선생님은 답 대신 찾는 길만</td></tr>
+          <tr><td class="wkn" data-l="주차">W4</td><td class="found" data-l="자립 스킬"><b>스스로 점검·고치기</b> — 내 작품을 직접 평가하고 한 번 더 고치기 (+윤리 자기 점검)</td><td data-l="집 미션">만든 걸 스스로 고쳐서 가족에게 보여주기(첫 쇼케이스) + 우리 규칙 정하기</td><td data-l="초4/중2">둘 다 "한 번 더 고치기"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="phase">
+      <div class="phase-h"><span class="dot" style="background:var(--teal)"></span>2단계 · 스스로 굴러가기<span class="wk">5–8주</span></div>
+      <p style="font-size:.85rem;color:var(--ink-soft);margin:-2px 0 12px;">이 단계부터 무게 중심이 뒤집힌다 — <b>집 프로젝트가 본무대</b>, 수업은 잠깐 들르는 정비소(코칭). 선생님 도움은 매주 줄어든다.</p>
+      <table class="ctable">
+        <thead><tr><th>주차</th><th>키우는 자립 스킬 (수업서 점검)</th><th>수업 밖 '집 미션' (본무대)</th><th>초4 / 중2</th></tr></thead>
+        <tbody>
+          <tr><td class="wkn" data-l="주차">W5</td><td class="found" data-l="자립 스킬"><b>내 프로젝트의 주인 되기</b> — 틀 없이 스스로 기획 <span class="pill">자립 단계</span></td><td data-l="집 미션">내가 정한 프로젝트의 첫 조각을 집에서 만들어 오기</td><td data-l="초4/중2">초4: 작게 · 중2: 연구로</td></tr>
+          <tr><td class="wkn" data-l="주차">W6</td><td class="found" data-l="자립 스킬"><b>한 주를 스스로 끌고 오기</b> — 수업은 점검만, 진행은 집에서</td><td data-l="집 미션">수업 없이 한 단계 전진시켜 오기 (수업선 막힌 것만)</td><td data-l="초4/중2">도움 요청도 스스로 판단</td></tr>
+          <tr><td class="wkn" data-l="주차">W7</td><td class="found" data-l="자립 스킬"><b>스스로 써먹기</b> — 시키지 않아도 공부·일상·다른 주제에 적용</td><td data-l="집 미션">공부·취미에 한 가지 직접 적용 + 효과 한 줄 + 새 주제 살짝</td><td data-l="초4/중2">"진짜 도움 됐나?" 자평</td></tr>
+          <tr><td class="wkn" data-l="주차">W8</td><td class="found" data-l="자립 스킬"><b>혼자서도 계속</b> — 다음 사이클을 스스로 설계 (+쇼케이스·가치관)</td><td data-l="집 미션">다음에 혼자 할 프로젝트 계획서 + 발표 + 윤리 자기 점검</td><td data-l="초4/중2">'열린 고리' — 끝내지 않고 다음으로</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <div class="close rv">
+    <p class="big">성공의 신호는 단순하다 — 아이가 수업을 기다리지 않고 스스로 다음을 시작할 때. 그때 이 커리큘럼은 제 역할을 다하고, 가벼워진다.</p>
+    <p>주차별 토대 수업은 <b>MIT Day of AI</b>(연령대별·나선형 무료 자료)와 <b>Stanford CRAFT</b>(편향·윤리 짧은 활동)에서 필요한 부분을 가져와 보강하면 좋다. 영어 자료가 많으니 초4용은 번역·각색이 필요할 수 있다.</p>
+    <p>그리고 잊지 말 것: AI는 읽기·쓰기·논리·기초 컴퓨터 이해 <b>위에 얹히는</b> 것. 이 기본기를 탄탄히 가져가는 게 최고의 AI 토대다.</p>
+    <div class="foot">우리 교실 AI 비전 &amp; 커리큘럼 · 4주 × 2단계(8주) · 매주 일요일 2시간 · 초4·중2 혼합 · <a href="index.html" style="color:var(--clay-deep);font-weight:600;">현황 대시보드</a> · <a href="gemini.html" style="color:var(--clay-deep);font-weight:600;">Gemini 가이드</a></div>
+  </div>
+
+</div>
+<script>
+  // staggered reveal
+  document.querySelectorAll('.rv').forEach((el,i)=>{el.style.animationDelay=(i*0.12)+'s';});
+</script>
+</body>
+</html>
