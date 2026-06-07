@@ -89,7 +89,7 @@
 
     <div class="ataglance">
       <div class="ag"><div class="l">이미지</div><div class="v">W1 · 맛보기</div></div>
-      <div class="ag"><div class="l">영상(Veo)</div><div class="v">W1 · 내 그림 움직이게</div></div>
+      <div class="ag"><div class="l">영상</div><div class="v">Google Flow(Veo)</div></div>
       <div class="ag"><div class="l">방식</div><div class="v">공용 화면 가이드형</div></div>
       <div class="ag"><div class="l">저장</div><div class="v">구글 드라이브</div></div>
     </div>
@@ -103,7 +103,7 @@
 
     <div class="check"><span class="box"></span><div><b>교사/공용 Gemini 계정 로그인</b> — 이미지·영상의 공용 작업 계정. 큰 화면/프로젝터에 띄울 준비.</div></div>
     <div class="check"><span class="box"></span><div><b>이미지는 보통 무료로도 가능</b> — Gemini 앱(웹/모바일)에서 바로 그림 생성. 수업 전 캐릭터 1장 테스트.</div></div>
-    <div class="check"><span class="box"></span><div><b>영상(Veo)은 보통 유료 플랜 + 횟수 제한</b> — Google AI Pro/Ultra 등에서 제공되고 하루 생성 수에 한도가 있을 수 있음. <span class="warn">영상은 교사 공용(유료) 계정으로 시연 위주</span>, 수업 전 1편 테스트.</div></div>
+    <div class="check"><span class="box"></span><div><b>영상은 Gemini 채팅 말고 Google Flow로</b> — Gemini 앱 채팅은 하루 영상 한도가 매우 적다. 구독(Pro/Ultra)에 포함된 <b>Flow 크레딧</b>을 쓰는 <a href="https://flow.google" style="color:var(--clay-deep);font-weight:600;">Google Flow</a>가 훨씬 여유롭다. <span class="warn">영상은 교사 공용(유료) 계정으로 시연 위주</span>, 수업 전 Flow에서 1편 테스트.</div></div>
     <div class="check"><span class="box"></span><div><b>18세 미만 계정 제한</b> — 사람(실제 인물) 이미지·영상 생성이 막히거나 제한될 수 있음. <span class="warn">사람 얼굴 대신 캐릭터·동물·사물·풍경</span>으로. 그래서 공용 화면 진행.</div></div>
     <div class="check"><span class="box"></span><div><b>구글 드라이브 공유 폴더 열어두기</b> — 만든 이미지·영상을 바로 여기에 저장(기기 달라도 같은 곳).</div></div>
   </section>
@@ -142,24 +142,28 @@
 
   <!-- 영상 -->
   <section>
-    <div class="sec-head">영상 만들기 · W1 맛보기 → 이후 계속</div>
-    <h2 class="sec-title">영상 — 짧게, 신중하게, 고쳐가며</h2>
-    <p class="sec-lead">Veo로 몇 초짜리 짧은 영상을 만든다. 생성에 시간이 걸리고 횟수 한도가 있어 <b>한 문장을 신중히</b> 쓰는 게 중요하다. W1에서 '<b>내 그림을 움직이게</b>'로 맛보고, W2 '막힘 뚫기' 스킬을 연습할 최고의 재료가 된다.</p>
+    <div class="sec-head">영상 만들기 · Google Flow · W1 맛보기 → 이후 계속</div>
+    <h2 class="sec-title">영상 — Google Flow로, 짧게·신중하게</h2>
+    <p class="sec-lead"><b>Gemini 앱 채팅은 하루 영상이 몇 편뿐</b>이라 수업엔 부족하다. 대신 구독(Pro/Ultra)에 포함된 <b>Flow 크레딧</b>을 쓰는 <b><a href="https://flow.google" style="color:var(--clay-deep);font-weight:600;">Google Flow</a></b>(labs.google/flow)를 쓴다 — 영상 전용 작업실이라 더 많이, 더 다양하게 만들 수 있다. 모두 교사 공용 화면으로.</p>
 
-    <div class="step teal"><div class="num">1</div><div><div class="bt">두 가지 방법 중 고르기</div><p><b>글 → 영상</b>: 장면을 글로 설명. &nbsp;<b>이미지 → 영상</b>: <b>W1에서 만든 내 그림을 움직이게</b> 한다(연결 포인트!). 둘 다 공용 화면으로 시연.</p></div></div>
+    <div class="promptbox" style="margin-bottom:14px"><span class="lbl">왜 Flow?</span><br>Gemini 채팅 = 빠른 한 편 맛보기(하루 한도 적음). <b>Flow = 구독 크레딧으로 여러 편</b> + 내 그림을 첫 장면으로(Frames) + 클립을 이야기로 잇기(Scenebuilder) + 같은 캐릭터 고정(Ingredients).</div>
 
-    <div class="step teal"><div class="num">2</div><div><div class="bt">영상 프롬프트 = 무엇 + 움직임 + 분위기</div><p>이미지 3요소에 <b>'어떻게 움직이는지'</b>를 더한다. 카메라 움직임("천천히 다가가며")도 말할 수 있다.</p>
-      <div class="promptbox"><span class="lbl">예시</span><br><b>우주를 나는 고양이</b>가 <b>꼬리를 흔들며 별 사이를 천천히 날아가는</b>, <b>그림책 같은 신나는</b> 짧은 영상.</div></div></div>
+    <div class="step teal"><div class="num">1</div><div><div class="bt">Flow 열기</div><p><b>flow.google</b>(또는 labs.google/flow)에 <b>구독한 공용 계정</b>으로 로그인 → 새 프로젝트 만들기. 큰 화면으로 다 같이.</p></div></div>
 
-    <div class="step teal"><div class="num">3</div><div><div class="bt">기다리고, 고치고, 저장</div><p>생성에 시간이 걸린다. 안 되면 <b>막힘 뚫기 5가지</b>(다시 묻기·쪼개기·검색·예시·잠깐 멈춤)로 다시 시도. 마음에 들면 내려받아 <b>공유 폴더</b>에 저장.</p></div></div>
+    <div class="step teal"><div class="num">2</div><div><div class="bt">만드는 방법 고르기</div><p><b>Frames to Video</b>: <b>W1에서 만든 내 그림을 첫 장면으로 올려</b> 움직이게 한다(연결 포인트!). &nbsp;<b>Text to Video</b>: 글로만 장면 설명. &nbsp;<b>Ingredients</b>: 같은 캐릭터·사물을 여러 영상에 똑같이 등장시키기.</p></div></div>
 
-    <h3 style="font-family:'Hahmlet',serif;font-size:1.02rem;color:var(--clay-deep);margin:22px 0 8px;">영상에서 더 챙길 것</h3>
-    <div class="check"><span class="box"></span><div><b>횟수·시간 제한</b> — 한도가 있으니 아무거나 막 누르지 않기. "한 문장을 잘 쓰자"가 규칙.</div></div>
-    <div class="check"><span class="box"></span><div><b>진짜처럼 보이는 영상 주의</b> — 진짜와 헷갈릴 수 있는 영상은 만들지 않기·퍼뜨리지 않기. <span class="warn">'진짜/가짜' 윤리는 W3, 자기 점검은 W4</span>로 이어진다.</div></div>
+    <div class="step teal"><div class="num">3</div><div><div class="bt">영상 프롬프트 = 무엇 + 어디서 + 어떻게 움직임 + 분위기</div><p>이미지 3요소에 <b>'장면(어디서)'과 '움직임'</b>을 더한다. 카메라 움직임("천천히 다가가며")도 말할 수 있다.</p>
+      <div class="promptbox"><span class="lbl">예시</span><br><b>우주를 나는 고양이</b>가 <b>별이 가득한 밤하늘에서</b> <b>꼬리를 흔들며 천천히 날아가는</b>, <b>그림책 같은 신나는</b> 짧은 영상.</div></div></div>
+
+    <div class="step teal"><div class="num">4</div><div><div class="bt">생성 → 잇고 늘이고 저장</div><p>한 클립은 보통 몇 초. 마음에 들면 <b>Scenebuilder</b>로 클립을 이어 이야기로, 또는 <b>Extend</b>로 더 길게. 안 되면 <b>막힘 뚫기 5가지</b>(다시 묻기·쪼개기·검색·예시·잠깐 멈춤)로 다시. 완성본은 내려받아 <b>공유 폴더</b>에 저장.</p></div></div>
+
+    <h3 style="font-family:'Hahmlet',serif;font-size:1.02rem;color:var(--clay-deep);margin:22px 0 8px;">크레딧·안전 챙기기</h3>
+    <div class="check"><span class="box"></span><div><b>Flow 크레딧은 영상 1편마다 차감</b> — 구독에 매월 크레딧이 포함되지만 무한은 아니다(정확한 양은 계정·플랜에서 확인, 자주 바뀜). 규칙은 하나 — <b>"막 누르지 말고 한 문장을 잘 쓰자."</b></div></div>
+    <div class="check"><span class="box"></span><div><b>진짜처럼 보이는 영상 주의</b> — 진짜와 헷갈릴 수 있는 영상은 만들지 않기·퍼뜨리지 않기. 사람 얼굴·내 정보 ✕. <span class="warn">'진짜/가짜' 윤리는 W3, 자기 점검은 W4</span>로 이어진다.</div></div>
 
     <div class="two">
-      <div class="lvl a"><h4>초4</h4><p>교사가 대신 생성, 아이는 "무엇이 어떻게 움직이면 좋을지" 말로 정한다. 짧게 한 편.</p></div>
-      <div class="lvl b"><h4>중2</h4><p>직접 프롬프트를 쓰고 고쳐보게. W1 이미지를 영상으로 잇는 작은 작품에 도전.</p></div>
+      <div class="lvl a"><h4>초4</h4><p>교사가 Flow를 조작, 아이는 "무엇이 어디서 어떻게 움직이면 좋을지" 말로 정한다. 짧게 한 편.</p></div>
+      <div class="lvl b"><h4>중2</h4><p>직접 프롬프트를 쓰고 Frames·Scenebuilder까지 시도. W1 이미지를 잇는 작은 영상 작품에 도전.</p></div>
     </div>
   </section>
 
