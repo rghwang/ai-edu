@@ -162,7 +162,7 @@
     {id:'p6', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'}
   ];
   var phase1 = [
-    {id:'w1', wk:'W1', skill:'고르기', desc:'Gemini 이미지·영상으로 손풀기 → 내가 만들 걸 스스로 정하기', mission:'내가 고른 작은 것 1개 + 집에서 이미지 한 컷(또는 영상) 더 만들어 오기', links:[{label:'📋 상세 수업안', href:'w1.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w1-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]},
+    {id:'w1', wk:'W1', skill:'고르기', desc:'Gemini 이미지·영상으로 손풀기 → 내가 만들 걸 스스로 정하기 (첫 시간 — 숙제 없음)', mission:'', links:[{label:'📋 상세 수업안', href:'w1.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w1-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]},
     {id:'w2', wk:'W2', skill:'스스로 찾기 + 확인', desc:'내 관심사 도감 사이트 ① — 주제 고르고 Gemini로 찾고 진짜인지 확인 + 사이트 뼈대', mission:'도감에 넣을 항목 1~2개 더 조사·확인해 노트에 적어오기', links:[{label:'📋 상세 수업안', href:'w2.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w2-slides.html'}]},
     {id:'w3', wk:'W3', skill:'스스로 점검·고치기', desc:'도감 사이트 ② — 항목·이미지 채우고 더 낫게 고치기', mission:'내 사이트에서 고치고 싶은 곳 한 군데 집에서 손봐오기'},
     {id:'w4', wk:'W4', skill:'완성·공유 + 우리 규칙', desc:'도감 사이트 완성 + 가족에게 공유 + 윤리·우리 규칙 함께 정하기', mission:'가족에게 내 도감 보여주고 반응 한 줄 적어오기'}
@@ -252,7 +252,7 @@
       var left = document.createElement('div');
       left.innerHTML = '<div class="ttl"><span class="wk">'+it.wk+'</span>'+it.skill+'</div>'
         + '<div class="desc">'+it.desc+'</div>'
-        + '<div class="mission"><b>집 미션</b> · '+it.mission+'</div>';
+        + (it.mission ? '<div class="mission"><b>집 미션</b> · '+it.mission+'</div>' : '');
       r1.appendChild(left);
       r1.appendChild(chipEl(it.id));
       card.appendChild(r1);
