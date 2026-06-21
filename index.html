@@ -129,14 +129,14 @@
   </section>
 
   <section>
-    <div class="sec-head">현재 커리큘럼 · 4주 × 2단계</div>
-    <h2 class="sec-title">자립을 키우는 8주</h2>
+    <div class="sec-head">현재 커리큘럼 · 2단계</div>
+    <h2 class="sec-title">자립을 키우는 커리큘럼 (W6–W13)</h2>
     <p class="sec-lead">매주 중심은 '자립 스킬' 하나와 그걸 시험하는 수업 밖 '집 미션'이다.</p>
 
-    <div class="phase-bar"><span class="pdot"></span>1단계 · 자립 근육 만들기<span class="pw">1–4주</span></div>
+    <div class="phase-bar"><span class="pdot"></span>1단계 · 자립 근육 만들기<span class="pw">7–9주</span></div>
     <div id="phase1List"></div>
 
-    <div class="phase-bar"><span class="pdot" style="background:var(--teal)"></span>2단계 · 스스로 굴러가기<span class="pw">5–8주</span></div>
+    <div class="phase-bar"><span class="pdot" style="background:var(--teal)"></span>2단계 · 스스로 굴러가기<span class="pw">10–13주</span></div>
     <div id="phase2List"></div>
   </section>
 
@@ -154,24 +154,23 @@
 
   // ---- data ----
   var past = [
-    {id:'p1', title:'AI 개념', note:'AI가 무엇인지 기초 개념 도입', tag:'base', tagText:'완료'},
-    {id:'p2', title:'Claude Code로 게임·앱 만들기', note:'각자 게임·앱 제작 — 반응 매우 좋음', tag:'good', tagText:'반응 좋음'},
-    {id:'p3', title:'음악 만들기', note:'시끄러웠지만 반응 좋음', tag:'good', tagText:'반응 좋음'},
-    {id:'p4', title:'일상 앱 만들기 (투두리스트)', note:'틀을 주면 됨 · "알아서 만들어봐"는 어려웠음', tag:'fix', tagText:'보완 포인트'},
-    {id:'p5', title:'방탈출 게임 만들기', note:'1차 제작은 됨 · 개선·반복이 어려웠음', tag:'fix', tagText:'보완 포인트'},
-    {id:'p6', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'},
-    {id:'w1', title:'W1 · 이미지·영상 맛보기 + 고르기', note:'Gemini 이미지·영상으로 손풀고 내가 만들 걸 스스로 정하기 — 새 커리큘럼 1주차 완료', tag:'good', tagText:'완료', links:[{label:'📋 수업안', href:'w1.html'},{label:'🖥️ 슬라이드', href:'w1-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]}
+    {id:'p1', wk:'W1', title:'AI 개념 + 게임·앱 만들기', note:'AI 기초 개념 + Claude Code로 각자 게임·앱 제작 — 반응 매우 좋음', tag:'good', tagText:'반응 좋음'},
+    {id:'p3', wk:'W2', title:'음악 만들기', note:'시끄러웠지만 반응 좋음', tag:'good', tagText:'반응 좋음'},
+    {id:'p4', wk:'W3', title:'일상 앱 만들기 (투두리스트)', note:'틀을 주면 됨 · "알아서 만들어봐"는 어려웠음', tag:'fix', tagText:'보완 포인트'},
+    {id:'p5', wk:'W4', title:'방탈출 게임 만들기', note:'1차 제작은 됨 · 개선·반복이 어려웠음', tag:'fix', tagText:'보완 포인트'},
+    {id:'p6', wk:'W5', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'},
+    {id:'w1', wk:'W6', title:'이미지·영상 맛보기 + 고르기', note:'Gemini 이미지·영상으로 손풀고 내가 만들 걸 스스로 정하기 — 새 커리큘럼 첫 주', tag:'good', tagText:'완료', links:[{label:'📋 수업안', href:'w1.html'},{label:'🖥️ 슬라이드', href:'w1-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]}
   ];
   var phase1 = [
-    {id:'w2', wk:'W2', skill:'스스로 찾기 + 확인', desc:'내 관심사 도감 사이트 ① — 주제 고르고 Gemini로 찾고 진짜인지 확인 + 사이트 뼈대', mission:'도감에 넣을 항목 1~2개 더 조사·확인해 노트에 적어오기', links:[{label:'📋 상세 수업안', href:'w2.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w2-slides.html'}]},
-    {id:'w3', wk:'W3', skill:'스스로 점검·고치기', desc:'도감 사이트 ② — 항목·이미지 채우고 더 낫게 고치기', mission:'내 사이트에서 고치고 싶은 곳 한 군데 집에서 손봐오기'},
-    {id:'w4', wk:'W4', skill:'완성·공유 + 우리 규칙', desc:'도감 사이트 완성 + 가족에게 공유 + 윤리·우리 규칙 함께 정하기', mission:'가족에게 내 도감 보여주고 반응 한 줄 적어오기'}
+    {id:'w2', wk:'W7', skill:'스스로 찾기 + 확인', desc:'내 관심사 도감 사이트 ① — 주제 고르고 Gemini로 찾고 진짜인지 확인 + 사이트 뼈대', mission:'도감에 넣을 항목 1~2개 더 조사·확인해 노트에 적어오기', links:[{label:'📋 상세 수업안', href:'w2.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w2-slides.html'}]},
+    {id:'w3', wk:'W8', skill:'스스로 점검·고치기', desc:'도감 사이트 ② — 항목·이미지 채우고 더 낫게 고치기', mission:'내 사이트에서 고치고 싶은 곳 한 군데 집에서 손봐오기'},
+    {id:'w4', wk:'W9', skill:'완성·공유 + 우리 규칙', desc:'도감 사이트 완성 + 가족에게 공유 + 윤리·우리 규칙 함께 정하기', mission:'가족에게 내 도감 보여주고 반응 한 줄 적어오기'}
   ];
   var phase2 = [
-    {id:'w5', wk:'W5', skill:'이어 만들기(스토리)', desc:'웹툰·4컷 만화 ① — 내 이야기 기획하고 컷 만들기', mission:'다음 컷 아이디어를 집에서 스케치해 오기'},
-    {id:'w6', wk:'W6', skill:'한 주를 스스로 끌고 오기', desc:'웹툰 ② — 완성하고 가족·친구에게 공유', mission:'내 웹툰 한 편을 가족에게 보여주기'},
-    {id:'w7', wk:'W7', skill:'스스로 기획→제작', desc:'내가 고른 자유 프로젝트 (예: 10년 뒤 나) — 틀 없이 스스로', mission:'내 프로젝트를 집에서 한 단계 전진시켜 오기'},
-    {id:'w8', wk:'W8', skill:'혼자서도 계속', desc:'다음 사이클을 스스로 설계 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
+    {id:'w5', wk:'W10', skill:'이어 만들기(스토리)', desc:'웹툰·4컷 만화 ① — 내 이야기 기획하고 컷 만들기', mission:'다음 컷 아이디어를 집에서 스케치해 오기'},
+    {id:'w6', wk:'W11', skill:'한 주를 스스로 끌고 오기', desc:'웹툰 ② — 완성하고 가족·친구에게 공유', mission:'내 웹툰 한 편을 가족에게 보여주기'},
+    {id:'w7', wk:'W12', skill:'스스로 기획→제작', desc:'내가 고른 자유 프로젝트 (예: 10년 뒤 나) — 틀 없이 스스로', mission:'내 프로젝트를 집에서 한 단계 전진시켜 오기'},
+    {id:'w8', wk:'W13', skill:'혼자서도 계속', desc:'다음 사이클을 스스로 설계 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
   ];
 
   var ALL_IDS = past.map(function(x){return x.id;})
@@ -235,7 +234,7 @@
       var card = document.createElement('div'); card.className='card'+cardStatusClass(it.id);
       var r1 = document.createElement('div'); r1.className='row1';
       var left = document.createElement('div');
-      left.innerHTML = '<div class="ttl">'+it.title+'</div><div class="desc">'+it.note+'</div>'
+      left.innerHTML = '<div class="ttl">'+(it.wk?'<span class="wk">'+it.wk+'</span>':'')+it.title+'</div><div class="desc">'+it.note+'</div>'
         + '<span class="tag '+it.tag+'">'+it.tagText+'</span>';
       r1.appendChild(left);
       r1.appendChild(chipEl(it.id));
