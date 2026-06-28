@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W9 수업안 · 내 웹툰으로 애니메이션</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--paper-2:#efe5d2;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.0rem;margin-top:3px;line-height:1.35;}
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:14px;}
+  .checkgroup{margin-bottom:18px;}
+  .checkgroup h3{font-family:'Hahmlet',serif;font-size:1.05rem;color:var(--clay-deep);margin-bottom:8px;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;} .check .warn{color:var(--clay-deep);font-weight:600;}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--amber);}
+  .block .time{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.92rem;letter-spacing:.02em;}
+  .block .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.15rem;margin:3px 0 8px;}
+  .block ul{margin:0 0 0 18px;padding:0;}
+  .block li{font-size:.92rem;color:var(--ink-soft);margin-bottom:4px;}
+  .block li b{color:var(--ink);font-weight:600;}
+  .block.spine{border-left-color:var(--teal);}
+  .spine-tag{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 8px;font-weight:600;margin-left:6px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;} .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">9주차 상세 수업안 · 일요일 2시간</div>
+    <h1>W9 — 내 웹툰으로 애니메이션</h1>
+    <p class="sub">W8에서 만든 <b>웹툰을 움직이는 애니메이션</b>으로. 움직일 컷을 골라 <b>Google Flow</b>로 영상화하고, 이어 붙여 짧은 애니메이션을 만든다. 이미 만든 작품을 한 단계 더 키우는 수업.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">자립 스킬</div><div class="v">내 작품 키우기</div></div>
+      <div class="ag"><div class="l">도구</div><div class="v">Gemini + Google Flow</div></div>
+      <div class="ag"><div class="l">결과물</div><div class="v">짧은 애니메이션</div></div>
+      <div class="ag"><div class="l">집 미션</div><div class="v">장면 더 / 소리 더하기</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">사전 준비 · 수업 전에 끝내둘 것</div>
+    <h2 class="sec-title">준비 체크리스트</h2>
+
+    <div class="checkgroup">
+      <h3>계정 · 도구</h3>
+      <div class="check"><span class="box"></span><div><b>Gemini 계정 공유</b> — 아이들은 본인 계정 대신 <b>교사/공용 계정에 로그인</b>. <span class="warn">Family Link 필요 없음.</span></div></div>
+      <div class="check"><span class="box"></span><div><b>Google Flow 준비</b> — 영상은 Gemini 채팅 말고 <b>Flow</b>(구독 크레딧)로. 수업 전 <b>웹툰 컷 1개를 Flow에서 움직여보는 테스트</b>. 진행법은 <b><a href="gemini.html" style="color:var(--clay-deep);font-weight:600;">Gemini 가이드</a></b> 참고.</div></div>
+      <div class="check"><span class="box"></span><div><b>Flow 크레딧 확인</b> — <span class="warn">영상은 횟수 제한</span>이라 교사 공용(유료) 계정으로, 신중히. 인원당 1~2컷이 현실적.</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>자료 · 기기</h3>
+      <div class="check"><span class="box"></span><div><b>W8 웹툰 준비</b> — 지난주 만든 웹툰(구글 드라이브 공유 폴더)을 열어둔다. 움직일 재료다.</div></div>
+      <div class="check"><span class="box"></span><div><b>애니 예시 1편 미리 만들어두기</b> — 웹툰 컷 하나를 Flow로 움직인 짧은 클립. "이렇게 움직인다"고 보여주면 이해가 빠름.</div></div>
+      <div class="check"><span class="box"></span><div><b>큰 화면(교사 시범) + 학생 기기</b>. 학생용 슬라이드 띄울 준비(아래 링크).</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수업 흐름 · 2시간</div>
+    <h2 class="sec-title">분 단위 진행</h2>
+
+    <div class="block spine">
+      <div class="time">0:00 – 0:20</div>
+      <div class="bt">자랑 + 오늘 소개 <span class="spine-tag">수업 밖이 무대</span></div>
+      <ul>
+        <li>집에서 웹툰을 더 이어 그린 것 있으면 자랑부터 — 잘한 점 1개씩(없어도 OK).</li>
+        <li>오늘 미션 공개: "<b>내 웹툰을 움직이는 애니메이션으로!</b>" Flow로 만든 짧은 애니 예시를 큰 화면으로 보여주기.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:20 – 0:40</div>
+      <div class="bt">① 움직일 컷 고르기 + 계획</div>
+      <ul>
+        <li>내 웹툰에서 <b>움직이면 멋진 컷 2~3개</b>를 고른다.</li>
+        <li>각 컷마다 한 줄로: <b>무엇이 + 어떻게 움직이는지</b>(예: "고양이가 천천히 날아오른다"). 노트에 적기.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:40 – 1:25</div>
+      <div class="bt">② Google Flow로 컷 움직이게</div>
+      <ul>
+        <li><b>Frames to Video</b>: 웹툰 컷 이미지를 첫 장면으로 올리고, 영상 프롬프트 = <b>무엇 + 어떻게 움직임 + 분위기</b>. (캐릭터가 그대로 유지됨)</li>
+        <li>아이가 움직임을 정하면 <b>교사가 공용 계정 Flow에서 생성</b> — 크레딧 제한 때문에 한 문장을 신중히. 안 되면 <b>막힘 뚫기</b>로 다시.</li>
+        <li><b>초등학생은 교사가 조작</b>, 아이는 장면·움직임을 말로. 중학생은 직접 프롬프트 시도.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">1:25 – 1:45</div>
+      <div class="bt">③ 이어 붙이기 + 소리(선택)</div>
+      <ul>
+        <li>움직이는 컷들을 <b>Flow의 Scenebuilder</b>로 차례로 이어 짧은 애니메이션 완성. 가능하면 음악·효과음.</li>
+        <li>완성본은 <b>구글 드라이브 공유 폴더</b>에 저장.</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">1:45 – 2:00</div>
+      <div class="bt">나눔(상영회) + 집 미션</div>
+      <ul>
+        <li>각자 <b>움직이는 내 작품</b> 상영. 서로 칭찬 1개 + 궁금한 것 1개.</li>
+        <li>집 미션: "<b>장면 한두 개 더 움직이게</b> 하거나 <b>소리·음악</b>을 더해 오기."</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수준별</div>
+    <h2 class="sec-title">초등학생 / 중학생 다르게</h2>
+    <div class="two">
+      <div class="lvl a"><h4>초등학생</h4><p>컷 1~2개만 움직이게. Flow는 교사가 조작하고, 아이는 "무엇이 어떻게 움직이면 좋을지" 말로 정한다. 짧게 한 편.</p></div>
+      <div class="lvl b"><h4>중학생</h4><p>컷 더 많이, 직접 Flow 프롬프트·Scenebuilder까지. 카메라 움직임·장면 전환·소리에 도전.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">기억할 것</div>
+    <h2 class="sec-title">오늘의 포인트</h2>
+    <div class="callout">
+      핵심은 <b>이미 만든 작품을 버리지 않고 한 단계 키우는 경험</b> — 멈춰 있던 웹툰이 움직이면 아이들이 크게 반응합니다. 단, <b>Flow 영상은 크레딧·횟수 제한</b>이 있으니 "막 누르지 말고 한 문장을 잘 쓰자"가 규칙. 웹툰 컷을 그대로 올리면 <b>같은 캐릭터</b>가 유지됩니다. 진짜처럼 보이는 영상은 만들지·퍼뜨리지 않기.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w9-slides.html">🖥️ 학생용 수업 자료(슬라이드) 열기 →</a>
+    <a href="gemini.html">🎨 Gemini·Flow 가이드</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>W9 상세 수업안 · AI 자립 커리큘럼 · 자립 최우선 · 초등학생·중학생</footer>
+</div>
+</body>
+</html>
