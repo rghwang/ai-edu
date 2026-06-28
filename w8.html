@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W8 수업안 · 미래의 나 웹툰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--paper-2:#efe5d2;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.0rem;margin-top:3px;line-height:1.35;}
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:14px;}
+  .checkgroup{margin-bottom:18px;}
+  .checkgroup h3{font-family:'Hahmlet',serif;font-size:1.05rem;color:var(--clay-deep);margin-bottom:8px;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;} .check .warn{color:var(--clay-deep);font-weight:600;}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--amber);}
+  .block .time{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.92rem;letter-spacing:.02em;}
+  .block .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.15rem;margin:3px 0 8px;}
+  .block ul{margin:0 0 0 18px;padding:0;}
+  .block li{font-size:.92rem;color:var(--ink-soft);margin-bottom:4px;}
+  .block li b{color:var(--ink);font-weight:600;}
+  .block.spine{border-left-color:var(--teal);}
+  .spine-tag{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 8px;font-weight:600;margin-left:6px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;} .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">8주차 상세 수업안 · 일요일 2시간</div>
+    <h1>W8 — 미래의 나 웹툰</h1>
+    <p class="sub">10년 뒤 나의 모습을 <b>캐릭터</b>로 만들고, 짧은 <b>시나리오</b>를 써서, 위에서 아래로 스크롤하는 <b>한국 웹툰</b>으로 만든다. 캐릭터 시트 → 시나리오 → 웹툰 컷.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">자립 스킬</div><div class="v">이야기 기획 → 완성</div></div>
+      <div class="ag"><div class="l">도구</div><div class="v">Gemini + 구글 슬라이드</div></div>
+      <div class="ag"><div class="l">결과물</div><div class="v">세로 스크롤 웹툰</div></div>
+      <div class="ag"><div class="l">집 미션</div><div class="v">장면 더 이어 그리기</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">사전 준비 · 수업 전에 끝내둘 것</div>
+    <h2 class="sec-title">준비 체크리스트</h2>
+
+    <div class="checkgroup">
+      <h3>계정</h3>
+      <div class="check"><span class="box"></span><div><b>Gemini 계정 공유</b> — 아이들은 본인 계정 대신 <b>교사/공용 Gemini 계정에 로그인</b>해 함께 쓴다. <span class="warn">Family Link 필요 없음.</span> 이미지 생성도 공용 계정으로.</div></div>
+      <div class="check"><span class="box"></span><div><b>캐릭터 일관성 테스트</b> — 캐릭터 시트(이미지)를 Gemini에 <b>참고로 같이 올려</b> "이 캐릭터가 ~하는 장면" 했을 때 같은 인물이 유지되는지 수업 전 1회 확인.</div></div>
+      <div class="check"><span class="box"></span><div><b>구글 슬라이드(또는 문서) 준비</b> — 완성 컷을 위→아래로 이어 붙일 곳. 교육용 계정에서.</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>시연 · 기기</h3>
+      <div class="check"><span class="box"></span><div><b>한국 웹툰 예시 1~2편 준비</b> — '세로로 스크롤하며 본다'가 뭔지 큰 화면으로 먼저 보여주기.</div></div>
+      <div class="check"><span class="box"></span><div><b>큰 화면(교사 시범) + 학생 기기</b> — 각자 Gemini로 캐릭터·컷 만들고, 슬라이드/문서에 이어 붙이기.</div></div>
+      <div class="check"><span class="box"></span><div><b>시나리오 노트</b> — 칸을 나눠 컷별 장면·대사를 적는 곳.</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>수업 자료</h3>
+      <div class="check"><span class="box"></span><div>학생용 슬라이드 띄울 준비 (아래 링크).</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수업 흐름 · 2시간</div>
+    <h2 class="sec-title">분 단위 진행</h2>
+
+    <div class="block spine">
+      <div class="time">0:00 – 0:20</div>
+      <div class="bt">자랑 + 오늘 소개 <span class="spine-tag">수업 밖이 무대</span></div>
+      <ul>
+        <li>지난 주 이후 <b>혼자 해본 것</b>(도감 더 채우기 등) 있으면 자랑부터 — 잘한 점 1개씩(없어도 OK).</li>
+        <li>오늘 미션 공개: "<b>10년 뒤 나</b>를 주인공으로 <b>세로 스크롤 웹툰</b>을 만든다." 한국 웹툰 예시를 큰 화면으로 보여주기.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:20 – 0:45</div>
+      <div class="bt">① 캐릭터 만들기 — 캐릭터 이미지 시트</div>
+      <ul>
+        <li>먼저 상상: <b>10년 뒤 나는?</b> 직업·성격·옷차림·분위기를 한두 줄로 정한다.</li>
+        <li>Gemini로 <b>캐릭터 이미지 시트</b> 생성 — 같은 인물의 <b>여러 표정·포즈</b>를 한 장에. (웹툰 내내 쓸 '기준 캐릭터')</li>
+        <li>안전: <b>진짜 사람 얼굴·사진 ✕</b>, 내 개인정보 ✕. 마음에 안 들면 한 가지씩 고쳐 달라고.</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">0:45 – 1:05</div>
+      <div class="bt">② 시나리오 쓰기 <span class="spine-tag">자립 스킬</span></div>
+      <ul>
+        <li>짧은 이야기를 <b>3~5컷</b>으로: <b>어디서 + 무슨 일이 + 어떻게 끝나는지</b>.</li>
+        <li>노트에 칸을 나눠 컷별로 '장면 한 줄 + 대사'를 적는다. Gemini에게 아이디어·다듬기를 도와달라고 해도 됨(고르는 건 내가).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">1:05 – 1:45</div>
+      <div class="bt">③ 웹툰 컷 만들기 + 이어 붙이기</div>
+      <ul>
+        <li>각 컷을 Gemini로 생성 — <b>캐릭터 시트를 참고로 같이 올려</b> 같은 인물이 유지되게(연결 포인트!).</li>
+        <li>컷에 <b>대사·말풍선</b>을 넣고, 구글 슬라이드/문서에 <b>위에서 아래로</b> 차곡차곡 → 세로 스크롤 웹툰.</li>
+        <li>한 번에 완벽하지 않아도 OK — 막히면 <b>다시 묻기·한 가지씩 고치기</b>. <b>초등학생은 교사가 컷 생성 도움</b>.</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">1:45 – 2:00</div>
+      <div class="bt">나눔 + 집 미션</div>
+      <ul>
+        <li>각자 <b>세로로 스크롤하며</b> 자기 웹툰 공유. 서로 칭찬 1개 + 궁금한 것 1개.</li>
+        <li>완성본은 <b>구글 드라이브 공유 폴더</b>에 저장. 집 미션: "이야기를 이어 <b>장면 몇 컷 더</b> 그려오기."</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수준별</div>
+    <h2 class="sec-title">초등학생 / 중학생 다르게</h2>
+    <div class="two">
+      <div class="lvl a"><h4>초등학생</h4><p>캐릭터 1명, 컷 3개 정도로 작게. 컷 생성은 교사가 옆에서 도와주고, 대사는 짧게. 이야기는 '하루 일과' 같은 단순한 흐름.</p></div>
+      <div class="lvl b"><h4>중학생</h4><p>캐릭터 디테일·표정 다양하게, 컷 5~8개. 반전이나 감정선이 있는 이야기에 도전. 캐릭터 시트를 직접 활용해 일관성 챙기기.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">기억할 것</div>
+    <h2 class="sec-title">오늘의 포인트</h2>
+    <div class="callout">
+      핵심은 <b>캐릭터 일관성</b> — 캐릭터 시트를 <b>매 컷마다 참고로 같이 올리면</b> 같은 인물이 유지됩니다. 그게 '진짜 웹툰' 느낌을 만들어요. 컷이 한 번에 안 나와도 괜찮습니다(막힘 뚫기 연습). 그리고 컷을 <b>세로로 이어 붙이는 것</b>만으로 한국 웹툰 형식이 됩니다. 진짜 사람 얼굴·개인정보는 넣지 않기.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w8-slides.html">🖥️ 학생용 수업 자료(슬라이드) 열기 →</a>
+    <a href="gemini.html">🎨 Gemini 이미지·영상 가이드</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>W8 상세 수업안 · AI 자립 커리큘럼 · 자립 최우선 · 초등학생·중학생</footer>
+</div>
+</body>
+</html>
