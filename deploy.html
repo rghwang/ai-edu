@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub · Vercel 배포 셋업 · 교사 준비 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --paper-2:#efe5d2; --card:#fffaf0;
+    --ink:#23201a; --ink-soft:#5a5347; --line:#d8cbb1;
+    --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a;
+    --teal:#3f6b63; --teal-soft:#e4ece8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.0rem;margin-top:3px;line-height:1.35;}
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:8px;}
+  .sec-lead{color:var(--ink-soft);font-size:.93rem;margin-bottom:18px;max-width:64ch;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;} .check .warn{color:var(--clay-deep);font-weight:600;}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 16px;margin-bottom:11px;border-left:4px solid var(--amber);display:flex;gap:14px;align-items:flex-start;}
+  .step .num{flex:none;font-family:'Hahmlet',serif;font-weight:800;font-size:1.4rem;color:var(--amber);line-height:1.1;min-width:26px;}
+  .step .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.08rem;margin-bottom:3px;}
+  .step p{font-size:.92rem;color:var(--ink-soft);}
+  .step p b{color:var(--ink);font-weight:600;}
+  .step a{color:var(--clay-deep);font-weight:600;}
+  .flowbox{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:12px;padding:14px 16px;margin:4px 0 0;font-size:.92rem;color:var(--ink);}
+  .flowbox .lbl{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;}
+  .flowbox b{color:var(--clay-deep);}
+  .two{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:6px;}
+  .lvl{border-radius:13px;padding:15px 16px;background:var(--card);border:1px solid var(--line);}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.02rem;margin-bottom:5px;color:var(--clay-deep);}
+  .lvl p{font-size:.88rem;color:var(--ink-soft);}
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">도구 가이드 · 교사용</div>
+    <h1>GitHub · Vercel 배포 셋업</h1>
+    <p class="sub">아이들이 만든 앱·게임을 <b>진짜 인터넷 주소(URL)로 내놓기</b> 위한 준비. 셋업은 <b>공용(클래스) 계정</b>으로 교사가 미리 한 번 해두고, 수업에선 아이들이 로그인만. 아이패드는 <b>전부 브라우저</b>로 됩니다. (이 교육 사이트도 이 방식으로 배포됩니다.)</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">저장·버전</div><div class="v">GitHub</div></div>
+      <div class="ag"><div class="l">자동 배포</div><div class="v">Vercel</div></div>
+      <div class="ag"><div class="l">코딩</div><div class="v">Claude Code 웹</div></div>
+      <div class="ag"><div class="l">기기</div><div class="v">아이패드 브라우저 OK</div></div>
+    </div>
+  </header>
+
+  <!-- 개념 -->
+  <section>
+    <div class="sec-head">먼저 · 각각 뭔지</div>
+    <h2 class="sec-title">셋이 어떻게 이어지나</h2>
+    <p class="sec-lead">셋은 한 줄로 이어집니다. 하나가 저장, 하나가 배포, 하나가 코딩 도구.</p>
+
+    <div class="two">
+      <div class="lvl"><h4>GitHub</h4><p>내 작품(코드)을 저장하는 <b>클라우드 창고</b>. 계속 쌓이고, 되돌리기(버전 관리)도 됨.</p></div>
+      <div class="lvl"><h4>Vercel</h4><p>GitHub 창고에 올리면 <b>자동으로 인터넷 주소</b>를 만들어 웹에 올려주는 서비스.</p></div>
+      <div class="lvl"><h4>Claude Code 웹</h4><p>브라우저(claude.ai/code)에서 <b>코드를 짜고 GitHub에 올려주는</b> AI 도구. 설치 불필요.</p></div>
+    </div>
+
+    <div class="flowbox" style="margin-top:14px"><span class="lbl">한 줄 흐름</span><br>만든다(Claude Code) → <b>GitHub에 저장(push)</b> → <b>Vercel이 자동으로 웹에 올림</b> → 친구·가족이 <b>링크로 본다</b>.</div>
+  </section>
+
+  <!-- 미리 셋업 -->
+  <section>
+    <div class="sec-head">미리 해둘 셋업 · 한 번만 (공용 계정)</div>
+    <h2 class="sec-title">교사 준비 4단계</h2>
+    <p class="sec-lead">전부 무료 플랜으로 충분. 교육용 이메일로 <b>클래스 공용 계정</b>을 만든다(아이들은 여기에 로그인만 함, 18세 미만이라 본인 계정 대신).</p>
+
+    <div class="step"><div class="num">1</div><div><div class="bt">클래스 GitHub 계정 만들기</div><p><a href="https://github.com/signup" target="_blank">github.com</a>에서 교육용 이메일로 계정 1개(예: 클래스 공용). 무료. <b>모든 작품 코드의 창고</b>가 된다.</p></div></div>
+
+    <div class="step"><div class="num">2</div><div><div class="bt">Vercel 계정 만들기 + GitHub 연결</div><p><a href="https://vercel.com/signup" target="_blank">vercel.com</a>에서 <b>"Continue with GitHub"</b>로 그 GitHub 계정으로 로그인(별도 가입 없이 연결). 무료 Hobby 플랜. 이후 GitHub repo를 <b>Import</b>하면 <b>push할 때마다 자동 배포</b>.</p></div></div>
+
+    <div class="step"><div class="num">3</div><div><div class="bt">Claude Code 웹 연결</div><p>교육용 <b>개인 Claude Pro 계정</b>(회사 계정 아님)으로 <a href="https://claude.ai/code" target="_blank">claude.ai/code</a> 접속 → GitHub 연결 승인. 이제 브라우저에서 코드를 짜고 바로 push할 수 있다.</p></div></div>
+
+    <div class="step"><div class="num">4</div><div><div class="bt">테스트 배포 1번</div><p>repo 하나 만들어 Claude Code로 "간단한 웹페이지 만들어줘" → push → <b>Vercel에 URL이 뜨는지</b> 확인. 되면 셋업 끝. 이후 아이별/작품별로 repo만 새로 만들면 됨.</p></div></div>
+
+    <div class="check"><span class="box"></span><div><b>프로젝트 규칙</b> — 아이별·작품별 <b>repo 하나씩</b>. 이름 규칙(예: <code>jiwoo-game</code>). Vercel이 각 repo를 각각의 URL로 배포.</div></div>
+  </section>
+
+  <!-- 아이들에게 -->
+  <section>
+    <div class="sec-head">아이들에게 · 30초 설명</div>
+    <h2 class="sec-title">이렇게 말해주면 충분</h2>
+    <div class="callout">
+      "우리가 만든 걸 <b>GitHub</b>이라는 창고에 저장하면, <b>Vercel</b>이 자동으로 <b>인터넷 주소</b>를 만들어줘. 그 링크를 친구·가족한테 보내면 진짜로 열어볼 수 있어!" — 개념은 이 정도면 충분하고, 실제 push·배포는 <b>Claude Code가 대신</b> 해줍니다. 아이는 '무엇을 만들지'에 집중.
+    </div>
+  </section>
+
+  <!-- 아이패드 · 안전 -->
+  <section>
+    <div class="sec-head">아이패드 · 계정 · 안전</div>
+    <h2 class="sec-title">챙길 것</h2>
+    <div class="check"><span class="box"></span><div><b>아이패드 = 전부 브라우저</b> — github.com · vercel.com · claude.ai/code 모두 사파리/크롬에서. <b>앱 설치 불필요</b>, 공용 계정 로그인만.</div></div>
+    <div class="check"><span class="box"></span><div><b>공용 계정 하나로 관리</b> — GitHub·Vercel·Claude 모두 클래스 공용 계정(18세 이상). 아이들은 로그인해서 함께 사용(동시 사용이 많으면 Claude 사용량 한도 주의).</div></div>
+    <div class="check"><span class="box"></span><div><b>공개 범위</b> — repo·배포는 기본 공개(Public)라 링크로 누구나 봄. <span class="warn">진짜 이름·사진·개인정보가 든 건 올리지 않기</span>. 필요하면 Private으로.</div></div>
+    <div class="check"><span class="box"></span><div><b>모두에게 필요한 건 아님</b> — 이미지·웹툰·애니·슬라이드 등 대부분은 구글 드라이브면 충분. GitHub·Vercel은 <b>'진짜 배포되는 앱·게임'을 만드는 아이(주로 캡스톤)</b>에게만.</div></div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w9.html">🎯 W9 캡스톤 수업안</a>
+    <a href="gemini.html">🎨 Gemini·Flow 가이드</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>GitHub · Vercel 배포 셋업 · 교사 준비 가이드 · 공용 계정 · 아이패드 브라우저 OK</footer>
+</div>
+</body>
+</html>
