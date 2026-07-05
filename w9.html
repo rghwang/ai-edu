@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W9 수업안 · 캡스톤 — 남이 쓸 수준까지 완성</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--paper-2:#efe5d2;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.0rem;margin-top:3px;line-height:1.35;}
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:14px;}
+  .checkgroup{margin-bottom:18px;}
+  .checkgroup h3{font-family:'Hahmlet',serif;font-size:1.05rem;color:var(--clay-deep);margin-bottom:8px;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;} .check .warn{color:var(--clay-deep);font-weight:600;}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--amber);}
+  .block .time{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.92rem;letter-spacing:.02em;}
+  .block .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.15rem;margin:3px 0 8px;}
+  .block ul{margin:0 0 0 18px;padding:0;}
+  .block li{font-size:.92rem;color:var(--ink-soft);margin-bottom:4px;}
+  .block li b{color:var(--ink);font-weight:600;}
+  .block.spine{border-left-color:var(--teal);}
+  .spine-tag{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 8px;font-weight:600;margin-left:6px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;} .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">9주차 · 캡스톤 · 일요일 2시간</div>
+    <h1>W9 — 캡스톤: 남이 쓸 수준까지</h1>
+    <p class="sub">구조화된 커리큘럼의 매듭. 각자 <b>자유롭게 고른 프로젝트</b>를 '<b>진짜 누군가 쓰거나 볼 수 있는 수준</b>'까지 완성해 <b>쇼케이스</b>로 내놓는다. 끝이 아니라, 스스로 계속 만드는 <b>메이커 루프</b>의 출발점.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">자립 스킬</div><div class="v">기획→완성→공개</div></div>
+      <div class="ag"><div class="l">도구</div><div class="v">자유 (Gemini·Flow·슬라이드·Claude Code…)</div></div>
+      <div class="ag"><div class="l">결과물</div><div class="v">완성·공개한 작품 + 쇼케이스</div></div>
+      <div class="ag"><div class="l">집 미션</div><div class="v">완성해 진짜 관객에게</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">사전 준비 · 수업 전에 끝내둘 것</div>
+    <h2 class="sec-title">준비 체크리스트</h2>
+
+    <div class="checkgroup">
+      <h3>계정 · 도구</h3>
+      <div class="check"><span class="box"></span><div><b>Gemini 계정 공유</b> — 아이들은 교사/공용 계정 로그인. <span class="warn">Family Link 필요 없음.</span> 프로젝트에 따라 Flow·구글 슬라이드/문서 등 <b>필요한 도구는 자유</b>.</div></div>
+      <div class="check"><span class="box"></span><div><b>지난 작품들 열어두기</b> — 도감·웹툰·애니 등 공유 폴더의 작업물. 캡스톤은 <b>이어서 키워도</b> 되고 새로 해도 됨.</div></div>
+    </div>
+
+    <div class="checkgroup">
+      <h3>쇼케이스 · 기기</h3>
+      <div class="check"><span class="box"></span><div><b>쇼케이스 세팅</b> — 큰 화면/프로젝터. 가능하면 <b>가족을 관객으로</b> 초대(진짜 관객이 핵심).</div></div>
+      <div class="check"><span class="box"></span><div><b>'완성 기준' 카드</b> — "누가 쓸까 / 어디까지면 완성 / 어떻게 보여줄까" 세 칸. 처음에 각자 채우게.</div></div>
+      <div class="check"><span class="box"></span><div>학생용 슬라이드 띄울 준비(아래 링크).</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수업 흐름 · 2시간</div>
+    <h2 class="sec-title">분 단위 진행</h2>
+
+    <div class="block spine">
+      <div class="time">0:00 – 0:15</div>
+      <div class="bt">돌아보기 + 캡스톤 선언 <span class="spine-tag">매듭</span></div>
+      <ul>
+        <li>그동안 만든 것(이미지·도감·웹툰·애니…) 쭉 돌아보며 "이만큼 스스로 만들었다" 확인.</li>
+        <li>오늘 미션: "<b>하나를 골라 '남이 쓰거나 볼 수 있는' 수준까지 끝내고 내놓는다.</b>"</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">0:15 – 0:40</div>
+      <div class="bt">① 고르기 + '완성 기준' 정하기 <span class="spine-tag">자립 스킬</span></div>
+      <ul>
+        <li>무엇을 완성할지 고른다 — <b>앱·게임 키우기 / 실생활 문제 해결(과제·발표 등) / 지난 작품(웹툰·도감…) 더 멋지게</b> 중 자유.</li>
+        <li>가장 중요한 한 줄: "<b>누구</b>를 위해, <b>어디까지</b> 하면 완성인가?" 완성 기준을 먼저 못 박는다(범위를 작게).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:40 – 1:30</div>
+      <div class="bt">② 만들기 — 끝까지 밀어붙이기</div>
+      <ul>
+        <li>각자 자기 도구로 제작. 선생님은 <b>답 대신 질문</b>("완성 기준까지 뭐가 남았지?"). 막히면 그동안 배운 <b>막힘 뚫기·스스로 찾기</b>로.</li>
+        <li>완성이 어려우면 <b>범위를 줄여서라도 '끝난 상태'</b>를 만든다. 미완성 여러 개보다 완성 하나.</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">1:30 – 2:00</div>
+      <div class="bt">③ 쇼케이스 — 내놓기 <span class="spine-tag">진짜 관객</span></div>
+      <ul>
+        <li>각자 완성작 발표: <b>무엇을 · 누구를 위해 · 어떻게 막힌 걸 뚫었나</b>. (가능하면 가족 앞에서)</li>
+        <li>서로 피드백 한마디 + 완성작을 <b>공유 폴더/온라인에 공개</b>.</li>
+        <li>마무리 예고: "이제 <b>수업 없이도 스스로</b> — 앞으로 <b>메이커 루프</b>로 계속 만든다."</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수준별</div>
+    <h2 class="sec-title">초등학생 / 중학생 다르게</h2>
+    <div class="two">
+      <div class="lvl a"><h4>초등학생</h4><p>완성 기준을 작게(예: "우리 가족이 한 번 써보고 웃으면 성공"). 지난 작품을 조금 다듬어 내놓아도 훌륭한 완성.</p></div>
+      <div class="lvl b"><h4>중학생</h4><p>'남이 진짜 쓰는' 기준을 높게 — 실제 사용자 1명에게 테스트받고 고치기. 실생활 문제(공부·발표·용돈 등) 해결형에 도전.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">기억할 것</div>
+    <h2 class="sec-title">오늘의 포인트</h2>
+    <div class="callout">
+      캡스톤의 핵심은 실력 과시가 아니라 <b>"끝내서 진짜 관객에게 내놓는 경험"</b>입니다 — 이 '완성 → 공개 → 피드백'의 반복이 오래 쌓여야 진짜 실력·작품군이 됩니다. 그러니 <b>완벽보다 완성</b>, 범위를 줄여서라도 끝내게 하세요. 그리고 오늘은 마지막이 아니라 <b>시작</b>입니다 — 대시보드의 <b>'메이커 루프'</b>로 이어집니다.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w9-slides.html">🖥️ 학생용 수업 자료(슬라이드) 열기 →</a>
+    <a href="gemini.html">🎨 Gemini·Flow 가이드</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>W9 캡스톤 상세 수업안 · AI 자립 커리큘럼 · 자립 최우선 · 초등학생·중학생</footer>
+</div>
+</body>
+</html>

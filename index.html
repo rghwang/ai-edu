@@ -54,6 +54,12 @@
   .phase-bar{display:flex;align-items:center;gap:10px;margin:24px 0 12px;font-family:'Hahmlet',serif;font-weight:700;font-size:1.1rem;}
   .phase-bar .pdot{width:10px;height:10px;border-radius:50%;background:var(--clay);}
   .phase-bar .pw{font-size:.74rem;font-weight:600;color:var(--ink-soft);background:var(--paper-2);border-radius:20px;padding:2px 10px;letter-spacing:.03em;}
+  .loop-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+  .loop-box ul{margin:0 0 0 18px;padding:0;}
+  .loop-box li{font-size:.92rem;color:var(--ink-soft);margin-bottom:7px;}
+  .loop-box li b{color:var(--ink);font-weight:600;}
+  .loop-signal{margin-top:12px;background:var(--teal-soft);border-radius:10px;padding:11px 14px;font-size:.88rem;color:var(--teal);}
+  .loop-signal b{font-weight:700;}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;position:relative;border-left:4px solid var(--line);transition:border-color .3s;}
   .card.s-doing{border-left-color:var(--doing);}
@@ -137,6 +143,22 @@
     <div id="phase2List"></div>
   </section>
 
+  <section>
+    <div class="sec-head">W9 이후 · 계속 굴러가기</div>
+    <h2 class="sec-title">메이커 루프 — 수업 없이도 스스로</h2>
+    <p class="sec-lead">구조화된 수업(W1~W9)은 여기서 매듭. 이후엔 아이가 스스로 만들고 내놓는 걸 가벼운 리듬으로 이어간다 — 선생님은 '가르치는 사람'에서 '코치'로.</p>
+    <div class="loop-box">
+      <ul>
+        <li><b>매 사이클은 '내놓기'로 끝난다</b> — 가족·친구·온라인 등 진짜 관객에게.</li>
+        <li><b>포트폴리오가 쌓인다</b> — 만든 건 계속 공유 드라이브 폴더에.</li>
+        <li><b>가벼운 테마·제약을 던진다</b> — "아무거나"의 막막함을 막고 아이디어를 끌어냄.</li>
+        <li><b>몇 사이클마다 쇼케이스</b> — 마감이 완성을 만든다.</li>
+        <li><b>리듬은 가볍게</b> — 격주 또는 '만들 게 생겼을 때'. 매주가 아니어도 OK, 어른도 지속가능하게.</li>
+      </ul>
+      <div class="loop-signal">✦ 종료 신호 — 세션 사이에 <b>시키지 않아도 스스로 만들어 오기</b> 시작하면, 루프는 제 역할을 다한 것. 그땐 아주 가볍게 하거나 쉬어도 됩니다. (성공의 척도 = "수업 밖에서 스스로 무엇을 했나")</div>
+    </div>
+  </section>
+
   <footer>
     <div>우리 교실 AI 수업 현황 · 매주 일요일 2시간 · 초등학생·중학생 혼합 · 자립 최우선</div>
     <div class="save-hint">진행 상황과 메모는 이 브라우저에 저장됩니다(기기마다 따로). 같은 기기·브라우저로 열면 그대로 이어집니다.</div>
@@ -161,7 +183,7 @@
     {id:'w3', wk:'W8', title:'미래의 나 웹툰 → 애니메이션', note:'10년 뒤 나로 이야기·캐릭터·웹툰을 만들고, Google Flow로 움직이는 애니메이션까지 (한 수업에 웹툰+애니 완성)', tag:'good', tagText:'완료', links:[{label:'📋 1부 웹툰', href:'w8.html'},{label:'🎬 2부 애니', href:'w8-anim.html'}]}
   ];
   var phase1 = [
-    {id:'w6', wk:'W9', skill:'스스로 기획→제작 + 혼자서도 계속', desc:'자유 프로젝트 + 마무리 — 틀 없이 내가 고른 걸 만들고, 다음에 혼자 할 것 설계·발표 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
+    {id:'w6', wk:'W9', skill:'기획 → 완성 → 공개 (캡스톤)', desc:'캡스톤 — 자유롭게 고른 프로젝트를 "남이 쓰거나 볼 수 있는 수준"까지 완성해 쇼케이스로 내놓기 (구조 수업의 매듭)', mission:'완성해서 진짜 관객(가족·친구·온라인)에게 보여주고 반응 적어오기', links:[{label:'📋 상세 수업안', href:'w9.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w9-slides.html'}]}
   ];
   var phase2 = [];
 
