@@ -129,7 +129,7 @@
   </section>
 
   <section>
-    <div class="sec-head">앞으로의 커리큘럼 · W8–W10</div>
+    <div class="sec-head">앞으로의 커리큘럼 · W9</div>
     <h2 class="sec-title">관심사로 만들며 자립을 키운다</h2>
     <p class="sec-lead">매주 중심은 '자립 스킬' 하나와 그걸 시험하는 수업 밖 '집 미션'. 뒤로 갈수록 선생님 도움은 줄고 아이가 스스로 끌고 간다.</p>
 
@@ -157,15 +157,13 @@
     {id:'p5', wk:'W4', title:'방탈출 게임 만들기', note:'1차 제작은 됨 · 개선·반복이 어려웠음', tag:'fix', tagText:'보완 포인트'},
     {id:'p6', wk:'W5', title:'파일·폴더 개념', note:'아이패드·맥 기기 차이로 진행이 쉽지 않았음', tag:'fix', tagText:'보완 포인트'},
     {id:'w1', wk:'W6', title:'이미지·영상 맛보기 + 고르기', note:'Gemini 이미지·영상으로 손풀고 내가 만들 걸 스스로 정하기 — 새 커리큘럼 첫 주', tag:'good', tagText:'완료', links:[{label:'📋 수업안', href:'w6.html'},{label:'🖥️ 슬라이드', href:'w6-slides.html'},{label:'🎨 Gemini 가이드', href:'gemini.html'}]},
-    {id:'w2', wk:'W7', title:'관심사 도감 슬라이드', note:'Gemini로 찾고 "이거 진짜야?" 확인해 실제 도감 책처럼 슬라이드로 — 축구 선수·동물·레고 등', tag:'good', tagText:'완료', links:[{label:'📋 수업안', href:'w7.html'},{label:'🖥️ 슬라이드', href:'w7-slides.html'},{label:'📚 도감 예시(레고)', href:'examples/lego-heritage-dogam.pdf'}]}
+    {id:'w2', wk:'W7', title:'관심사 도감 슬라이드', note:'Gemini로 찾고 "이거 진짜야?" 확인해 실제 도감 책처럼 슬라이드로 — 축구 선수·동물·레고 등', tag:'good', tagText:'완료', links:[{label:'📋 수업안', href:'w7.html'},{label:'🖥️ 슬라이드', href:'w7-slides.html'},{label:'📚 도감 예시(레고)', href:'examples/lego-heritage-dogam.pdf'}]},
+    {id:'w3', wk:'W8', title:'미래의 나 웹툰 → 애니메이션', note:'10년 뒤 나로 이야기·캐릭터·웹툰을 만들고, Google Flow로 움직이는 애니메이션까지 (2주에 걸쳐 완성)', tag:'good', tagText:'완료', links:[{label:'📋 1부 웹툰', href:'w8.html'},{label:'🎬 2부 애니', href:'w8-anim.html'}]}
   ];
   var phase1 = [
-    {id:'w3', wk:'W8', skill:'이야기 기획 → 완성', desc:'미래의 나 웹툰 — 10년 뒤 나로 이야기를 쓰고 주인공 캐릭터를 만들어 세로 스크롤 한국 웹툰으로 (이야기 → 캐릭터 시트 → 웹툰)', mission:'이야기를 이어 장면 몇 컷 더 그려오기', links:[{label:'📋 상세 수업안', href:'w8.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w8-slides.html'}]},
-    {id:'w4', wk:'W9', skill:'내 작품 키우기', desc:'내 웹툰으로 애니메이션 — W8 웹툰을 Google Flow로 움직이는 짧은 애니메이션으로', mission:'장면 더 움직이게 / 소리·음악 더해 오기', links:[{label:'📋 상세 수업안', href:'w9.html'},{label:'🖥️ 수업 자료(슬라이드)', href:'w9-slides.html'}]}
+    {id:'w6', wk:'W9', skill:'스스로 기획→제작 + 혼자서도 계속', desc:'자유 프로젝트 + 마무리 — 틀 없이 내가 고른 걸 만들고, 다음에 혼자 할 것 설계·발표 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
   ];
-  var phase2 = [
-    {id:'w6', wk:'W10', skill:'스스로 기획→제작 + 혼자서도 계속', desc:'자유 프로젝트 + 마무리 — 틀 없이 내가 고른 걸 만들고, 다음에 혼자 할 것 설계·발표 (+쇼케이스·가치관)', mission:'다음에 혼자 할 프로젝트 계획서 + 발표'}
-  ];
+  var phase2 = [];
 
   var ALL_IDS = past.map(function(x){return x.id;})
     .concat(phase1.map(function(x){return x.id;}))
