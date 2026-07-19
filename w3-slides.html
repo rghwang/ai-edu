@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 수업 자료 · 학생용</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);overflow:hidden;
+    background-image:radial-gradient(circle at 12% 10%, rgba(216,151,58,.12), transparent 40%),radial-gradient(circle at 88% 88%, rgba(63,107,99,.10), transparent 42%);}
+  .stage{height:100vh;width:100%;position:relative;}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6vh 7vw;}
+  .slide.active{display:flex;animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  .tag{font-size:clamp(.8rem,2vw,1rem);letter-spacing:.28em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:24px;}
+  h1{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(2rem,6.4vw,4rem);line-height:1.16;letter-spacing:-.02em;}
+  h2{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.8rem,5.4vw,3.2rem);line-height:1.2;margin-bottom:28px;}
+  p.big{font-size:clamp(1.1rem,3vw,1.7rem);color:var(--ink-soft);max-width:24ch;line-height:1.5;}
+  .accent{color:var(--clay-deep);} .teal{color:var(--teal);}
+  .cards3{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;max-width:920px;}
+  .c3{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:24px 22px;min-width:200px;flex:1;}
+  .c3 .n{font-family:'Hahmlet',serif;font-size:1.5rem;color:var(--amber);font-weight:800;}
+  .c3 .t{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.1rem,2.6vw,1.5rem);margin:6px 0;}
+  .c3 .d{font-size:clamp(.9rem,2vw,1.05rem);color:var(--ink-soft);}
+  .pill-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+  .pill{background:var(--teal-soft);color:var(--teal);border-radius:30px;padding:12px 26px;font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1rem,2.6vw,1.4rem);border:2px solid #c7d8d2;}
+  .example{background:var(--card);border:2px dashed var(--clay);border-radius:16px;padding:20px 26px;margin-top:22px;font-size:clamp(1rem,2.6vw,1.45rem);max-width:26ch;color:var(--ink);}
+  .example b{color:var(--clay-deep);}
+  .mission{background:var(--card);border:2px solid var(--teal);border-radius:18px;padding:26px 28px;font-size:clamp(1.15rem,3.2vw,1.9rem);font-family:'Hahmlet',serif;font-weight:700;line-height:1.5;max-width:22ch;}
+  .nav{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:10;}
+  .nav button{background:var(--card);border:2px solid var(--line);color:var(--ink);width:48px;height:48px;border-radius:50%;font-size:1.4rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .nav button:hover{border-color:var(--clay);color:var(--clay-deep);} .nav button:disabled{opacity:.35;cursor:default;}
+  .counter{font-family:'Hahmlet',serif;font-weight:700;color:var(--ink-soft);font-size:.95rem;min-width:54px;text-align:center;}
+  .dots{position:fixed;top:20px;left:0;right:0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:10;}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .2s,transform .2s;}
+  .dots i.on{background:var(--clay);transform:scale(1.25);}
+  .hint{position:fixed;bottom:24px;right:22px;font-size:.74rem;color:#a89c83;z-index:10;}
+  .home{position:fixed;top:16px;right:18px;font-size:.78rem;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:10;}
+  @media(max-width:560px){.hint{display:none;}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a>
+<div class="dots" id="dots"></div>
+
+<div class="stage" id="stage">
+
+  <section class="slide active">
+    <div class="tag">W3 · 오늘의 수업</div>
+    <h1>쓸모있는 앱 만들기<br><span class="accent">— 투두리스트</span> ✅</h1>
+  </section>
+
+  <section class="slide">
+    <div class="tag">왜 앱?</div>
+    <h2>내 <span class="teal">생활</span>을 편하게</h2>
+    <p class="big">할 일 목록, 용돈 계산, 타이머… 내가 진짜 쓸 걸 직접 만든다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="tag">오늘 만들 것</div>
+    <h2><span class="accent">할 일 목록</span> 앱</h2>
+    <p class="big">할 일을 <b>추가 · 완료 · 삭제</b>하는 나만의 투두리스트.</p>
+  </section>
+
+  <section class="slide">
+    <div class="tag">틀부터</div>
+    <h2>Claude에게 <span class="teal">주문</span> 💬</h2>
+    <div class="example">"<b>할 일 추가·완료·삭제 되는 투두 앱</b> 만들어줘"</div>
+  </section>
+
+  <section class="slide">
+    <div class="tag">내 것으로</div>
+    <h2>하나씩 <span class="accent">바꾸기</span> 🎨</h2>
+    <div class="pill-row">
+      <span class="pill">색 바꾸기</span>
+      <span class="pill">제목 넣기</span>
+      <span class="pill">기능 하나 추가</span>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="tag">막히면</div>
+    <h2>안 되는 곳만 <span class="accent">다시</span> 🔁</h2>
+    <p class="big">"완료 버튼이 안 눌려. 고쳐줘" 처럼 콕 집어서 다시 시키기.</p>
+  </section>
+
+  <section class="slide">
+    <div class="tag">오늘의 미션</div>
+    <div class="mission">내가 진짜 쓸<br><span class="accent">앱 하나</span>로 다듬기 📱</div>
+    <p class="big" style="margin-top:22px">집에서도 한 번 써보자!</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="이전">‹</button>
+  <span class="counter"><span id="cur">1</span> / <span id="tot">7</span></span>
+  <button id="next" aria-label="다음">›</button>
+</div>
+<div class="hint">← → 방향키 · 클릭으로 넘기기</div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var cur=document.getElementById('cur'),tot=document.getElementById('tot');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  var dotsWrap=document.getElementById('dots');
+  tot.textContent=n;
+  slides.forEach(function(_,k){var d=document.createElement('i');d.addEventListener('click',function(e){e.stopPropagation();go(k);});dotsWrap.appendChild(d);});
+  var dots=Array.prototype.slice.call(dotsWrap.children);
+  function go(k){if(k<0||k>=n)return;slides[i].classList.remove('active');i=k;slides[i].classList.add('active');cur.textContent=i+1;dots.forEach(function(d,j){d.classList.toggle('on',j===i);});prev.disabled=(i===0);next.disabled=(i===n-1);}
+  function step(d){go(i+d);}
+  prev.addEventListener('click',function(e){e.stopPropagation();step(-1);});
+  next.addEventListener('click',function(e){e.stopPropagation();step(1);});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')step(1);else if(e.key==='ArrowLeft')step(-1);});
+  document.getElementById('stage').addEventListener('click',function(){step(1);});
+  go(0);
+})();
+</script>
+</body>
+</html>
