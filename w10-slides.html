@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W10 수업 자료 · 학생용</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--paper-2:#efe5d2;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);overflow:hidden;
+    background-image:radial-gradient(circle at 12% 10%, rgba(216,151,58,.12), transparent 40%),radial-gradient(circle at 88% 88%, rgba(63,107,99,.10), transparent 42%);}
+  .stage{height:100vh;width:100%;position:relative;}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:7vh 8vw;}
+  .slide.active{display:flex;animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  .inner{width:100%;max-width:940px;margin:0 auto;}
+  .kicker{font-family:'IBM Plex Sans KR';font-size:clamp(.72rem,1.5vw,.9rem);letter-spacing:.24em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;display:inline-flex;align-items:center;gap:.7em;margin-bottom:clamp(14px,2vw,24px);}
+  .kicker::before{content:"";width:26px;height:2px;background:var(--clay);display:inline-block;}
+  h1{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(2rem,6.2vw,3.9rem);line-height:1.1;letter-spacing:-.01em;}
+  h2{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.6rem,4.4vw,2.9rem);line-height:1.15;}
+  p.big{font-family:'IBM Plex Sans KR';color:var(--ink-soft);font-weight:500;font-size:clamp(1rem,2.2vw,1.45rem);line-height:1.5;margin-top:clamp(14px,1.8vw,22px);max-width:44ch;}
+  .accent{color:var(--clay-deep);} .teal{color:var(--teal);} .amber{color:var(--amber);}
+  .center{text-align:center;align-items:center;}
+  .center .inner{display:flex;flex-direction:column;align-items:center;}
+  .center p.big{max-width:34ch;}
+
+  /* title */
+  .badge{font-family:'IBM Plex Sans KR';font-size:clamp(.7rem,1.4vw,.85rem);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:.5em 1.1em;display:inline-block;margin-bottom:clamp(18px,2.4vw,30px);background:var(--card);}
+  .pill-row{margin-top:clamp(18px,2.4vw,30px);display:flex;gap:12px;flex-wrap:wrap;}
+  .pill{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(.95rem,1.8vw,1.25rem);padding:.6em 1.1em;border-radius:14px;background:var(--card);border:1px solid var(--line);}
+  .pill b{color:var(--amber);}
+
+  /* divider */
+  .divider{background:linear-gradient(160deg,var(--paper-2),var(--paper));}
+  .part-no{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(64px,16vw,200px);line-height:.9;color:transparent;-webkit-text-stroke:2px var(--clay);letter-spacing:-.02em;}
+  .divider.teal .part-no{-webkit-text-stroke-color:var(--teal);}
+
+  /* steps */
+  .steps{margin-top:clamp(20px,2.6vw,34px);display:grid;gap:clamp(12px,1.5vw,18px);}
+  .step{display:flex;gap:clamp(14px,1.8vw,24px);align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(15px,2vw,24px) clamp(18px,2.2vw,28px);}
+  .step .n{font-family:'Hahmlet',serif;font-weight:800;flex:none;font-size:clamp(1.1rem,2.2vw,1.6rem);color:var(--amber);min-width:1.4em;}
+  .step .t{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.05rem,2.2vw,1.5rem);line-height:1.25;}
+  .step .d{color:var(--ink-soft);font-weight:500;font-size:clamp(.9rem,1.7vw,1.15rem);margin-top:.3em;line-height:1.45;}
+
+  /* stage tags */
+  .stag{font-family:'IBM Plex Sans KR';font-size:clamp(.72rem,1.3vw,.9rem);letter-spacing:.16em;text-transform:uppercase;padding:.4em .85em;border-radius:8px;font-weight:700;display:inline-block;margin-bottom:clamp(12px,1.6vw,20px);}
+  .stag.start{background:#f4e3d4;color:var(--clay-deep);}
+  .stag.mid{background:#f6ecd2;color:#9a7010;}
+  .stag.end{background:var(--teal-soft);color:var(--teal);}
+
+  /* compare cards */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.8vw,22px);margin-top:clamp(20px,2.6vw,32px);}
+  .cbox{border-radius:16px;padding:clamp(16px,2vw,24px);border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;gap:.6em;}
+  .cbox.bad{border-color:#e0b89c;background:#fbf0e6;}
+  .cbox.good{border-color:#b9d0c9;background:var(--teal-soft);}
+  .clabel{font-weight:800;font-size:clamp(.8rem,1.3vw,.95rem);letter-spacing:.04em;}
+  .cbox.bad .clabel{color:var(--clay-deep);} .cbox.good .clabel{color:var(--teal);}
+  .cmsg{font-size:clamp(.95rem,1.8vw,1.2rem);line-height:1.5;color:var(--ink);}
+  .cmsg .who{color:var(--ink-soft);margin-right:.5em;font-size:.82em;}
+  .cout{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(.95rem,1.7vw,1.2rem);margin-top:.3em;}
+  .cout.teal{color:var(--teal);}
+  .cur{display:inline-block;width:.55em;height:1em;background:var(--clay);transform:translateY(.15em);margin-left:.1em;animation:blink 1.05s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* single prompt box */
+  .promptbox{background:var(--card);border:2px dashed var(--clay);border-radius:16px;padding:clamp(16px,2vw,24px);margin-top:clamp(18px,2.2vw,26px);font-size:clamp(1rem,1.9vw,1.3rem);line-height:1.5;color:var(--ink);}
+
+  /* analogy */
+  .analogybig{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(1.8rem,5vw,3.6rem);line-height:1.1;letter-spacing:-.01em;margin-top:.2em;}
+  .analogybig u{text-decoration:none;color:var(--amber);}
+
+  /* memo bars */
+  .memo{margin-top:clamp(18px,2.2vw,28px);display:grid;gap:clamp(12px,1.5vw,18px);}
+  .memo .m{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(13px,1.7vw,20px) clamp(16px,2vw,24px);}
+  .memo .mh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .memo .name{font-family:'Hahmlet',serif;font-weight:800;font-size:clamp(1.05rem,2vw,1.5rem);}
+  .memo .amt{color:var(--ink-soft);font-size:clamp(.8rem,1.4vw,1rem);}
+  .memo .track{height:clamp(12px,1.4vw,16px);background:var(--paper-2);border:1px solid var(--line);border-radius:999px;margin-top:.6em;overflow:hidden;}
+  .memo .fill{height:100%;border-radius:999px;}
+  .memo .books{font-weight:700;font-size:clamp(.9rem,1.7vw,1.15rem);margin-top:.5em;}
+  .memo .books span{color:var(--ink-soft);font-weight:500;font-size:.85em;}
+
+  /* dead tricks */
+  .dead{display:grid;gap:clamp(11px,1.4vw,15px);margin-top:clamp(18px,2.2vw,28px);}
+  .dead .x{display:flex;align-items:center;gap:14px;background:#fbf0e6;border:1px dashed #e0b89c;border-radius:14px;padding:clamp(13px,1.6vw,19px) clamp(16px,2vw,24px);font-size:clamp(.95rem,1.8vw,1.25rem);color:#8a5a3f;text-decoration:line-through;text-decoration-color:rgba(189,90,50,.5);}
+  .dead .x::before{content:"✕";color:var(--clay);font-weight:800;text-decoration:none;flex:none;}
+
+  /* checklist */
+  .check{margin-top:clamp(20px,2.6vw,32px);display:grid;gap:clamp(11px,1.4vw,15px);}
+  .check .row{display:flex;align-items:center;gap:clamp(13px,1.8vw,22px);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(14px,1.8vw,21px) clamp(16px,2vw,24px);}
+  .check .cbx{flex:none;width:clamp(28px,3.2vw,40px);height:clamp(28px,3.2vw,40px);border:2.5px solid var(--teal);border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--teal);font-weight:900;font-size:clamp(15px,1.9vw,22px);}
+  .check .q{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1rem,2vw,1.4rem);}
+  .check .q span{color:var(--ink-soft);font-weight:500;font-size:.8em;}
+
+  /* closing grid */
+  .closeg{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.8vw,22px);margin-top:clamp(20px,2.6vw,32px);}
+  .cc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,2.2vw,28px);}
+  .cc .h{font-family:'IBM Plex Sans KR';font-size:clamp(.72rem,1.3vw,.9rem);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:.6em;}
+  .cc p{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.05rem,2vw,1.45rem);line-height:1.3;}
+  .cc small{display:block;color:var(--ink-soft);font-weight:500;font-size:clamp(.85rem,1.5vw,1.05rem);margin-top:.5em;line-height:1.45;}
+
+  /* nav */
+  .nav{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:10;}
+  .nav button{background:var(--card);border:2px solid var(--line);color:var(--ink);width:46px;height:46px;border-radius:50%;font-size:1.4rem;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .nav button:hover{border-color:var(--clay);color:var(--clay-deep);} .nav button:disabled{opacity:.35;cursor:default;}
+  .counter{font-family:'Hahmlet',serif;font-weight:700;color:var(--ink-soft);font-size:.95rem;min-width:54px;text-align:center;}
+  .dots{position:fixed;top:16px;left:0;right:0;display:flex;gap:7px;justify-content:center;flex-wrap:wrap;padding:0 60px;z-index:10;}
+  .dots i{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .2s,transform .2s;}
+  .dots i.on{background:var(--clay);transform:scale(1.25);}
+  .hint{position:fixed;bottom:24px;right:22px;font-size:.74rem;color:#a89c83;z-index:10;}
+  .home{position:fixed;top:14px;right:18px;font-size:.78rem;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:10;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px;}
+  @media(max-width:640px){.cmp,.closeg{grid-template-columns:1fr;}.hint{display:none;}}
+</style>
+</head>
+<body>
+<a class="home" href="w10.html">수업안 ↗</a>
+<div class="dots" id="dots"></div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide active center">
+    <div class="inner">
+      <span class="badge">오늘의 미션 · 자유 제작</span>
+      <h1>혼자 계속 하는 힘<br><span class="teal">+</span> AI에게 잘 시키기</h1>
+      <div class="pill-row">
+        <span class="pill"><b>①</b> 혼자 계속 하는 습관</span>
+        <span class="pill"><b>②</b> AI에게 잘 시키는 법</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 OPENING -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">여는 5분</span>
+      <h2>지난주에 집에서 뭐 했어?</h2>
+      <p class="big">한 명씩 돌아가며 <span class="amber">한 줄</span>로 보고. 못 했어도 괜찮아 — "그럼 오늘 나가면서 뭐부터 할래?"로 넘어가면 돼.</p>
+    </div>
+  </section>
+
+  <!-- 3 TODAY -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">오늘 배우는 것</span>
+      <h2>딱 두 가지만.</h2>
+      <div class="steps">
+        <div class="step"><div class="n">①</div><div><div class="t">혼자 계속 하는 습관</div><div class="d">시작 → 막힘 뚫기 → 마무리. 수업이 끝나도 집에서 혼자 이어갈 수 있게.</div></div></div>
+        <div class="step"><div class="n">②</div><div><div class="t">AI에게 잘 시키는 법</div><div class="d">원하는 걸 정확히 얻어내는 4가지 습관.</div></div></div>
+      </div>
+      <p class="big">오늘은 만드는 게 목표가 아니야. <span class="teal">혼자 계속 하는 힘</span>을 몸에 붙이는 날.</p>
+    </div>
+  </section>
+
+  <!-- 4 PART 1 -->
+  <section class="slide divider center">
+    <div class="inner">
+      <div class="part-no">01</div>
+      <h1>혼자 계속 하는 힘</h1>
+      <p class="big">시작 · 중간 · 마무리. 이 세 동작만 습관이 되면 혼자서도 안 멈춰.</p>
+    </div>
+  </section>
+
+  <!-- 5 START -->
+  <section class="slide">
+    <div class="inner">
+      <span class="stag start">START · 시작</span>
+      <h2>오늘 끝낼 <span class="accent">한 조각</span>으로 쪼개기</h2>
+      <div class="steps">
+        <div class="step"><div class="n">Q1</div><div><div class="t">오늘 뭘 만들 거야?</div></div></div>
+        <div class="step"><div class="n">Q2</div><div><div class="t">그걸 오늘 안에 끝낼 수 있는 크기로 쪼개면?</div><div class="d">"게임 만들기" ✕ → "캐릭터가 점프하게 만들기" ⭕. 못 쪼개면 손 들어 — 같이 쪼개자.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 MIDDLE -->
+  <section class="slide">
+    <div class="inner">
+      <span class="stag mid">MIDDLE · 막혔을 때</span>
+      <h2>손 들기 전에 <span class="amber">3번</span> 시도.</h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div><div class="t">AI에게 물어보기</div><div class="d">모르는 건 검색도 AI한테 시키면 돼.</div></div></div>
+        <div class="step"><div class="n">2</div><div><div class="t">질문을 바꿔서 다시 물어보기</div><div class="d">더 구체적으로, 배경을 붙여서.</div></div></div>
+        <div class="step"><div class="n">3</div><div><div class="t">더 잘게 쪼개보기</div></div></div>
+      </div>
+      <p class="big">셋 다 해보고도 막히면 그때 불러. 나는 대신 고쳐주지 않고 <span class="teal">"뭐 시도했어?"</span>부터 물어볼 거야.</p>
+    </div>
+  </section>
+
+  <!-- 7 END -->
+  <section class="slide">
+    <div class="inner">
+      <span class="stag end">END · 마무리</span>
+      <h2>다음 걸음을 <span class="teal">'시작한 상태'</span>로 남기기</h2>
+      <p class="big">다음에 뭐 할지 정하는 걸 넘어서, 그 <span class="amber">첫 줄·첫 클릭까지</span> 지금 해두고 나가. 집에선 '새로 시작'이 아니라 '이어하기'라 훨씬 쉬워.</p>
+      <div class="steps">
+        <div class="step"><div class="n">✎</div><div><div class="t">작업하던 자리에 "다음 한 걸음" 바로 메모하기</div><div class="d">그리고 그 첫 동작을 딱 여기서 시작해두기 — 다음엔 이어서만 하면 돼.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 PART 2 -->
+  <section class="slide divider teal center">
+    <div class="inner">
+      <div class="part-no">02</div>
+      <h1>AI에게 잘 시키기</h1>
+      <p class="big">'요령'이 아니라 '습관'. 모델이 뭐로 바뀌어도 안 죽는 것만 배운다.</p>
+    </div>
+  </section>
+
+  <!-- 9 ANALOGY -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">먼저, AI를 이렇게 생각해</span>
+      <div class="analogybig">AI는 <u>방금 기억상실증에서 깬<br>천재 친구</u>야.</div>
+      <p class="big">엄청 똑똑하지만 — 네가 뭘 하려는지, 어제 뭘 했는지, 왜 이걸 하는지 <span class="accent">하나도 몰라</span>. 그래서 배경을 안 주면 아무리 똑똑해도 헛다리를 짚어.</p>
+    </div>
+  </section>
+
+  <!-- 10 PROMPT -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">용어 ① · PROMPT</span>
+      <h2>프롬프트 = <span class="teal">지금 내가 치는 한 마디</span></h2>
+      <div class="promptbox">공룡 캐릭터 하나 그려줘<span class="cur"></span></div>
+      <p class="big">AI에게 주는 <span class="teal">이번 지시 하나</span>. 딱 지금 이 순간의 부탁이야.</p>
+    </div>
+  </section>
+
+  <!-- 11 CONTEXT (대화 맥락) -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">용어 ② · CONTEXT</span>
+      <h2>컨텍스트 = <span class="amber">지금까지의 대화 전부</span></h2>
+      <div class="cmp" style="grid-template-columns:1fr">
+        <div class="cbox good">
+          <div class="cmsg"><span class="who">아까 내가</span>주인공은 겁 많은 파란 로봇이야</div>
+          <div class="cmsg"><span class="who">지금 내가</span>걔를 더 용감하게 그려줘</div>
+          <div class="cout teal">→ AI가 '걔'를 알아듣는 건, 앞 대화를 기억하니까.</div>
+        </div>
+      </div>
+      <p class="big">그 기억이 <span class="amber">컨텍스트</span>. 새 창에서 똑같이 물으면? <span class="accent">"걔가 누구…?"</span></p>
+    </div>
+  </section>
+
+  <!-- 12 CONTEXT SIZE -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">AI마다 기억 크기가 달라</span>
+      <h2>한 번에 읽는 <span class="amber">책 분량</span>으로 치면</h2>
+      <div class="memo">
+        <div class="m">
+          <div class="mh"><span class="name">클로드 <span class="amt">Claude</span></span><span class="amt">기본 20만 토큰</span></div>
+          <div class="track"><div class="fill" style="width:20%;background:var(--clay)"></div></div>
+          <div class="books">📕📕 두꺼운 소설책 약 2권 <span>· 상위 모델은 10권까지</span></div>
+        </div>
+        <div class="m">
+          <div class="mh"><span class="name">챗지피티 <span class="amt">ChatGPT</span></span><span class="amt">최신 100만 토큰</span></div>
+          <div class="track"><div class="fill" style="width:100%;background:var(--amber)"></div></div>
+          <div class="books">📚 책 약 10권 = 3,000쪽 <span>· 무료판은 훨씬 작아</span></div>
+        </div>
+        <div class="m">
+          <div class="mh"><span class="name">제미나이 <span class="amt">Gemini</span></span><span class="amt">100만 토큰</span></div>
+          <div class="track"><div class="fill" style="width:100%;background:var(--teal)"></div></div>
+          <div class="books">📚 책 약 10권 = 3,000쪽 <span>· 최대 100만 이상을 실험 중</span></div>
+        </div>
+      </div>
+      <p class="big">숫자는 <span class="accent">계속 바뀌어</span>. 그리고 크다고 무조건 좋은 것도 아니야 →</p>
+    </div>
+  </section>
+
+  <!-- 13 CONTEXT LIMITS -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">컨텍스트엔 한계가 있어</span>
+      <h2>기억은 <span class="accent">생각보다 빨리 차고</span>, 중간부터 흐릿해져</h2>
+      <div class="steps">
+        <div class="step"><div class="n">📦</div><div><div class="t">내 말만 쌓이는 게 아니야</div><div class="d">AI의 긴 답변, 이미지, 파일까지 전부 자리를 차지해 — 그래서 생각보다 빨리 꽉 차.</div></div></div>
+        <div class="step"><div class="n">🌫</div><div><div class="t">맨 앞·맨 뒤는 잘 기억하는데, 중간은 잘 못 꺼내</div><div class="d">"아까 말했잖아!" 싶을 때 → 화내지 말고 중요한 건 다시 챙겨주기.</div></div></div>
+        <div class="step"><div class="n">⚙</div><div><div class="t">모델마다 '기억할 수 있는 양'도 달라</div><div class="d">너무 길어졌다 싶으면 → 새 대화를 열고 핵심 요약만 들고 가기.</div></div></div>
+      </div>
+      <p class="big">기억상실증 친구가 <span class="amber">노트 한 권</span>을 든 셈 — 노트는 차기도 하고, 가운데 페이지는 잘 안 펴봐.</p>
+    </div>
+  </section>
+
+  <!-- 14 HABIT 1 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">습관 1 / 4 · 프롬프트</span>
+      <h2>구체적으로 말하기</h2>
+      <div class="cmp">
+        <div class="cbox bad"><div class="clabel">흐릿한 지시</div><div class="cmsg">포스터 그려줘</div></div>
+        <div class="cbox good"><div class="clabel">또렷한 지시</div><div class="cmsg">10살 생일파티 포스터. 공룡 테마, 파란색, 세로 방향, 글자 넣을 자리는 비워줘</div></div>
+      </div>
+      <p class="big">원하는 걸 정확히 말하는 것, 그 자체가 실력이야.</p>
+    </div>
+  </section>
+
+  <!-- 15 HABIT 2 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">습관 2 / 4 · 컨텍스트</span>
+      <h2>맥락 챙겨주기</h2>
+      <div class="cmp">
+        <div class="cbox bad"><div class="clabel">배경 없음</div><div class="cmsg">이 이야기 이어서 써줘</div></div>
+        <div class="cbox good"><div class="clabel">배경 있음</div><div class="cmsg">난 12살이고, 우주 탐험 게임을 만드는 중이야. 주인공은 겁 많은 로봇. 이 장면 다음을 이어서 써줘</div></div>
+      </div>
+      <p class="big">기억상실증 친구한테 상황을 먼저 알려주는 거야.</p>
+    </div>
+  </section>
+
+  <!-- 16 HABIT 3 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">습관 3 / 4 · 예시</span>
+      <h2>예시 보여주기</h2>
+      <div class="cmp">
+        <div class="cbox bad"><div class="clabel">예시 없음</div><div class="cmsg">멋진 이름 지어줘</div></div>
+        <div class="cbox good"><div class="clabel">예시 있음</div><div class="cmsg">'번개보이', '그림자여우' 같은 느낌으로 캐릭터 이름 5개 지어줘</div></div>
+      </div>
+      <p class="big">"이런 느낌으로"라고 하나만 보여주면 결과가 확 좋아져.</p>
+    </div>
+  </section>
+
+  <!-- 17 HABIT 4 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">습관 4 / 4 · 제일 중요</span>
+      <h2>보고 → 판단 → <span class="teal">다시 시키기</span></h2>
+      <p class="big">한 방에 완벽하게 안 나와. 그게 정상이야. 결과를 <span class="amber">보고</span>, 뭐가 이상한지 <span class="amber">판단</span>하고, "여기를 이렇게 바꿔줘"로 다시 시키는 것.</p>
+      <div class="steps">
+        <div class="step"><div class="n">↻</div><div><div class="t">"배경이 너무 어두워. 더 밝게, 낮 느낌으로 바꿔줘."</div><div class="d">이 반복이 진짜 실력이고, 모델이 바뀌어도 절대 안 죽는 습관이야.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 DEAD TRICKS -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">이제 안 통해요</span>
+      <h2>이런 <span class="accent">'주문'</span>은 그만.</h2>
+      <div class="dead">
+        <div class="x">"너는 세계 최고 전문가야…"</div>
+        <div class="x">"잘하면 팁 줄게 / 못하면 벌점이야"</div>
+        <div class="x">일단 다 때려넣는 엄청 긴 프롬프트</div>
+      </div>
+      <p class="big">요즘 모델은 <span class="teal">평범하고 명확한 말</span>을 더 잘 알아들어. 연기·과장은 오히려 방해만 돼.</p>
+    </div>
+  </section>
+
+  <!-- 19 CHECKLIST -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">막힘 뚫기 · AI가 말 안 들을 때</span>
+      <h2>4단 체크</h2>
+      <div class="check">
+        <div class="row"><div class="cbx">✓</div><div class="q">구체적으로 말했나? <span>(뭘, 어떻게)</span></div></div>
+        <div class="row"><div class="cbx">✓</div><div class="q">배경을 줬나? <span>(내가 뭐 하는 중인지)</span></div></div>
+        <div class="row"><div class="cbx">✓</div><div class="q">예시를 보여줬나? <span>(이런 느낌으로)</span></div></div>
+        <div class="row"><div class="cbx">✓</div><div class="q">결과를 보고 다시 시켰나? <span>(고쳐줘)</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 TODAY FLOW -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">이제 만들 시간</span>
+      <h2>오늘 할 일</h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div><div class="t">오늘 끝낼 한 조각 정하기</div></div></div>
+        <div class="step"><div class="n">2</div><div><div class="t">만들다 막히면 → 3번 시도 → 그래도 막히면 손들기</div></div></div>
+        <div class="step"><div class="n">3</div><div><div class="t">AI가 말 안 들으면 → 4단 체크</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 CLOSING -->
+  <section class="slide">
+    <div class="inner">
+      <span class="kicker">닫는 5분</span>
+      <h2>나가기 전에.</h2>
+      <div class="closeg">
+        <div class="cc"><div class="h">돌아보기</div><p>오늘 뭘 했어?</p><small>한 줄로 말해보기.</small></div>
+        <div class="cc"><div class="h">다음 걸음</div><p>집에서 이어서 할 첫 걸음은?</p><small>작업하던 자리에 메모하고, 그 첫 동작까지 지금 시작해두기.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 END -->
+  <section class="slide divider teal center">
+    <div class="inner">
+      <span class="kicker">끝 · 홈미션</span>
+      <h1>이번 주,<br>혼자 <span class="teal">한 걸음</span>만.</h1>
+      <p class="big">잘 만드는 게 아니라, 안 멈추는 게 목표야. 다음 주에 뭐 했는지 듣자.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="이전">‹</button>
+  <span class="counter"><span id="cur">1</span> / <span id="tot">22</span></span>
+  <button id="next" aria-label="다음">›</button>
+</div>
+<div class="hint">← → 방향키 · 클릭으로 넘기기</div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var cur=document.getElementById('cur'),tot=document.getElementById('tot');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  var dotsWrap=document.getElementById('dots');
+  tot.textContent=n;
+  slides.forEach(function(_,k){var d=document.createElement('i');d.addEventListener('click',function(e){e.stopPropagation();go(k);});dotsWrap.appendChild(d);});
+  var dots=Array.prototype.slice.call(dotsWrap.children);
+  function go(k){if(k<0||k>=n)return;slides[i].classList.remove('active');i=k;slides[i].classList.add('active');cur.textContent=i+1;dots.forEach(function(d,j){d.classList.toggle('on',j===i);});prev.disabled=(i===0);next.disabled=(i===n-1);}
+  function step(d){go(i+d);}
+  prev.addEventListener('click',function(e){e.stopPropagation();step(-1);});
+  next.addEventListener('click',function(e){e.stopPropagation();step(1);});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')step(1);else if(e.key==='ArrowLeft')step(-1);});
+  document.getElementById('stage').addEventListener('click',function(){step(1);});
+  go(0);
+})();
+</script>
+</body>
+</html>

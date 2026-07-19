@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W10 수업안 · 혼자 굴리는 힘 + AI에게 잘 시키기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--paper-2:#efe5d2;--card:#fffaf0;--ink:#23201a;--ink-soft:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay-deep:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal-soft:#e4ece8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;-webkit-font-smoothing:antialiased;padding-bottom:80px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px;}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600;}
+  .backlink:hover{text-decoration:underline;}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink);}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay);}
+  h1{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25;}
+  .sub{color:var(--ink-soft);margin-top:8px;font-size:.96rem;}
+  .ataglance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.0rem;margin-top:3px;line-height:1.35;}
+  section{padding:38px 0 0;}
+  .sec-head{font-family:'Hahmlet',serif;font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:600;font-size:clamp(1.3rem,3.2vw,1.7rem);margin-bottom:14px;}
+  .checkgroup{margin-bottom:18px;}
+  .checkgroup h3{font-family:'Hahmlet',serif;font-size:1.05rem;color:var(--clay-deep);margin-bottom:8px;}
+  .check{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:7px;font-size:.92rem;}
+  .check .box{flex:none;width:18px;height:18px;border:2px solid var(--clay);border-radius:5px;margin-top:3px;}
+  .check b{font-weight:600;} .check .warn{color:var(--clay-deep);font-weight:600;}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--amber);}
+  .block .time{font-family:'Hahmlet',serif;font-weight:700;color:var(--clay-deep);font-size:.92rem;letter-spacing:.02em;}
+  .block .bt{font-family:'Hahmlet',serif;font-weight:700;font-size:1.15rem;margin:3px 0 8px;}
+  .block ul{margin:0 0 0 18px;padding:0;}
+  .block li{font-size:.92rem;color:var(--ink-soft);margin-bottom:4px;}
+  .block li b{color:var(--ink);font-weight:600;}
+  .block.spine{border-left-color:var(--teal);}
+  .spine-tag{display:inline-block;font-size:.66rem;letter-spacing:.04em;background:var(--teal-soft);color:var(--teal);border-radius:6px;padding:1px 8px;font-weight:600;margin-left:6px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .lvl{border-radius:13px;padding:16px 18px;}
+  .lvl.a{background:#fbf0e6;border:1px solid #e6cdb4;} .lvl.b{background:var(--teal-soft);border:1px solid #c7d8d2;}
+  .lvl h4{font-family:'Hahmlet',serif;font-size:1.05rem;margin-bottom:6px;}
+  .lvl.a h4{color:var(--clay-deep);} .lvl.b h4{color:var(--teal);}
+  .lvl p{font-size:.89rem;color:var(--ink-soft);}
+  .callout{background:#fbf3e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;font-size:.92rem;color:var(--ink-soft);}
+  .callout b{color:var(--ink);}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .links a{text-decoration:none;font-weight:600;font-size:.9rem;border-radius:20px;padding:9px 18px;border:1px solid var(--clay);color:var(--clay-deep);background:var(--card);}
+  .links a.primary{background:var(--clay);color:#fff;border-color:var(--clay);}
+  .links a:hover{opacity:.9;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;color:var(--ink-soft);}
+  @media(max-width:620px){.ataglance{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">← 수업 현황 대시보드로</a>
+
+  <header>
+    <div class="kicker">10주차 · 메이커 루프 · 일요일 2시간</div>
+    <h1>W10 — 혼자 굴리는 힘 + AI에게 잘 시키기</h1>
+    <p class="sub">메이커 루프의 본격 시작. 오늘은 '만들기'보다 <b>두 가지 습관을 몸에 붙이는 날</b> — ① <b>혼자 계속 하는 힘</b>(시작 → 막힘 뚫기 → 마무리), ② <b>AI에게 잘 시키는 법</b>(프롬프트·컨텍스트 개념 + 4습관). 모델이 바뀌어도 안 죽는 것만 배운다.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">자립 스킬</div><div class="v">혼자 굴리기 + AI 잘 시키기</div></div>
+      <div class="ag"><div class="l">새 개념</div><div class="v">프롬프트 · 컨텍스트</div></div>
+      <div class="ag"><div class="l">방식</div><div class="v">개념 → 각자 제작</div></div>
+      <div class="ag"><div class="l">집 미션</div><div class="v">혼자 한 걸음</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">사전 준비 · 수업 전에 끝내둘 것</div>
+    <h2 class="sec-title">준비 체크리스트</h2>
+    <div class="checkgroup">
+      <h3>계정 · 자료</h3>
+      <div class="check"><span class="box"></span><div><b>Gemini 계정 공유</b> — 교사/공용 계정 로그인(Family Link 불필요). 아이별 진행 중인 작업물(드라이브 공유 폴더)도 열어두기.</div></div>
+      <div class="check"><span class="box"></span><div><b>핵심 개념 미리 숙지</b> — 프롬프트=이번 지시 한 마디 / 컨텍스트=지금까지 대화 전부(기억엔 한계). 4습관(구체·맥락·예시·다시 시키기) + '4단 체크'.</div></div>
+      <div class="check"><span class="box"></span><div>학생용 슬라이드 띄울 준비(아래 링크). '4단 체크'는 <b>포스터로 붙여두면</b> 매주 재활용.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수업 흐름 · 2시간</div>
+    <h2 class="sec-title">분 단위 진행</h2>
+
+    <div class="block spine">
+      <div class="time">0:00 – 0:10</div>
+      <div class="bt">여는 5분 · 지난주 한 것 <span class="spine-tag">수업 밖이 무대</span></div>
+      <ul>
+        <li>한 명씩 <b>한 줄</b>로 "집에서 뭐 했어?". 못 했어도 OK — "그럼 오늘 나가면서 뭐부터 할래?"로 넘어가기.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:10 – 0:40</div>
+      <div class="bt">① 혼자 계속 하는 힘 — 시작·중간·마무리</div>
+      <ul>
+        <li><b>시작</b>: 오늘 끝낼 <b>한 조각</b>으로 쪼개기. "게임 만들기" ✕ → "캐릭터 점프시키기" ⭕.</li>
+        <li><b>막혔을 때</b>: 손 들기 전에 <b>3번 시도</b>(AI에 묻기 → 질문 바꿔 다시 → 더 잘게 쪼개기). 그래도 막히면 교사는 답 대신 "뭐 시도했어?"부터.</li>
+        <li><b>마무리</b>: 다음 걸음을 <b>'시작한 상태'</b>로 남기기 — 다음 한 걸음을 메모하고 그 <b>첫 동작까지 지금 해두기</b>(집에선 '이어하기'라 쉬움).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">0:40 – 1:10</div>
+      <div class="bt">② AI에게 잘 시키기 — 개념 + 4습관</div>
+      <ul>
+        <li>비유: "AI는 <b>방금 기억상실증에서 깬 천재 친구</b>" — 똑똑하지만 배경을 안 주면 헛다리.</li>
+        <li>개념: <b>프롬프트</b>(이번 지시 한 마디) · <b>컨텍스트</b>(지금까지 대화 전부 = AI의 기억, 단 <b>빨리 차고 중간은 흐릿</b>·모델마다 크기 다름).</li>
+        <li>4습관: <b>①구체적으로 ②맥락 챙기기 ③예시 보여주기 ④보고→판단→다시 시키기</b>(제일 중요). 죽은 요령(과장 역할극·긴 주문)은 이제 방해만.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="time">1:10 – 1:50</div>
+      <div class="bt">③ 각자 제작 — 오늘 한 조각</div>
+      <ul>
+        <li>정한 한 조각을 만든다. 막히면 <b>3번 시도</b>, AI가 말 안 들으면 <b>4단 체크</b>(구체·배경·예시·다시).</li>
+        <li>교사는 코치 — 답 대신 질문. 초등학생은 옆에서 거들기.</li>
+      </ul>
+    </div>
+
+    <div class="block spine">
+      <div class="time">1:50 – 2:00</div>
+      <div class="bt">닫는 5분 + 홈미션</div>
+      <ul>
+        <li>돌아보기(오늘 뭐 했어? 한 줄) + <b>집에서 이어서 할 첫 걸음</b>을 지금 메모·시작해두기.</li>
+        <li>홈미션: "이번 주, 혼자 <b>한 걸음</b>만." 잘 만드는 게 아니라 <b>안 멈추는 것</b>이 목표.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">수준별</div>
+    <h2 class="sec-title">초등학생 / 중학생 · 성인 다르게</h2>
+    <div class="two">
+      <div class="lvl a"><h4>초등학생</h4><p>'한 조각 쪼개기'와 '3번 시도'를 옆에서 같이. 4습관은 <b>①구체 ④다시 시키기</b> 두 개만 확실히.</p></div>
+      <div class="lvl b"><h4>중학생 · 성인</h4><p>컨텍스트 한계(길어지면 새 대화+요약), 예시 주기까지 직접. 성인은 업무 프롬프트에 4습관을 바로 적용.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">기억할 것</div>
+    <h2 class="sec-title">오늘의 포인트</h2>
+    <div class="callout">
+      오늘 두 가지는 <b>모델이 바뀌어도 안 죽는 것</b>입니다 — '혼자 안 멈추는 힘'과 'AI에게 잘 시키는 습관'. 특히 <b>④ 보고→판단→다시 시키기</b>가 핵심(한 방에 완벽은 없다). 이 두 습관이 그대로 <b>메이커 루프의 엔진</b>이 되어, 수업이 없어도 아이가 혼자 굴러갑니다. 오늘 목표는 완성작이 아니라 <b>습관</b>.
+    </div>
+  </section>
+
+  <div class="links">
+    <a class="primary" href="w10-slides.html">🖥️ 학생용 수업 자료(슬라이드) 열기 →</a>
+    <a href="gemini.html">🎨 Gemini·Flow 가이드</a>
+    <a href="index.html">📊 현황 대시보드</a>
+  </div>
+
+  <footer>W10 상세 수업안 · AI 자립 커리큘럼 · 메이커 루프 · 초등학생·중학생</footer>
+</div>
+</body>
+</html>
