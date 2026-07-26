@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W12 · 맡기는 힘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
+    --ink:#23201a; --mute:#5a5347;
+    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
+    --mono:'Space Mono', ui-monospace, monospace;
+    --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
+    --disp:'Hahmlet', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background-color:var(--paper); color:var(--ink); font-family:var(--sans); overflow:hidden; -webkit-font-smoothing:antialiased;}
+  .deck{position:fixed; inset:0;}
+  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+    padding:clamp(32px,6vw,110px); background-color:var(--paper);
+    background-image:radial-gradient(1100px 600px at 78% -12%, rgba(63,107,99,.10), transparent 60%),
+                     radial-gradient(900px 520px at 8% 108%, rgba(216,151,58,.12), transparent 62%);}
+  .slide.active{display:flex; animation:in .38s ease both;}
+  @keyframes in{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+
+  .bar{position:fixed; left:0; top:0; height:4px; background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal)); width:0; z-index:40; transition:width .3s ease;}
+  .count{position:fixed; right:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:13px; color:var(--mute); z-index:40; letter-spacing:.06em;}
+  .hint{position:fixed; left:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:12px; color:#a89c83; z-index:40;}
+  .home{position:fixed; right:clamp(18px,3vw,38px); top:clamp(14px,2.4vw,22px); font-family:var(--sans); font-size:13px; color:var(--clay-deep); text-decoration:none; font-weight:600; z-index:40; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px;}
+
+  .eyebrow{font-family:var(--sans); font-size:clamp(11px,1.15vw,14px); letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep); font-weight:700; margin-bottom:22px;}
+  .eyebrow.coral{color:var(--clay-deep);} .eyebrow.yellow{color:var(--gold);}
+  h1{font-family:var(--disp); font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.08; letter-spacing:-.02em;}
+  h2{font-family:var(--disp); font-size:clamp(28px,4.6vw,56px); font-weight:800; line-height:1.18; letter-spacing:-.015em; margin-bottom:18px;}
+  h3{font-family:var(--disp); font-size:clamp(19px,2.1vw,26px); font-weight:700; line-height:1.3;}
+  .lead{font-size:clamp(17px,1.85vw,24px); color:var(--mute); line-height:1.65; max-width:46ch; font-weight:500;}
+  .big{font-family:var(--disp); font-size:clamp(24px,3.6vw,44px); font-weight:800; line-height:1.35; letter-spacing:-.01em;}
+  .mono{font-family:var(--mono);}
+  .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
+  .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
+
+  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
+  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
+  .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
+  .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
+  .card.on{border-color:var(--clay); background-color:#fbf0e6;} .card.on .k{color:var(--clay-deep);}
+  .card.dim{opacity:.5;}
+  .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
+  .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
+  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
+  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
+  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
+
+  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
+  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
+  ul.plain li:last-child{border-bottom:none;}
+  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
+  ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
+  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
+  .chip.a{border-color:#b9d0c9; color:var(--teal);}
+  .chip.b{border-color:#e6cf9a; color:var(--gold);}
+  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
+  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
+
+  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
+  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
+  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
+  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
+  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
+  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
+  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
+  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
+
+  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
+  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
+
+  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
+  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
+  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
+  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
+  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
+
+  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
+  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
+  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
+  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
+  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
+  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
+  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
+
+  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
+  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
+  .prompt .val{color:var(--ink);}
+
+  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
+  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
+
+  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
+  @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a>
+<div class="bar" id="bar"></div>
+<div class="count" id="count"></div>
+<div class="hint">← → 또는 클릭</div>
+
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="eyebrow">W12 · 토대 2 / 3</div>
+    <h1>어디까지<br><span class="hi">맡길지</span> 정하기</h1>
+    <div class="rule"></div>
+    <p class="lead">AI에게 말을 잘 거는 법은 배웠다.<br>이번엔 <b class="hi-y">애초에 맡길 일인지</b> 고르는 법.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">지난 시간에서</div>
+    <h2>연료가 정해져 있으면<br><span class="hi">고를 수밖에 없다</span></h2>
+    <p class="lead">무한정 쓸 수 있으면 아무거나 다 시켜도 된다.<br>그런데 아니니까 — <b class="hi-y">뭘 맡길지 고르는 힘</b>이 필요하다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">4D</div>
+    <h2>AI를 쓰는 네 가지 힘</h2>
+    <div class="grid g4">
+      <div class="card on"><div class="k">D1 · Delegation</div><h3>맡기기</h3><p>맡길까, 내가 할까, 같이 할까</p></div>
+      <div class="card dim"><div class="k">D2 · Description</div><h3>설명하기</h3><p>원하는 걸 제대로 전달하기</p></div>
+      <div class="card dim"><div class="k">D3 · Discernment</div><h3>가려내기</h3><p>결과가 진짜인지 판단하기</p></div>
+      <div class="card dim"><div class="k">D4 · Diligence</div><h3>책임지기</h3><p>출처와 저작권, 정직하게 쓰기</p></div>
+    </div>
+    <div class="kicker">오늘은 <span class="hi">D1</span>. 나머지 셋이 전부 여기서 시작된다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">오늘의 질문</div>
+    <h1 style="max-width:16ch;">이거,<br>AI한테 맡길까<br>내가 할까?</h1>
+    <p class="lead" style="margin-top:26px;">시작하기 전에 이 질문을 한 번 던지는 것.<br>오늘 연습할 건 이게 전부다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">분류하기</div>
+    <h2>일을 세 칸으로 나눈다</h2>
+    <div class="grid g3">
+      <div class="card tag-ai">
+        <div class="k">AI가 할 일</div>
+        <p>많고 · 반복되고 · 정답이 정해진 일<br><br>자료 모으기, 표로 정리, 파일 이름 바꾸기, 초안 쓰기</p>
+      </div>
+      <div class="card tag-me">
+        <div class="k">내가 할 일</div>
+        <p>고르고 · 판단하고 · 책임지는 일<br><br>뭘 만들지 정하기, 좋은지 나쁜지 고르기, 마지막 결정</p>
+      </div>
+      <div class="card tag-both">
+        <div class="k">같이 할 일</div>
+        <p>AI가 내놓고 내가 고르는 일<br><br>아이디어 뽑기, 고쳐 쓰기, 어디가 이상한지 찾기</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">경계선</div>
+    <h2>이건 절대 안 넘긴다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>뭘 만들지 정하는 것</b><span>내가 뭘 하고 싶은지는 AI가 모른다</span></li>
+      <li data-n="02"><b>좋은지 나쁜지 판단하는 것</b><span>AI는 "괜찮아 보이는 것"은 만들어도, "좋은 것"을 고르진 못한다</span></li>
+      <li data-n="03"><b>마지막 결정</b><span>내보낼지 말지는 만든 사람이 정한다</span></li>
+    </ul>
+    <div class="kicker">이 셋을 넘기는 순간, 결과물은 <span class="hi">내 것이 아니게 된다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">맡기기 전 3초</div>
+    <h2>세 개만 확인한다</h2>
+    <div class="gates">
+      <div class="gate"><span class="q">01</span><span class="t">틀렸을 때 내가 알아챌 수 있나?</span><span class="no">아니오 →<br>내가 한다</span></div>
+      <div class="gate"><span class="q">02</span><span class="t">잘못돼도 되돌릴 수 있나?</span><span class="no">아니오 →<br>먼저 복사해둔다</span></div>
+      <div class="gate"><span class="q">03</span><span class="t">이게 내가 배워야 할 일인가?</span><span class="no">예 →<br>직접 해본다</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">비교</div>
+    <h2>같은 일도<br>나누면 달라진다</h2>
+    <div class="grid g2">
+      <div class="card dim">
+        <div class="k">통째로 맡기면</div>
+        <h3>"내 소개 웹툰 만들어줘"</h3>
+        <p>나온 결과가 내 얘기가 아니다. 어디를 고쳐야 할지도 모른다.</p>
+      </div>
+      <div class="card on">
+        <div class="k">나눠서 맡기면</div>
+        <h3>줄거리는 내가 · 그림은 AI가 · 컷 순서는 같이</h3>
+        <p>내 이야기가 남고, 어디가 잘못됐는지 바로 보인다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">활동 · 8분</div>
+    <h2>오늘 할 일을 쪼개고<br>이름표 붙이기</h2>
+    <ul class="plain">
+      <li data-n="01"><b>오늘 만들 것을 3~5덩어리로 쪼갠다</b></li>
+      <li data-n="02"><b>각 덩어리에 이름표를 붙인다</b><span>AI가 할 일 / 내가 할 일 / 같이 할 일</span></li>
+      <li data-n="03"><b>맡기기 전 3초 점검을 통과시킨다</b></li>
+      <li data-n="04"><b>그 순서가 오늘의 작업 순서다</b></li>
+    </ul>
+    <div class="kicker">"내가 할 일" 칸이 <span class="hi">비어 있으면 다시 쪼갠다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">맡긴 다음</div>
+    <h2>맡겼다고<br>끝난 게 아니다</h2>
+    <div class="grid g3">
+      <div class="card tag-ai"><div class="k">받고 나서 ①</div><h3>내가 시킨 게 맞나?</h3></div>
+      <div class="card tag-both"><div class="k">받고 나서 ②</div><h3>어디가 이상한가?</h3></div>
+      <div class="card tag-me"><div class="k">받고 나서 ③</div><h3>이걸 내 이름으로 낼 수 있나?</h3></div>
+    </div>
+    <div class="kicker">맡기는 사람의 일은 <span class="hi-y">시키는 것 + 확인하는 것</span>, 두 개다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">오늘의 한 줄</div>
+    <div class="banner">
+      <p class="big">틀렸을 때<br><span class="hi">내가 알아챌 수 있는 일</span>만<br>맡긴다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">다음 시간</div>
+    <h2>여러 단계를<br><span class="hi-y">한꺼번에</span> 맡길 수도<br>있다면?</h2>
+    <p class="lead" style="margin-top:22px;">다음 시간엔 <b>스스로 계획하고 실행하는 AI — 에이전트</b>를 직접 본다.</p>
+    <div class="kicker">이번 주 미션 — 집에서 한 가지 일을 세 칸으로 나눠보고, 어떻게 나눴는지 적어오기.</div>
+  </section>
+
+</div>
+
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));
+  const bar=document.getElementById('bar'), count=document.getElementById('count');
+  let i=0; const pad=n=>String(n).padStart(2,'0');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    count.textContent=pad(i+1)+' / '+pad(slides.length);
+  }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1);}
+    if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1);}
+    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+  });
+  document.getElementById('deck').addEventListener('click',e=>{show(e.clientX<window.innerWidth*0.28?i-1:i+1);});
+  let x0=null;
+  document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>45)show(dx<0?i+1:i-1); x0=null;
+  },{passive:true});
+  show(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W11 · 토큰과 사용량</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
+    --ink:#23201a; --mute:#5a5347;
+    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
+    --mono:'Space Mono', ui-monospace, monospace;
+    --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
+    --disp:'Hahmlet', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background-color:var(--paper); color:var(--ink); font-family:var(--sans); overflow:hidden; -webkit-font-smoothing:antialiased;}
+  .deck{position:fixed; inset:0;}
+  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+    padding:clamp(32px,6vw,110px); background-color:var(--paper);
+    background-image:radial-gradient(1100px 600px at 78% -12%, rgba(63,107,99,.10), transparent 60%),
+                     radial-gradient(900px 520px at 8% 108%, rgba(216,151,58,.12), transparent 62%);}
+  .slide.active{display:flex; animation:in .38s ease both;}
+  @keyframes in{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+
+  .bar{position:fixed; left:0; top:0; height:4px; background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal)); width:0; z-index:40; transition:width .3s ease;}
+  .count{position:fixed; right:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:13px; color:var(--mute); z-index:40; letter-spacing:.06em;}
+  .hint{position:fixed; left:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:12px; color:#a89c83; z-index:40;}
+  .home{position:fixed; right:clamp(18px,3vw,38px); top:clamp(14px,2.4vw,22px); font-family:var(--sans); font-size:13px; color:var(--clay-deep); text-decoration:none; font-weight:600; z-index:40; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px;}
+
+  .eyebrow{font-family:var(--sans); font-size:clamp(11px,1.15vw,14px); letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep); font-weight:700; margin-bottom:22px;}
+  .eyebrow.coral{color:var(--clay-deep);} .eyebrow.yellow{color:var(--gold);}
+  h1{font-family:var(--disp); font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.08; letter-spacing:-.02em;}
+  h2{font-family:var(--disp); font-size:clamp(28px,4.6vw,56px); font-weight:800; line-height:1.18; letter-spacing:-.015em; margin-bottom:18px;}
+  h3{font-family:var(--disp); font-size:clamp(19px,2.1vw,26px); font-weight:700; line-height:1.3;}
+  .lead{font-size:clamp(17px,1.85vw,24px); color:var(--mute); line-height:1.65; max-width:46ch; font-weight:500;}
+  .big{font-family:var(--disp); font-size:clamp(24px,3.6vw,44px); font-weight:800; line-height:1.35; letter-spacing:-.01em;}
+  .mono{font-family:var(--mono);}
+  .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
+  .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
+
+  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
+  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
+  .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
+  .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
+  .card.on{border-color:var(--clay); background-color:#fbf0e6;} .card.on .k{color:var(--clay-deep);}
+  .card.dim{opacity:.5;}
+  .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
+  .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
+  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
+  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
+  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
+
+  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
+  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
+  ul.plain li:last-child{border-bottom:none;}
+  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
+  ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
+  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
+  .chip.a{border-color:#b9d0c9; color:var(--teal);}
+  .chip.b{border-color:#e6cf9a; color:var(--gold);}
+  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
+  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
+
+  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
+  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
+  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
+  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
+  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
+  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
+  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
+  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
+
+  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
+  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
+
+  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
+  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
+  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
+  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
+  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
+
+  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
+  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
+  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
+  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
+  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
+  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
+  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
+
+  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
+  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
+  .prompt .val{color:var(--ink);}
+
+  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
+  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
+
+  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
+  @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a>
+<div class="bar" id="bar"></div>
+<div class="count" id="count"></div>
+<div class="hint">← → 또는 클릭</div>
+
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="eyebrow">W11 · 토대 1 / 3</div>
+    <h1>AI에게도<br><span class="hi">연료</span>가 있다</h1>
+    <div class="rule"></div>
+    <p class="lead">토큰과 사용량. 왜 갑자기 "그만"이라고 하는지,<br>그리고 어떻게 하면 오래 쓸 수 있는지.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">이런 적 있지</div>
+    <h2>"사용 한도에<br>도달했습니다"</h2>
+    <p class="lead">한참 재밌게 만들고 있는데 갑자기 멈춘다.<br>몇 시간을 기다려야 한다.<br><br><b class="hi">왜 그럴까?</b></p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">첫 번째 사실</div>
+    <h2>AI는 글자를<br>그대로 읽지 않는다</h2>
+    <p class="lead">문장을 <b class="hi-c">작은 조각</b>으로 잘라서 읽는다.<br>그 조각 하나를 <b class="hi-c">토큰</b>이라고 부른다.</p>
+    <div class="kicker">글자도 아니고 단어도 아닌, 그 중간쯤 되는 조각.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">쪼개보면</div>
+    <h2>이렇게 잘린다</h2>
+    <div class="chips">
+      <span class="chip a">포켓</span><span class="chip a">몬</span><span class="chip a">을</span>
+      <span class="chip a">좋</span><span class="chip a">아</span><span class="chip a">해</span>
+    </div>
+    <div class="chiplabel">한글 — 조각 6개쯤</div>
+    <div class="chips">
+      <span class="chip b">I</span><span class="chip b"> like</span><span class="chip b"> Pokemon</span>
+    </div>
+    <div class="chiplabel">영어 — 조각 3개쯤</div>
+    <div class="kicker">같은 말인데 <span class="hi-y">한글이 조각을 더 많이 쓴다.</span> 대략 2~3배.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">두 번째 사실</div>
+    <h2>글자만 세는 게 아니다</h2>
+    <div class="grid g3">
+      <div class="card c-cy"><div class="k">내가 쓴 것</div><p>질문, 붙여넣은 글, 올린 파일</p></div>
+      <div class="card c-yl"><div class="k">AI가 답한 것</div><p>답이 길수록 더 많이 쓴다</p></div>
+      <div class="card on"><div class="k">이미지 · 파일</div><p>사진 한 장이 긴 글 한 편만큼</p></div>
+    </div>
+    <div class="kicker">그래서 사진을 여러 장 올리면 <span class="hi">순식간에</span> 줄어든다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">세 번째 사실 · 제일 중요</div>
+    <h2>AI는 매번<br><span class="hi">대화 전체를 다시</span> 읽는다</h2>
+    <p class="lead">기억하고 있는 게 아니다. 내가 말을 걸 때마다<br>처음부터 끝까지 통째로 다시 읽고 답한다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">그래서</div>
+    <h2>뒤로 갈수록 비싸진다</h2>
+    <div class="turns">
+      <div class="turn"><div class="fill"></div><div class="cap">1번째</div></div>
+      <div class="turn"><div class="fill"></div><div class="cap">5번째</div></div>
+      <div class="turn"><div class="fill"></div><div class="cap">15번째</div></div>
+      <div class="turn"><div class="fill"></div><div class="cap">30번째</div></div>
+    </div>
+    <div class="kicker">같은 한 마디라도, 대화 뒤쪽에서 하면 <span class="hi">훨씬 많이 먹는다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">헷갈리는 두 가지</div>
+    <h2>창이 차는 것 ≠<br>사용량이 주는 것</h2>
+    <div class="grid g2">
+      <div class="card c-cy">
+        <div class="k">컨텍스트 창 — 지난주에 배움</div>
+        <h3>한 대화에 들어가는 양</h3>
+        <p>가득 차면 앞부분을 잊는다. 새 대화를 열면 <b>다시 텅 빈다.</b></p>
+      </div>
+      <div class="card on">
+        <div class="k">사용량 — 오늘 배울 것</div>
+        <h3>내가 오늘 쓸 수 있는 총량</h3>
+        <p>새 대화를 열어도 <b>돌아오지 않는다.</b> 시간이 지나야 채워진다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">사용량</div>
+    <h2>몇 시간마다<br>다시 채워진다</h2>
+    <ul class="plain">
+      <li data-n="01">쓴 만큼 줄어들고, 정해진 시간이 지나면 회복된다</li>
+      <li data-n="02">무료로 쓰면 적게, 돈을 내면 많이 준다<span>서비스마다 다르고 자주 바뀐다</span></li>
+      <li data-n="03">다 쓰면 <b>기다리는 것 말고 방법이 없다</b></li>
+    </ul>
+    <div class="kicker">수업 시간에 다 써버리면 남은 시간이 사라진다는 뜻.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">아껴 쓰는 법</div>
+    <h2>다섯 가지</h2>
+    <ul class="plain">
+      <li data-n="01"><b>주제가 바뀌면 새 대화</b><span>앞의 긴 대화를 계속 끌고 다니지 않는다</span></li>
+      <li data-n="02"><b>길어지면 요약하고 새 창</b><span>"지금까지 정한 것 정리해줘" → 복사 → 새 대화</span></li>
+      <li data-n="03"><b>필요한 파일만 올린다</b><span>혹시 몰라서 다 올리는 게 제일 비싸다</span></li>
+      <li data-n="04"><b>짧게 답해달라고 말한다</b><span>"세 줄로" 한 마디면 답이 짧아진다</span></li>
+      <li data-n="05"><b>생각하고 나서 묻는다</b><span>대충 묻고 열 번 고치는 게 가장 많이 먹는다</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">반대로</div>
+    <h2>아끼면 안 되는 것도 있다</h2>
+    <div class="banner">
+      <p class="big">중요한 작업엔<br><span class="hi">충분히 쓴다.</span></p>
+    </div>
+    <p class="lead" style="margin-top:26px;">아끼려고 설명을 줄이면 결과가 나빠지고,<br>고치느라 더 많이 쓰게 된다.<br><b class="hi-y">아끼는 건 낭비를 줄이는 것</b>이지 대충 하는 게 아니다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">활동 · 5분</div>
+    <h2>내 대화를 열어보자</h2>
+    <ul class="plain">
+      <li data-n="01">지금까지 한 대화 중 <b>제일 긴 것</b>을 연다</li>
+      <li data-n="02">몇 번을 주고받았는지 센다</li>
+      <li data-n="03">AI에게 물어본다 — <span class="mono hi-c">"이 대화 지금까지 토큰 얼마나 썼어?"</span></li>
+      <li data-n="04">거기서 <b>지워도 되는 부분</b>을 찾아본다</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">오늘의 한 줄</div>
+    <div class="banner">
+      <p class="big">AI는 기억하는 게 아니라<br><span class="hi">매번 다시 읽는다.</span></p>
+    </div>
+    <div class="kicker">그래서 대화가 길어질수록 비싸진다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">다음 시간</div>
+    <h2>연료가 정해져 있다면,<br><span class="hi-y">어디에 쓸지</span>도<br>정해야 한다</h2>
+    <p class="lead" style="margin-top:22px;">다음 시간엔 <b>무엇을 AI에게 맡기고, 무엇을 내가 할지</b> 정하는 법을 배운다.</p>
+    <div class="kicker">이번 주 미션 — 새 대화를 여는 습관 한 번 써보고, 어땠는지 한 줄 적어오기.</div>
+  </section>
+
+</div>
+
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));
+  const bar=document.getElementById('bar'), count=document.getElementById('count');
+  let i=0; const pad=n=>String(n).padStart(2,'0');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    count.textContent=pad(i+1)+' / '+pad(slides.length);
+  }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1);}
+    if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1);}
+    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+  });
+  document.getElementById('deck').addEventListener('click',e=>{show(e.clientX<window.innerWidth*0.28?i-1:i+1);});
+  let x0=null;
+  document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>45)show(dx<0?i+1:i-1); x0=null;
+  },{passive:true});
+  show(0);
+</script>
+</body>
+</html>
