@@ -204,8 +204,8 @@
       var raw = localStorage.getItem(KEY);
       if(raw){ var p = JSON.parse(raw); state.status = p.status||{}; state.notes = p.notes||{}; }
     }catch(e){ /* sandboxed: keep in-memory */ }
-    // defaults
-    past.forEach(function(it){ if(!state.status[it.id]) state.status[it.id]='done'; });
+    // defaults — '지금까지 해온 것'은 이력이므로 저장값과 무관하게 항상 완료 처리
+    past.forEach(function(it){ state.status[it.id]='done'; });
     phase1.concat(phase2).forEach(function(it){ if(!state.status[it.id]) state.status[it.id]='todo'; });
   }
   function save(){
