@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W12 · 맡기는 힘</title>
+<title>W12 · 내 컴퓨터 밖으로</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
   :root{
     --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
     --ink:#23201a; --mute:#5a5347;
-    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
+    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a; --teal-soft:#e4ece8;
     --mono:'Space Mono', ui-monospace, monospace;
     --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
     --disp:'Hahmlet', serif;
@@ -43,8 +43,8 @@
   .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
   .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
 
-  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
-  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:30px;}
+  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);}
   .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
   .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
   .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
@@ -52,57 +52,28 @@
   .card.dim{opacity:.5;}
   .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
   .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
-  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
-  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
-  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
 
-  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
-  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
+  ul.plain{list-style:none; margin-top:22px; max-width:960px;}
+  ul.plain li{font-size:clamp(15px,1.65vw,22px); line-height:1.5; padding:11px 0 11px 40px; position:relative; border-bottom:1px solid var(--line);}
   ul.plain li:last-child{border-bottom:none;}
-  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
+  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:14px; font-family:var(--mono); font-size:13px; color:var(--teal);}
   ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
 
-  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
-  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
-  .chip.a{border-color:#b9d0c9; color:var(--teal);}
-  .chip.b{border-color:#e6cf9a; color:var(--gold);}
-  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
-  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
+  .flow{display:flex; align-items:stretch; gap:clamp(8px,1.2vw,16px); margin-top:34px; flex-wrap:wrap;}
+  .step{flex:1; min-width:130px; background-color:var(--card); border:1px solid var(--line); border-top:3px solid var(--line); border-radius:12px; padding:clamp(14px,1.7vw,24px);}
+  .step .n{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.14em;}
+  .step .t{font-family:var(--disp); font-size:clamp(16px,1.8vw,23px); font-weight:800; margin-top:9px;}
+  .step .d{font-size:clamp(12px,1.25vw,15px); color:var(--mute); line-height:1.55; margin-top:8px;}
+  .step.s1{border-top-color:#c9bfa0;} .step.s2{border-top-color:var(--teal);} .step.s3{border-top-color:var(--amber);} .step.s4{border-top-color:var(--clay);}
 
-  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
-  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
-  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
-  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
-  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
-  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
-  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
-  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
+  .prompt{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.1vw,30px); font-family:var(--mono); font-size:clamp(14px,1.6vw,22px); line-height:1.8; max-width:880px; margin-top:24px; white-space:pre-wrap; color:var(--ink);}
+  .prompt .val{color:var(--teal);}
+  .prompt .cm{color:var(--mute); font-size:.72em;}
 
-  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
-  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
+  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:26px; max-width:960px;}
+  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:22px; letter-spacing:.02em; line-height:1.7;}
 
-  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
-  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
-  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
-  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
-  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
-
-  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
-  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
-  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
-  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
-  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
-  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
-  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
-
-  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
-  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
-  .prompt .val{color:var(--ink);}
-
-  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
-  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
-
-  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
+  @media (max-width:780px){ .g3,.g2{grid-template-columns:1fr;} .flow{flex-direction:column;} }
   @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
 </style>
 </head>
@@ -116,127 +87,228 @@
 
   <section class="slide active">
     <div class="eyebrow">W12 · 토대 2 / 3</div>
-    <h1>어디까지<br><span class="hi">맡길지</span> 정하기</h1>
+    <h1>내 컴퓨터<br><span class="hi">밖으로</span></h1>
     <div class="rule"></div>
-    <p class="lead">AI에게 말을 잘 거는 법은 배웠다.<br>이번엔 <b class="hi-y">애초에 맡길 일인지</b> 고르는 법.</p>
+    <p class="lead">만든 게임을 <b class="hi-c">진짜 주소가 있는 곳</b>에 올려본다.<br>서버 · 업로드 · 배포, 그리고 AI에게 손을 달아주는 법.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">지난 시간에서</div>
-    <h2>연료가 정해져 있으면<br><span class="hi">고를 수밖에 없다</span></h2>
-    <p class="lead">무한정 쓸 수 있으면 아무거나 다 시켜도 된다.<br>그런데 아니니까 — <b class="hi-y">뭘 맡길지 고르는 힘</b>이 필요하다.</p>
+    <div class="eyebrow coral">먼저 질문</div>
+    <h2>내가 만든 게임,<br>지금 <span class="hi">어디에</span> 있지?</h2>
+    <p class="lead">친구한테 보여주려면 어떻게 해야 하지?<br>내 컴퓨터를 들고 가야 하나?</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">4D</div>
-    <h2>AI를 쓰는 네 가지 힘</h2>
-    <div class="grid g4">
-      <div class="card on"><div class="k">D1 · Delegation</div><h3>맡기기</h3><p>맡길까, 내가 할까, 같이 할까</p></div>
-      <div class="card dim"><div class="k">D2 · Description</div><h3>설명하기</h3><p>원하는 걸 제대로 전달하기</p></div>
-      <div class="card dim"><div class="k">D3 · Discernment</div><h3>가려내기</h3><p>결과가 진짜인지 판단하기</p></div>
-      <div class="card dim"><div class="k">D4 · Diligence</div><h3>책임지기</h3><p>출처와 저작권, 정직하게 쓰기</p></div>
-    </div>
-    <div class="kicker">오늘은 <span class="hi">D1</span>. 나머지 셋이 전부 여기서 시작된다.</div>
+    <div class="eyebrow yellow">오늘의 규칙</div>
+    <h2>모르는 말이 나오면<br><span class="hi-y">바로 물어보자</span></h2>
+    <p class="lead">오늘은 처음 듣는 단어가 계속 나온다.<br>서버, 업로드, 배포, 커넥터, 경로…</p>
+    <div class="prompt"><span class="val">"서버가 뭐야? 초등학생한테 설명하듯이 알려줘"</span></div>
+    <div class="kicker">모르는 채로 넘어가면 <span class="hi">그다음이 전부 안 들린다.</span> 손 들지 말고 그냥 물어봐도 된다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">오늘의 질문</div>
-    <h1 style="max-width:16ch;">이거,<br>AI한테 맡길까<br>내가 할까?</h1>
-    <p class="lead" style="margin-top:26px;">시작하기 전에 이 질문을 한 번 던지는 것.<br>오늘 연습할 건 이게 전부다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">분류하기</div>
-    <h2>일을 세 칸으로 나눈다</h2>
+    <div class="eyebrow">복습</div>
+    <h2>파일과 폴더</h2>
     <div class="grid g3">
-      <div class="card tag-ai">
-        <div class="k">AI가 할 일</div>
-        <p>많고 · 반복되고 · 정답이 정해진 일<br><br>자료 모으기, 표로 정리, 파일 이름 바꾸기, 초안 쓰기</p>
-      </div>
-      <div class="card tag-me">
-        <div class="k">내가 할 일</div>
-        <p>고르고 · 판단하고 · 책임지는 일<br><br>뭘 만들지 정하기, 좋은지 나쁜지 고르기, 마지막 결정</p>
-      </div>
-      <div class="card tag-both">
-        <div class="k">같이 할 일</div>
-        <p>AI가 내놓고 내가 고르는 일<br><br>아이디어 뽑기, 고쳐 쓰기, 어디가 이상한지 찾기</p>
-      </div>
+      <div class="card c-cy"><div class="k">파일</div><h3>물건 하나</h3><p>게임 하나, 사진 하나, 글 하나</p></div>
+      <div class="card c-yl"><div class="k">폴더</div><h3>물건을 담는 상자</h3><p>상자 안에 상자를 또 넣을 수 있다</p></div>
+      <div class="card on"><div class="k">경로</div><h3>그 물건이 있는 자리</h3><p class="mono">바탕화면 / 내게임 / game.html</p></div>
     </div>
+    <div class="kicker">경로는 <span class="hi-c">집 주소</span>와 똑같다. 어느 상자 안 어디에 있는지 알려주는 것.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">경계선</div>
-    <h2>이건 절대 안 넘긴다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>뭘 만들지 정하는 것</b><span>내가 뭘 하고 싶은지는 AI가 모른다</span></li>
-      <li data-n="02"><b>좋은지 나쁜지 판단하는 것</b><span>AI는 "괜찮아 보이는 것"은 만들어도, "좋은 것"을 고르진 못한다</span></li>
-      <li data-n="03"><b>마지막 결정</b><span>내보낼지 말지는 만든 사람이 정한다</span></li>
-    </ul>
-    <div class="kicker">이 셋을 넘기는 순간, 결과물은 <span class="hi">내 것이 아니게 된다.</span></div>
+    <div class="eyebrow yellow">중요한 사실</div>
+    <h2>우리 게임은<br><span class="hi-y">파일 하나</span>다</h2>
+    <p class="lead">그림, 소리, 움직임까지 전부 <b>HTML 한 개</b> 안에 들어 있다.<br>그래서 통째로 옮길 수 있다.</p>
+    <div class="kicker">파일 하나 = 옮기기 쉽다 = <span class="hi-y">올리기 쉽다.</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">맡기기 전 3초</div>
-    <h2>세 개만 확인한다</h2>
-    <div class="gates">
-      <div class="gate"><span class="q">01</span><span class="t">틀렸을 때 내가 알아챌 수 있나?</span><span class="no">아니오 →<br>내가 한다</span></div>
-      <div class="gate"><span class="q">02</span><span class="t">잘못돼도 되돌릴 수 있나?</span><span class="no">아니오 →<br>먼저 복사해둔다</span></div>
-      <div class="gate"><span class="q">03</span><span class="t">이게 내가 배워야 할 일인가?</span><span class="no">예 →<br>직접 해본다</span></div>
-    </div>
+    <div class="eyebrow coral">문제</div>
+    <h2>내 컴퓨터를 끄면?</h2>
+    <p class="lead">파일이 내 컴퓨터에만 있으면,<br>내가 컴퓨터를 끄는 순간 <b class="hi">아무도 못 본다.</b><br><br>그럼 어떻게 해야 할까?</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">비교</div>
-    <h2>같은 일도<br>나누면 달라진다</h2>
+    <div class="eyebrow">답</div>
+    <h2>서버 =<br><span class="hi-c">항상 켜져 있는</span><br>남의 컴퓨터</h2>
+    <p class="lead">전 세계 어딘가에서 24시간 켜져 있는 컴퓨터.<br>거기에 파일을 올려두면, 내가 자고 있어도<br>누구든 열어볼 수 있다.</p>
+    <div class="kicker">유튜브도 인스타도 전부 <span class="hi-c">누군가의 서버</span>에 있는 파일이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">두 단어 구분</div>
+    <h2>업로드와 배포는<br>다르다</h2>
     <div class="grid g2">
-      <div class="card dim">
-        <div class="k">통째로 맡기면</div>
-        <h3>"내 소개 웹툰 만들어줘"</h3>
-        <p>나온 결과가 내 얘기가 아니다. 어디를 고쳐야 할지도 모른다.</p>
+      <div class="card c-cy">
+        <div class="k">업로드</div>
+        <h3>파일을 옮기는 것</h3>
+        <p>내 컴퓨터 → 서버. <b>옮기기만</b> 한 상태. 아직 아무도 모른다.</p>
       </div>
       <div class="card on">
-        <div class="k">나눠서 맡기면</div>
-        <h3>줄거리는 내가 · 그림은 AI가 · 컷 순서는 같이</h3>
-        <p>내 이야기가 남고, 어디가 잘못됐는지 바로 보인다.</p>
+        <div class="k">배포</div>
+        <h3>주소를 열어주는 것</h3>
+        <p>"이 주소로 들어오면 볼 수 있어" 라고 <b>공개</b>하는 것.</p>
       </div>
     </div>
+    <div class="kicker">올렸다고 끝이 아니다. <span class="hi">주소가 생겨야</span> 진짜 내놓은 것.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">활동 · 8분</div>
-    <h2>오늘 할 일을 쪼개고<br>이름표 붙이기</h2>
-    <ul class="plain">
-      <li data-n="01"><b>오늘 만들 것을 3~5덩어리로 쪼갠다</b></li>
-      <li data-n="02"><b>각 덩어리에 이름표를 붙인다</b><span>AI가 할 일 / 내가 할 일 / 같이 할 일</span></li>
-      <li data-n="03"><b>맡기기 전 3초 점검을 통과시킨다</b></li>
-      <li data-n="04"><b>그 순서가 오늘의 작업 순서다</b></li>
-    </ul>
-    <div class="kicker">"내가 할 일" 칸이 <span class="hi">비어 있으면 다시 쪼갠다.</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">맡긴 다음</div>
-    <h2>맡겼다고<br>끝난 게 아니다</h2>
-    <div class="grid g3">
-      <div class="card tag-ai"><div class="k">받고 나서 ①</div><h3>내가 시킨 게 맞나?</h3></div>
-      <div class="card tag-both"><div class="k">받고 나서 ②</div><h3>어디가 이상한가?</h3></div>
-      <div class="card tag-me"><div class="k">받고 나서 ③</div><h3>이걸 내 이름으로 낼 수 있나?</h3></div>
+    <div class="eyebrow">정리</div>
+    <h2>파일의 여행</h2>
+    <div class="flow">
+      <div class="step s1"><div class="n">01</div><div class="t">내 파일</div><div class="d">내 컴퓨터 안에만 있다</div></div>
+      <div class="step s2"><div class="n">02</div><div class="t">업로드</div><div class="d">서버로 옮긴다</div></div>
+      <div class="step s3"><div class="n">03</div><div class="t">서버</div><div class="d">항상 켜져 있는 곳에 보관</div></div>
+      <div class="step s4"><div class="n">04</div><div class="t">주소</div><div class="d">누구나 열어볼 수 있다</div></div>
     </div>
-    <div class="kicker">맡기는 사람의 일은 <span class="hi-y">시키는 것 + 확인하는 것</span>, 두 개다.</div>
+    <div class="kicker">오늘 우리가 할 일이 딱 이 네 칸이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">그런데</div>
+    <h2>AI가 이걸<br>대신 해줄 수 있을까?</h2>
+    <p class="lead">AI는 글을 쓰고 코드를 만든다.<br>그런데 <b class="hi">우리 아케이드에 올리는 건</b> 못 한다.<br><br>왜? <b class="hi-y">거기로 가는 길을 모르니까.</b></p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">커넥터</div>
+    <h2>AI에게 손을<br>달아주는 것</h2>
+    <p class="lead">커넥터를 연결하면 AI가 그 서비스로 가는 <b class="hi-y">길과 열쇠</b>를 갖게 된다.</p>
+    <div class="grid g2">
+      <div class="card dim"><div class="k">연결 안 됐을 때</div><p>"코드는 만들어줄게. 올리는 건 네가 해."</p></div>
+      <div class="card on"><div class="k">연결됐을 때</div><p>"아케이드에 올려줘" → <b>진짜로 올라간다</b></p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">종류</div>
+    <h2>커넥터는<br>여러 가지가 있다</h2>
+    <div class="grid g3">
+      <div class="card c-cy"><div class="k">우리 반 아케이드</div><p>만든 게임을 올리고, 친구 게임을 가져온다</p></div>
+      <div class="card c-yl"><div class="k">파일 보관함</div><p>클라우드에 있는 내 파일을 꺼내온다</p></div>
+      <div class="card on"><div class="k">달력 · 메모</div><p>일정을 확인하고 할 일을 적는다</p></div>
+    </div>
+    <div class="kicker">서비스마다 커넥터가 따로 있다. 오늘 쓸 건 딱 하나 — <span class="hi">우리 반 아케이드.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">잊지 말 것</div>
+    <div class="banner">
+      <p class="big">연결할지 말지는<br><span class="hi">내가 정한다.</span></p>
+    </div>
+    <p class="lead" style="margin-top:24px;">손을 달아준다는 건 <b>권한을 준다는 뜻</b>이다.<br>어떤 커넥터를 켤지, 무엇까지 맡길지 — 사람이 정한다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">실습</div>
+    <h1>아케이드에<br><span class="hi-y">올려보자</span></h1>
+    <p class="lead" style="margin-top:22px;">우리 반 게임이 모이는 진짜 웹사이트.<br>이미 게임 몇 개가 올라가 있다. 먼저 들어가서 놀아보자.</p>
+    <div class="prompt"><span class="val">class-arcade.vercel.app</span></div>
+    <div class="kicker">올리면 <span class="hi-y">내 게임에도 번호와 주소가 생긴다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">준비물</div>
+    <h2>세 가지만 챙기자</h2>
+    <div class="grid g3">
+      <div class="card c-cy"><div class="k">01</div><h3>만든 게임</h3><p>HTML 한 파일짜리 작품</p></div>
+      <div class="card c-yl"><div class="k">02</div><h3>내 별명</h3><p>실명 말고 별명으로</p></div>
+      <div class="card on"><div class="k">03</div><h3>반 코드</h3><p>선생님이 알려준다</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">먼저 · 커넥터 등록</div>
+    <h2>아케이드로 가는<br>길을 연결한다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>설정에서 커넥터를 연다</b><span>또는 채팅창 왼쪽 아래 [+] → 커넥터</span></li>
+      <li data-n="02"><b>"커스텀 커넥터 추가"를 누른다</b></li>
+      <li data-n="03"><b>이름과 주소를 넣는다</b></li>
+      <li data-n="04"><b>추가하고 연결</b></li>
+    </ul>
+    <div class="prompt"><span class="cm">이름</span>  <span class="val">우리반 아케이드</span>
+<span class="cm">주소</span>  <span class="val">class-arcade.vercel.app/api/mcp</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">연결 확인</div>
+    <h2>손이 제대로<br>달렸는지 본다</h2>
+    <p class="lead">등록했으면 이렇게 물어보자.<br>목록이 나오면 <b class="hi-c">연결 성공</b>이다.</p>
+    <div class="prompt"><span class="val">"아케이드에 어떤 게임들 있어?"</span></div>
+    <div class="kicker">안 되면 주소를 다시 확인. <span class="hi">/api/mcp</span> 까지 정확히 들어가야 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">올리기</div>
+    <h2>이제 말 한마디면 된다</h2>
+    <div class="prompt"><span class="val">"이 게임 아케이드에 올려줘"</span></div>
+    <ul class="plain">
+      <li data-n="01"><b>별명과 반 코드를 물어보면 알려준다</b></li>
+      <li data-n="02"><b>제목을 정한다</b><span>60자 안쪽, 한글 가능</span></li>
+      <li data-n="03"><b>주소와 수정 비밀코드가 나온다</b></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow coral">절대 놓치면 안 되는 것</div>
+    <div class="banner">
+      <p class="big"><span class="hi">수정 비밀코드</span>를<br>꼭 적어두자.</p>
+    </div>
+    <p class="lead" style="margin-top:24px;">올리면 비밀코드가 하나 나온다.<br>나중에 <b>게임을 고쳐서 다시 올릴 때</b> 이게 없으면 못 고친다.<br><br><b class="hi-y">종이에 적거나 메모 앱에 저장.</b></p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">잘 안 될 때</div>
+    <h2>직접 올리는 길도 있다</h2>
+    <p class="lead">게임 코드가 너무 크면 커넥터로 안 올라간다.<br>그럴 땐 손으로 올리면 된다.</p>
+    <ul class="plain">
+      <li data-n="01"><b>게임 오른쪽 위 [복사]</b></li>
+      <li data-n="02"><b>올리기 페이지에 붙여넣기</b><span class="mono">class-arcade.vercel.app/upload</span></li>
+      <li data-n="03"><b>제목 · 별명 · 반 코드 적고 올리기</b></li>
+    </ul>
+    <div class="kicker">막히면 길을 하나 더 아는 것 — 그게 <span class="hi-c">막혔을 때 스스로 빠져나오는 법.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">확인</div>
+    <h2>진짜 됐는지<br>이렇게 본다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>주소를 폰에서 열어본다</b><span>내 컴퓨터가 아닌 곳에서 열려야 진짜다</span></li>
+      <li data-n="02"><b>옆 사람에게 주소를 보내본다</b></li>
+      <li data-n="03"><b>옆 사람이 아무 설명 없이 놀 수 있나?</b><span>못 놀면 그게 다음에 고칠 것</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">한 걸음 더</div>
+    <h2>친구 게임을<br>가져와서 발전시키기</h2>
+    <ul class="plain">
+      <li data-n="01"><b>아케이드에서 마음에 드는 게임의 번호를 확인</b></li>
+      <li data-n="02"><b>AI에게 가져와 달라고 한다</b></li>
+      <li data-n="03"><b>내 방식으로 고친다</b></li>
+      <li data-n="04"><b>원본 번호를 적어서 올린다</b><span>누구 것에서 출발했는지 자동으로 표시된다</span></li>
+    </ul>
+    <div class="prompt"><span class="val">"3번 게임 가져와서 내 스타일로 바꿔줘"</span></div>
+    <div class="kicker">가져오는 건 훔치는 게 아니다. <span class="hi-y">원작자를 밝히면</span> 그게 리믹스다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow yellow">AI를 잘 쓴다는 것</div>
+    <div class="banner">
+      <p class="big">시키려고만 쓰면 <span class="hi">그때뿐</span>,<br>배우려고 쓰면 <span class="hi-y">내 것이 된다.</span></p>
+    </div>
+    <p class="lead" style="margin-top:24px;">오늘 물어본 단어들 — 서버, 배포, 커넥터.<br>이제 <b>AI가 없어도</b> 무슨 말인지 안다.<br>그게 오늘 진짜로 얻은 것이다.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow coral">오늘의 한 줄</div>
     <div class="banner">
-      <p class="big">틀렸을 때<br><span class="hi">내가 알아챌 수 있는 일</span>만<br>맡긴다.</p>
+      <p class="big">주소가 생기기 전까지는,<br><span class="hi">아무도 못 논다.</span></p>
     </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">다음 시간</div>
-    <h2>여러 단계를<br><span class="hi-y">한꺼번에</span> 맡길 수도<br>있다면?</h2>
-    <p class="lead" style="margin-top:22px;">다음 시간엔 <b>스스로 계획하고 실행하는 AI — 에이전트</b>를 직접 본다.</p>
-    <div class="kicker">이번 주 미션 — 집에서 한 가지 일을 세 칸으로 나눠보고, 어떻게 나눴는지 적어오기.</div>
+    <div class="kicker">이번 주 미션 — 내 게임 주소를 가족이나 친구에게 보내고, 반응을 한 줄 적어오기.</div>
   </section>
 
 </div>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "class-arcade",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/rgh/dev/class-arcade && npm run dev:local"],
+      "port": 3000
+    }
+  ]
+}
