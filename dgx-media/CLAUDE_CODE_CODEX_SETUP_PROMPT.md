@@ -1,5 +1,7 @@
 # Claude Code / Codex에 그대로 전달할 설치 문구
 
+상세 설명은 `https://rg-teach-ai.vercel.app/dgx-media/CLAUDE_CODE_GUIDE.md`에서 확인한다.
+
 아래 블록만 복사해 Claude Code 또는 Codex에 붙여 넣는다. API 키는 채팅에 붙여 넣지 말고, 설치 도중 터미널의 숨김 입력 칸에 직접 넣는다.
 
 ```text

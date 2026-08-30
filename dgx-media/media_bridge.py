@@ -14,6 +14,8 @@ import secrets
 import subprocess
 import sys
 import time
+from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -45,11 +47,177 @@ BLOCKED_PROMPT = re.compile(
     re.IGNORECASE,
 )
 
+GIB = 1024 ** 3
+MEMORY_BUDGET_BYTES = int(float(os.environ.get("MEDIA_MEMORY_BUDGET_GIB", "44")) * GIB)
+MIN_AVAILABLE_BYTES = int(float(os.environ.get("MEDIA_MIN_AVAILABLE_GIB", "12")) * GIB)
+MAX_PARALLEL_JOBS = int(os.environ.get("MEDIA_MAX_PARALLEL_JOBS", "4"))
+JOB_LIMITS = {
+    "image": int(os.environ.get("MEDIA_IMAGE_MAX_JOBS", "1")),
+    "audio": int(os.environ.get("MEDIA_AUDIO_MAX_JOBS", "4")),
+    "video": int(os.environ.get("MEDIA_VIDEO_MAX_JOBS", "1")),
+}
+JOB_MEMORY_BYTES = {
+    "image": int(float(os.environ.get("MEDIA_IMAGE_JOB_GIB", "14")) * GIB),
+    "image_cold": int(float(os.environ.get("MEDIA_IMAGE_COLD_JOB_GIB", "30")) * GIB),
+    "audio": int(float(os.environ.get("MEDIA_AUDIO_JOB_GIB", "8")) * GIB),
+    "video": int(float(os.environ.get("MEDIA_VIDEO_JOB_GIB", "22")) * GIB),
+}
+
 app = FastAPI(title="DGX Spark Media API", docs_url=None, redoc_url=None)
-MEDIA_LOCK = asyncio.Lock()
 IMAGE_PIPE: Any | None = None
 IMAGE_LOAD_LOCK = asyncio.Lock()
+IMAGE_RUN_LOCK = asyncio.Lock()
+VIDEO_RUN_LOCK = asyncio.Lock()
 log = logging.getLogger("dgx-media")
+
+
+@dataclass
+class JobTicket:
+    id: str
+    kind: str
+    queued_at: float
+    memory_bytes: int = 0
+    started_at: float | None = None
+
+    @property
+    def queue_wait_seconds(self) -> float:
+        end = self.started_at if self.started_at is not None else time.monotonic()
+        return max(0.0, end - self.queued_at)
+
+
+def _memory_info() -> dict[str, int]:
+    values: dict[str, int] = {}
+    try:
+        for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+            name, raw = line.split(":", 1)
+            values[name] = int(raw.strip().split()[0]) * 1024
+    except (OSError, ValueError, IndexError):
+        return {"total_bytes": 0, "available_bytes": 0}
+    return {
+        "total_bytes": values.get("MemTotal", 0),
+        "available_bytes": values.get("MemAvailable", values.get("MemFree", 0)),
+    }
+
+
+def _job_memory(kind: str) -> int:
+    if kind == "image" and IMAGE_PIPE is None:
+        return JOB_MEMORY_BYTES["image_cold"]
+    return JOB_MEMORY_BYTES[kind]
+
+
+class MemoryScheduler:
+    """Admit jobs by model limits, a reservation budget, and live available memory."""
+
+    def __init__(self) -> None:
+        self.condition = asyncio.Condition()
+        self.waiting: list[JobTicket] = []
+        self.active: dict[str, JobTicket] = {}
+
+    def _active_kind_count(self, kind: str) -> int:
+        return sum(ticket.kind == kind for ticket in self.active.values())
+
+    def _reserved_bytes(self) -> int:
+        return sum(ticket.memory_bytes for ticket in self.active.values())
+
+    def _can_start(self, ticket: JobTicket) -> bool:
+        required = _job_memory(ticket.kind)
+        memory = _memory_info()
+        if len(self.active) >= MAX_PARALLEL_JOBS:
+            return False
+        if self._active_kind_count(ticket.kind) >= JOB_LIMITS[ticket.kind]:
+            return False
+        if self._reserved_bytes() + required > MEMORY_BUDGET_BYTES:
+            return False
+        if memory["available_bytes"] and memory["available_bytes"] - required < MIN_AVAILABLE_BYTES:
+            return False
+        return True
+
+    async def acquire(self, kind: str) -> JobTicket:
+        ticket = JobTicket(id=f"{kind}_{secrets.token_urlsafe(8)}", kind=kind, queued_at=time.monotonic())
+        async with self.condition:
+            self.waiting.append(ticket)
+            try:
+                while not self._can_start(ticket):
+                    await self.condition.wait()
+            except BaseException:
+                if ticket in self.waiting:
+                    self.waiting.remove(ticket)
+                self.condition.notify_all()
+                raise
+            self.waiting.remove(ticket)
+            ticket.memory_bytes = _job_memory(kind)
+            ticket.started_at = time.monotonic()
+            self.active[ticket.id] = ticket
+            self.condition.notify_all()
+            return ticket
+
+    async def release(self, ticket: JobTicket) -> None:
+        async with self.condition:
+            self.active.pop(ticket.id, None)
+            self.condition.notify_all()
+
+    @asynccontextmanager
+    async def slot(self, kind: str):
+        ticket = await self.acquire(kind)
+        try:
+            yield ticket
+        finally:
+            await self.release(ticket)
+
+    async def snapshot(self) -> dict[str, Any]:
+        async with self.condition:
+            memory = _memory_info()
+            active_counts = {kind: self._active_kind_count(kind) for kind in JOB_LIMITS}
+            waiting_counts = {
+                kind: sum(ticket.kind == kind for ticket in self.waiting)
+                for kind in JOB_LIMITS
+            }
+            return {
+                "policy": "memory-aware-parallel",
+                "max_parallel_jobs": MAX_PARALLEL_JOBS,
+                "active_jobs": len(self.active),
+                "waiting_jobs": len(self.waiting),
+                "active_by_type": active_counts,
+                "waiting_by_type": waiting_counts,
+                "limits_by_type": JOB_LIMITS,
+                "memory": {
+                    "total_bytes": memory["total_bytes"],
+                    "total_gib": round(memory["total_bytes"] / GIB, 1),
+                    "available_bytes": memory["available_bytes"],
+                    "available_gib": round(memory["available_bytes"] / GIB, 1),
+                    "minimum_available_bytes": MIN_AVAILABLE_BYTES,
+                    "minimum_available_gib": round(MIN_AVAILABLE_BYTES / GIB, 1),
+                    "reservation_budget_bytes": MEMORY_BUDGET_BYTES,
+                    "reservation_budget_gib": round(MEMORY_BUDGET_BYTES / GIB, 1),
+                    "active_reserved_bytes": self._reserved_bytes(),
+                    "active_reserved_gib": round(self._reserved_bytes() / GIB, 1),
+                    "reservation_remaining_bytes": max(0, MEMORY_BUDGET_BYTES - self._reserved_bytes()),
+                    "reservation_remaining_gib": round(max(0, MEMORY_BUDGET_BYTES - self._reserved_bytes()) / GIB, 1),
+                    "job_estimates_bytes": {
+                        **JOB_MEMORY_BYTES,
+                        "image_current": _job_memory("image"),
+                    },
+                },
+                "active": [
+                    {
+                        "type": ticket.kind,
+                        "running_seconds": round(time.monotonic() - (ticket.started_at or time.monotonic()), 1),
+                        "reserved_bytes": ticket.memory_bytes,
+                    }
+                    for ticket in self.active.values()
+                ],
+                "waiting": [
+                    {
+                        "type": ticket.kind,
+                        "waiting_seconds": round(ticket.queue_wait_seconds, 1),
+                        "estimated_bytes": _job_memory(ticket.kind),
+                    }
+                    for ticket in self.waiting
+                ],
+            }
+
+
+SCHEDULER = MemoryScheduler()
 
 
 def _as_int(value: Any, name: str, default: int, minimum: int, maximum: int) -> int:
@@ -199,14 +367,37 @@ async def health() -> JSONResponse:
         pass
     audio_ready = SA3_RUNNER.is_file() and all(path.is_file() and path.stat().st_size > 0 for path in SA3_ENGINES)
     ready = IMAGE_READY_MARKER.is_file() and audio_ready and video_ready
+    scheduler = await SCHEDULER.snapshot()
     return JSONResponse({
         "status": "ready" if ready else "starting",
         "ready": ready,
-        "busy": MEDIA_LOCK.locked(),
-        "image": {"model": IMAGE_MODEL_ID, "installed": IMAGE_READY_MARKER.is_file(), "loaded": IMAGE_PIPE is not None},
-        "audio": {"model": "stable-audio-3-medium", "installed": audio_ready},
-        "video": {"model": "minimax-h3-fl2va", "ready": video_ready},
+        "busy": bool(scheduler["active_jobs"] or scheduler["waiting_jobs"]),
+        "image": {
+            "model": IMAGE_MODEL_ID,
+            "installed": IMAGE_READY_MARKER.is_file(),
+            "loaded": IMAGE_PIPE is not None,
+            "active": scheduler["active_by_type"]["image"],
+            "waiting": scheduler["waiting_by_type"]["image"],
+        },
+        "audio": {
+            "model": "stable-audio-3-medium",
+            "installed": audio_ready,
+            "active": scheduler["active_by_type"]["audio"],
+            "waiting": scheduler["waiting_by_type"]["audio"],
+        },
+        "video": {
+            "model": "minimax-h3-fl2va",
+            "ready": video_ready,
+            "active": scheduler["active_by_type"]["video"],
+            "waiting": scheduler["waiting_by_type"]["video"],
+        },
+        "scheduler": scheduler,
     }, status_code=200 if ready else 503)
+
+
+@app.get("/v1/queue")
+async def queue_status() -> dict[str, Any]:
+    return await SCHEDULER.snapshot()
 
 
 @app.get("/v1/models")
@@ -226,9 +417,10 @@ async def generate_image(payload: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(400, "response_format must be b64_json")
     started = time.monotonic()
     try:
-        async with MEDIA_LOCK:
-            pipe = await _image_pipe()
-            image_bytes, seed = await asyncio.to_thread(_generate_image_sync, pipe, payload)
+        async with SCHEDULER.slot("image") as ticket:
+            async with IMAGE_RUN_LOCK:
+                pipe = await _image_pipe()
+                image_bytes, seed = await asyncio.to_thread(_generate_image_sync, pipe, payload)
     except HTTPException:
         raise
     except Exception as exc:
@@ -239,6 +431,7 @@ async def generate_image(payload: dict[str, Any]) -> dict[str, Any]:
         "model": "flux-2-klein-4b",
         "seed": seed,
         "elapsed_seconds": round(time.monotonic() - started, 3),
+        "queue_wait_seconds": round(ticket.queue_wait_seconds, 3),
         "data": [{"b64_json": base64.b64encode(image_bytes).decode("ascii")}],
     }
 
@@ -246,7 +439,7 @@ async def generate_image(payload: dict[str, Any]) -> dict[str, Any]:
 @app.post("/v1/audio/generations")
 async def generate_audio(payload: dict[str, Any]) -> FileResponse:
     try:
-        async with MEDIA_LOCK:
+        async with SCHEDULER.slot("audio") as ticket:
             output, manifest = await asyncio.to_thread(_run_audio_sync, payload)
     except HTTPException:
         raise
@@ -257,7 +450,10 @@ async def generate_audio(payload: dict[str, Any]) -> FileResponse:
         output,
         media_type="audio/wav",
         filename=output.name,
-        headers={"X-DGX-Job-ID": str(manifest["job_id"])},
+        headers={
+            "X-DGX-Job-ID": str(manifest["job_id"]),
+            "X-DGX-Queue-Wait-Seconds": f"{ticket.queue_wait_seconds:.3f}",
+        },
     )
 
 
@@ -266,13 +462,15 @@ async def generate_video(request: Request) -> Response:
     body = await request.body()
     headers = {"content-type": request.headers.get("content-type", "application/json")}
     try:
-        async with MEDIA_LOCK:
-            async with httpx.AsyncClient(timeout=httpx.Timeout(3600.0, connect=20.0)) as client:
-                upstream = await client.post(f"{H3_URL}/v1/videos/sync", content=body, headers=headers)
+        async with SCHEDULER.slot("video") as ticket:
+            async with VIDEO_RUN_LOCK:
+                async with httpx.AsyncClient(timeout=httpx.Timeout(3600.0, connect=20.0)) as client:
+                    upstream = await client.post(f"{H3_URL}/v1/videos/sync", content=body, headers=headers)
     except httpx.RequestError as exc:
         raise HTTPException(502, f"H3 video service connection failed: {exc}") from exc
     passthrough = {
         key: value for key, value in upstream.headers.items()
         if key.lower() in {"content-type", "content-disposition"}
     }
+    passthrough["X-DGX-Queue-Wait-Seconds"] = f"{ticket.queue_wait_seconds:.3f}"
     return Response(content=upstream.content, status_code=upstream.status_code, headers=passthrough)

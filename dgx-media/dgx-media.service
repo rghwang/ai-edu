@@ -13,6 +13,16 @@ Environment=HF_HOME=/home/rgh/.cache/huggingface
 Environment=PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 Environment=IMAGE_MODEL_ID=black-forest-labs/FLUX.2-klein-4B
 Environment=IMAGE_READY_MARKER=/home/rgh/services/flux2-klein-4b/.model-ready
+Environment=MEDIA_MEMORY_BUDGET_GIB=44
+Environment=MEDIA_MIN_AVAILABLE_GIB=12
+Environment=MEDIA_MAX_PARALLEL_JOBS=4
+Environment=MEDIA_IMAGE_MAX_JOBS=1
+Environment=MEDIA_AUDIO_MAX_JOBS=4
+Environment=MEDIA_VIDEO_MAX_JOBS=1
+Environment=MEDIA_IMAGE_JOB_GIB=14
+Environment=MEDIA_IMAGE_COLD_JOB_GIB=30
+Environment=MEDIA_AUDIO_JOB_GIB=8
+Environment=MEDIA_VIDEO_JOB_GIB=22
 ExecStart=/home/rgh/services/flux2-klein-4b/.venv/bin/python -m uvicorn media_bridge:app --host 127.0.0.1 --port 8092
 
 [Install]

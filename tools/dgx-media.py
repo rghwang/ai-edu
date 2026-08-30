@@ -134,7 +134,13 @@ def main() -> int:
         output = Path(args.output).expanduser().resolve()
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_bytes(base64.b64decode(result["data"][0]["b64_json"]))
-        print(json.dumps({"output": str(output), "model": result["model"], "seed": result["seed"], "elapsed_seconds": result["elapsed_seconds"]}, ensure_ascii=False))
+        print(json.dumps({
+            "output": str(output),
+            "model": result["model"],
+            "seed": result["seed"],
+            "elapsed_seconds": result["elapsed_seconds"],
+            "queue_wait_seconds": result.get("queue_wait_seconds", 0),
+        }, ensure_ascii=False))
         return 0
     if args.command == "audio":
         payload = {"prompt": args.prompt, "duration_seconds": args.seconds, "steps": args.steps, "cfg": args.cfg, "negative_prompt": args.negative_prompt}
@@ -143,8 +149,9 @@ def main() -> int:
         output = Path(args.output).expanduser().resolve()
         output.parent.mkdir(parents=True, exist_ok=True)
         with request("/v1/audio/generations", payload=payload) as response:
+            queue_wait = response.headers.get("X-DGX-Queue-Wait-Seconds", "0")
             output.write_bytes(response.read())
-        print(json.dumps({"output": str(output)}, ensure_ascii=False))
+        print(json.dumps({"output": str(output), "queue_wait_seconds": float(queue_wait)}, ensure_ascii=False))
         return 0
     if args.command == "video":
         fields = {
@@ -160,8 +167,9 @@ def main() -> int:
         output = Path(args.output).expanduser().resolve()
         output.parent.mkdir(parents=True, exist_ok=True)
         with request("/v1/videos/sync", body=body, content_type=content_type) as response:
+            queue_wait = response.headers.get("X-DGX-Queue-Wait-Seconds", "0")
             output.write_bytes(response.read())
-        print(json.dumps({"output": str(output)}, ensure_ascii=False))
+        print(json.dumps({"output": str(output), "queue_wait_seconds": float(queue_wait)}, ensure_ascii=False))
         return 0
     return 2
 
