@@ -130,7 +130,7 @@ grep -oE \"wk:'W[0-9]+'\" index.html | sed \"s/[^0-9]//g\" | sort -n | tr '\\n' 
 ## 10. 관련 프로젝트
 - **우리반 아케이드** (`class-arcade.vercel.app`) — 아이들 게임 공유 갤러리. W12에서 AI **커넥터(MCP)** 로 게임을 업로드한 대상. 커넥터 주소: `class-arcade.vercel.app/api/mcp`, 직접 업로드: `class-arcade.vercel.app/upload`. (별도 저장소/프로젝트)
 - **죽어야 이기는 용사 출품판** (`/Users/rgh/dev/openai-game-builers/death-knight`, `death-knight-web.vercel.app`) — W13 실제 사례. Codex 작업 제목은 `제출 버전 통합`.
-- **DGX Spark** — W13 사운드 생성 모델과 W14 MiniMax H3 드라마 렌더링에 사용하는 외부 AI 컴퓨터. H3 수업/제작 시 `/Users/rgh/.codex/skills/dgx-h3-web-drama/SKILL.md`의 바이블·네이티브 대사·합격 검사 규칙을 따를 것.
+- **DGX Spark** — W13 사운드 생성 모델과 W14 MiniMax H3 드라마 렌더링에 사용하는 외부 AI 컴퓨터. 이미지용 FLUX.2 Klein 4B도 추가되어 `tools/dgx-media.py` 하나로 이미지·Stable Audio 음악·H3 영상을 생성한다. Claude Code/Codex 전달 문구는 `dgx-media/CLAUDE_CODE_CODEX_SETUP_PROMPT.md`, DGX 운영 파일은 `dgx-media/`에 있다. 외부 요청은 기존 키 인증 게이트웨이만 사용하고 키·로컬 설정 파일은 저장소에 넣지 않는다. H3 수업/제작 시 `/Users/rgh/.codex/skills/dgx-h3-web-drama/SKILL.md`의 바이블·네이티브 대사·합격 검사 규칙을 따를 것.
 
 ---
 

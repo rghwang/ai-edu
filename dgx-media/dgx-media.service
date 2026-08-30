@@ -1,0 +1,19 @@
+[Unit]
+Description=DGX Spark Unified Family Media API
+After=network-online.target h3-bridge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rgh
+WorkingDirectory=/home/rgh/services/flux2-klein-4b
+Restart=on-failure
+RestartSec=10
+Environment=HF_HOME=/home/rgh/.cache/huggingface
+Environment=PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+Environment=IMAGE_MODEL_ID=black-forest-labs/FLUX.2-klein-4B
+Environment=IMAGE_READY_MARKER=/home/rgh/services/flux2-klein-4b/.model-ready
+ExecStart=/home/rgh/services/flux2-klein-4b/.venv/bin/python -m uvicorn media_bridge:app --host 127.0.0.1 --port 8092
+
+[Install]
+WantedBy=multi-user.target
