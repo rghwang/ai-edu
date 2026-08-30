@@ -36,13 +36,13 @@
 | 파일 | 내용 |
 |---|---|
 | `index.html` | **현황 대시보드(첫 화면).** 진행률 바 + '지금까지 해온 것'(past) + '앞으로의 커리큘럼'(phase1/phase2) + '메이커 루프' 섹션. 데이터는 하단 `<script>`의 배열, 상태·메모는 localStorage. |
-| `vision.html` | 비전 & 커리큘럼(6가지 역량, 교육 원칙, 주간 리듬, 커리큘럼 표 W6~W13). 1·2단계 구분 없음. |
+| `vision.html` | 비전 & 커리큘럼(6가지 역량, 교육 원칙, 주간 리듬, 커리큘럼 표 W6~W15). 1·2단계 구분 없음. |
 | `gemini.html` | Gemini 이미지·영상 + Google Flow(영상) + 구글 드라이브 저장 **교사 가이드**. |
 | `deploy.html` | GitHub·Vercel·Claude Code(웹) **공용 계정 사전 세팅 가이드**(교사용). |
 | `w6.html`~`w10.html` (+ `-slides.html`) | 각 주차 상세 수업안 + 학생 슬라이드. |
 | `w8-anim.html`(+slides) | W8 2부(애니). W8은 1부 웹툰(`w8.html`)+2부 애니. |
 | `w1-slides.html`~`w5-slides.html` | 완료 초기 수업(W1~W5) 학생 슬라이드(수업안 없음). |
-| `w11~w13-slides.html` | W11~W13 학생 슬라이드(수업안 없음). |
+| `w11~w15-slides.html` | W11~W15 학생 슬라이드(수업안 없음). W13은 출품 실전 회고, W14는 H3 드라마, W15는 기존 AI 에이전트 수업. |
 | `examples/lego-heritage-dogam.pdf` | W7 도감 예시(교사가 보여줌). |
 | `README.md` | (구버전 설명이 남아 있음 — 이 HANDOFF가 최신) |
 
@@ -51,15 +51,17 @@
 ---
 
 ## 3. 커리큘럼 현황 (2026-08 기준)
-전체 **W1~W13**, 매주 완료되면 대시보드에서 past로 이동.
+전체 **W1~W15**, 매주 완료되면 대시보드에서 past로 이동.
 
-**완료(W1~W11) — index.html의 `past` 배열, '지금까지 해온 것':**
+**완료(W1~W12) — index.html의 `past` 배열, '지금까지 해온 것':**
 - W1 AI개념+게임(병합) / W2 음악 / W3 일상앱(투두) / W4 방탈출 / W5 파일·폴더
 - W6 이미지·영상 맛보기+고르기 / W7 관심사 도감 슬라이드 / W8 미래의 나 웹툰→애니(1·2부) / W9 원래 AI로 안 하던 걸 AI로(써먹기) / W10 혼자 굴리는 힘+AI에게 잘 시키기 / W11 토큰·사용량
+- W12 내 컴퓨터 밖으로(서버·업로드·배포 + AI 커넥터로 '우리반 아케이드'에 게임 올리기)
 
-**예정(W12~W13) — `phase1` 배열, '앞으로의 커리큘럼':**
-- W12 내 컴퓨터 밖으로(서버·업로드·배포 + AI 커넥터로 '우리반 아케이드' class-arcade에 게임 올리기)
-- W13 AI 에이전트(챗봇 vs 에이전트, 목표·규칙·완료기준, 안전, 자유 과제)
+**예정(W13~W15) — `phase1` 배열, '앞으로의 커리큘럼':**
+- W13 게임을 출품작으로: Claude Code·아케이드 결과물을 Codex에서 프로젝트화 → Vercel·아케이드 배포 → 이미지 생성·적용 → 외부 DGX Spark에서 음악 15곡 생성·적용 → 검수·재배포 → GitHub 협업. 실제 Codex 작업 `제출 버전 통합`과 `/Users/rgh/dev/openai-game-builers/death-knight` 결과를 바탕으로 만든 회고 수업.
+- W14 세로 드라마 만들기: MiniMax H3 + DGX Spark로 팀당 30~45초 한국어 9:16 드라마. 이야기 → 인물/장소 바이블 → 한 줄·한 화자 후보 생성 → 네이티브 대사/연속성 검사 → 통과본 편집·자막.
+- W15 AI 에이전트(기존 W13 이동): 챗봇 vs 에이전트, 목표·규칙·완료기준, 안전, 자유 과제.
 
 **W10 이후는 '메이커 루프'** — 번호 수업보다 스스로 만들고 내놓기를 가벼운 리듬으로. 대시보드에 별도 섹션 있음.
 
@@ -84,13 +86,14 @@
 
 ### 학생 슬라이드 두 가지 네비 유형(둘 다 허용)
 1. **사이트 제작형(W1~W10 slides)**: 상단 점(dots) + 하단 원형 ‹/›버튼 + 카운터, 클릭=다음, `.home` 링크. `.stage/.slide.active` 페이드.
-2. **첨부 재작성형(W11~W13, W12)**: 상단 진행 bar + 우하단 카운터 + 좌/우 클릭·키보드·터치. 원본(첨부)의 nav를 유지하고 **스타일만** warm으로 바꾼 것.
+2. **첨부 재작성형(W11~W15)**: 상단 진행 bar + 우하단 카운터 + 좌/우 클릭·키보드·터치. 원본(첨부)의 nav를 유지하고 **스타일만** warm으로 바꾼 것. W13·W14는 같은 네비 유형으로 새로 작성.
 
 ---
 
 ## 6. 도구 분담 (고정 원칙)
-- **텍스트·리서치·코딩 = Claude** (W1~W5 Claude Code, W9 써먹기, W10 잘 시키기, W12 커넥터/배포). 공용 **Claude 계정**(18세 미만은 본인 계정 불가 → 교사/공용 계정 공유), 아이패드는 **claude.ai/code(웹) 브라우저**.
-- **이미지·영상 생성 = Gemini / Google Flow(Veo)** (W6·W7·W8, `gemini.html`). Claude는 이미지·영상 생성을 못 하므로 이 분담 유지.
+- **수업용 텍스트·리서치·코딩 프로토타입 = Claude** (W1~W5 Claude Code, W9 써먹기, W10 잘 시키기, W12 커넥터/배포). 공용 **Claude 계정**(18세 미만은 본인 계정 불가 → 교사/공용 계정 공유), 아이패드는 **claude.ai/code(웹) 브라우저**.
+- **출품판 통합·자산 적용·테스트·배포 = Codex** (W13 실제 사례). 아케이드 결과물을 독립 프로젝트로 가져와 ImageGen 그래픽, 외부 DGX 음악, 모바일/게임 검수, Vercel·GitHub까지 한 작업 흐름으로 다룸.
+- **일반 이미지·영상 창작 = Gemini / Google Flow(Veo)** (W6·W7·W8, `gemini.html`). **한국어 대사 드라마 = MiniMax H3 / DGX Spark** (W14). H3는 한 화면 한 화자·한 줄씩 생성하고, 네이티브 대사와 인물 연속성을 통과한 움직이는 테이크만 편집한다.
 - 도감·슬라이드 결과물 = 구글 슬라이드. 학생 작업물 저장 = **교육용 계정 구글 드라이브 공유 폴더**.
 - 계정: 이미지·영상용 **Google AI Pro**(교육용 gmail, 성인 계정) / 배포·코딩용 **Claude Pro**(개인·교육용, 회사 계정 아님). Family Link 대신 **공용 계정 로그인** 방식.
 - 배포 스택: 클래스 공용 **GitHub + Vercel**(자동배포) — 설정 절차는 `deploy.html` 참고.
@@ -106,7 +109,7 @@
 ---
 
 ## 8. 첨부 다크 슬라이드 → 사이트 톤 변환 레시피
-`w11~w13-slides.html`, `w12-slides.html`가 이 방식으로 만들어짐. 파이썬(`/Users/rgh/miniconda3/bin/python3`)으로 `<style>...</style>`만 통째로 warm CSS로 치환하고, 폰트 링크(Pretendard→Hahmlet+IBM Plex+Space Mono)를 바꾸고, `<body>` 뒤에 `<a class="home" href="index.html">현황판 ↗</a>`를 삽입한다. 클래스명(eyebrow, card, grid, ul.plain, chips, turns, gates, ladder, prompt, flow/step, banner, kicker 등)은 **그대로 두고** warm 색으로 재정의만 하면 본문을 안 건드려도 된다. (기존 커밋의 파이썬 스니펫을 참고하거나 git 로그에서 찾을 것.)
+`w11~w15-slides.html`가 이 네비 유형과 warm 톤을 사용한다. 첨부 다크 슬라이드는 파이썬(`/Users/rgh/miniconda3/bin/python3`)으로 `<style>...</style>`만 통째로 warm CSS로 치환하고, 폰트 링크(Pretendard→Hahmlet+IBM Plex+Space Mono)를 바꾸고, `<body>` 뒤에 `<a class="home" href="index.html">현황판 ↗</a>`를 삽입한다. 클래스명(eyebrow, card, grid, ul.plain, chips, turns, gates, ladder, prompt, flow/step, banner, kicker 등)은 **그대로 두고** warm 색으로 재정의만 하면 본문을 안 건드려도 된다. (기존 커밋의 파이썬 스니펫을 참고하거나 git 로그에서 찾을 것.)
 
 색 매핑: coral→clay(`--clay`), cyan→teal, yellow→gold(`#a9761a` 텍스트)/amber(채움), 배경 다크→paper.
 
@@ -125,7 +128,9 @@ grep -oE \"wk:'W[0-9]+'\" index.html | sed \"s/[^0-9]//g\" | sort -n | tr '\\n' 
 ---
 
 ## 10. 관련 프로젝트
-- **우리반 아케이드** (`class-arcade.vercel.app`) — 아이들 게임 공유 갤러리. W12에서 AI **커넥터(MCP)** 로 게임을 업로드하는 대상. 커넥터 주소: `class-arcade.vercel.app/api/mcp`, 직접 업로드: `class-arcade.vercel.app/upload`. (별도 저장소/프로젝트)
+- **우리반 아케이드** (`class-arcade.vercel.app`) — 아이들 게임 공유 갤러리. W12에서 AI **커넥터(MCP)** 로 게임을 업로드한 대상. 커넥터 주소: `class-arcade.vercel.app/api/mcp`, 직접 업로드: `class-arcade.vercel.app/upload`. (별도 저장소/프로젝트)
+- **죽어야 이기는 용사 출품판** (`/Users/rgh/dev/openai-game-builers/death-knight`, `death-knight-web.vercel.app`) — W13 실제 사례. Codex 작업 제목은 `제출 버전 통합`.
+- **DGX Spark** — W13 사운드 생성 모델과 W14 MiniMax H3 드라마 렌더링에 사용하는 외부 AI 컴퓨터. H3 수업/제작 시 `/Users/rgh/.codex/skills/dgx-h3-web-drama/SKILL.md`의 바이블·네이티브 대사·합격 검사 규칙을 따를 것.
 
 ---
 

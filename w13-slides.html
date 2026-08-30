@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W13 · AI 에이전트</title>
+<title>W13 · 게임을 출품작으로</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -12,328 +12,267 @@
     --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
     --ink:#23201a; --mute:#5a5347;
     --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
-    --mono:'Space Mono', ui-monospace, monospace;
-    --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
-    --disp:'Hahmlet', serif;
+    --mono:'Space Mono',ui-monospace,monospace; --sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif; --disp:'Hahmlet',serif;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
-  body{background-color:var(--paper); color:var(--ink); font-family:var(--sans); overflow:hidden; -webkit-font-smoothing:antialiased;}
-  .deck{position:fixed; inset:0;}
-  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
-    padding:clamp(32px,6vw,110px); background-color:var(--paper);
-    background-image:radial-gradient(1100px 600px at 78% -12%, rgba(63,107,99,.10), transparent 60%),
-                     radial-gradient(900px 520px at 8% 108%, rgba(216,151,58,.12), transparent 62%);}
-  .slide.active{display:flex; animation:in .38s ease both;}
-  @keyframes in{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
-
-  .bar{position:fixed; left:0; top:0; height:4px; background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal)); width:0; z-index:40; transition:width .3s ease;}
-  .count{position:fixed; right:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:13px; color:var(--mute); z-index:40; letter-spacing:.06em;}
-  .hint{position:fixed; left:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:12px; color:#a89c83; z-index:40;}
-  .home{position:fixed; right:clamp(18px,3vw,38px); top:clamp(14px,2.4vw,22px); font-family:var(--sans); font-size:13px; color:var(--clay-deep); text-decoration:none; font-weight:600; z-index:40; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px;}
-
-  .eyebrow{font-family:var(--sans); font-size:clamp(11px,1.15vw,14px); letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep); font-weight:700; margin-bottom:22px;}
-  .eyebrow.coral{color:var(--clay-deep);} .eyebrow.yellow{color:var(--gold);}
-  h1{font-family:var(--disp); font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.08; letter-spacing:-.02em;}
-  h2{font-family:var(--disp); font-size:clamp(28px,4.6vw,56px); font-weight:800; line-height:1.18; letter-spacing:-.015em; margin-bottom:18px;}
-  h3{font-family:var(--disp); font-size:clamp(19px,2.1vw,26px); font-weight:700; line-height:1.3;}
-  .lead{font-size:clamp(17px,1.85vw,24px); color:var(--mute); line-height:1.65; max-width:46ch; font-weight:500;}
-  .big{font-family:var(--disp); font-size:clamp(24px,3.6vw,44px); font-weight:800; line-height:1.35; letter-spacing:-.01em;}
-  .mono{font-family:var(--mono);}
-  .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
-  .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
-
-  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
-  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
-  .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
-  .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
-  .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
-  .card.on{border-color:var(--clay); background-color:#fbf0e6;} .card.on .k{color:var(--clay-deep);}
-  .card.dim{opacity:.5;}
-  .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
-  .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
-  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
-  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
-  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
-
-  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
-  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
-  ul.plain li:last-child{border-bottom:none;}
-  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
-  ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
-
-  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
-  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
-  .chip.a{border-color:#b9d0c9; color:var(--teal);}
-  .chip.b{border-color:#e6cf9a; color:var(--gold);}
-  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
-  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
-
-  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
-  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
-  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
-  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
-  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
-  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
-  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
-  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
-
-  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
-  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
-
-  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
-  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
-  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
-  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
-  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
-
-  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
-  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
-  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
-  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
-  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
-  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
-  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
-
-  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
-  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
-  .prompt .val{color:var(--ink);}
-
-  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
-  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
-
-  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
-  @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
+  *{box-sizing:border-box;margin:0;padding:0} html,body{height:100%}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}
+  .slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}
+  .count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}
+  .hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}
+  .home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}
+  h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}
+  h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}
+  h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}
+  .lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}
+  .hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(13px,1.45vw,20px);line-height:1.75;max-width:980px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}
+  .banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .compare{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-top:30px}.arrow{font-family:var(--disp);font-size:clamp(26px,4vw,48px);color:var(--clay)}
+  @media(max-width:780px){.g3,.g2,.compare{grid-template-columns:1fr}.arrow{transform:rotate(90deg);justify-self:center}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow{margin-top:12px}.card,.step{padding:11px}.card p,.step .d{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
 </style>
 </head>
 <body>
 <a class="home" href="index.html">현황판 ↗</a>
-<div class="bar" id="bar"></div>
-<div class="count" id="count"></div>
-<div class="hint">← → 또는 클릭</div>
-
+<div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
 
   <section class="slide active">
-    <div class="eyebrow">W13 · 토대 3 / 3</div>
-    <h1>스스로 일하는 AI<br><span class="hi-c">에이전트</span></h1>
+    <div class="eyebrow">W13 · 출품 실전 회고</div>
+    <h1>게임을<br><span class="hi">출품작으로</span></h1>
     <div class="rule"></div>
-    <p class="lead">지난 시간엔 <b>일을 나눠서 맡기는 법</b>을 배웠다.<br>이번엔 여러 단계를 <b class="hi-y">한꺼번에</b> 맡겨본다.</p>
+    <p class="lead">아케이드에서 자란 아이디어가 어떻게 <b class="hi-t">독립 게임</b>이 되고,<br>그림·음악·테스트·협업까지 갖춘 제출 버전이 되었을까?</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">차이</div>
-    <h2>챗봇과 에이전트</h2>
-    <div class="vs">
-      <div class="card"><div class="k">챗봇</div><h3>답을 준다</h3><p>물어보면 알려준다. 실행은 내가 한다.</p></div>
-      <div class="mid">vs</div>
-      <div class="card tag-ai"><div class="k">에이전트</div><h3>일을 한다</h3><p>목표를 주면 스스로 여러 단계를 실행한다.</p></div>
-    </div>
-    <div class="banner" style="border-color:var(--line); background-color:var(--panel);">
-      <p class="big">"떡볶이 레시피 알려줘" <span class="mono" style="color:var(--mute); font-size:.55em;">→ 챗봇</span><br>
-      "재료 사와서 만들어놔" <span class="mono" style="color:var(--mute); font-size:.55em;">→ 에이전트</span></p>
+    <div class="eyebrow gold">먼저 기억하기</div>
+    <h2>처음부터 완성작은<br>아니었다</h2>
+    <div class="compare">
+      <div class="card"><div class="k">시작</div><h3>Claude Code + 아케이드</h3><p>아이들이 규칙과 캐릭터를 말로 제안하고, 서로의 게임을 플레이하고 리믹스했다.</p></div>
+      <div class="arrow">→</div>
+      <div class="card clay"><div class="k">출품판</div><h3>Codex에서 통합</h3><p>여러 결과물을 한 프로젝트로 묶고, 그래픽·음악·버그·배포를 끝까지 다듬었다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">작동 방식</div>
-    <h2>에이전트는 이렇게 움직인다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>목표를 받는다</b></li>
-      <li data-n="02"><b>스스로 계획을 세운다</b><span>어떤 순서로 할지 자기가 정한다</span></li>
-      <li data-n="03"><b>도구를 써서 실행한다</b><span>검색하고, 파일을 열고, 클릭하고, 저장한다</span></li>
-      <li data-n="04"><b>확인하고 고친다</b><span>빠진 게 있으면 되돌아가 다시 한다</span></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">그래서</div>
-    <h2>시키는 방법이 바뀐다</h2>
+    <div class="eyebrow teal">오늘의 질문</div>
+    <h2>AI가 다 만들었을까?</h2>
     <div class="grid g2">
-      <div class="card dim"><div class="k">챗봇에게</div><h3>결과물을 지시</h3><p>"포켓몬 10마리 표로 정리해줘"</p></div>
-      <div class="card on"><div class="k">에이전트에게</div><h3>목표 + 규칙 + 완료 기준</h3><p>무엇을 하려는지, 지켜야 할 조건, 그리고 <b>"다 됐다"가 무슨 뜻인지</b>까지</p></div>
+      <div class="card teal"><div class="k">사람이 한 일</div><h3>재미를 판단했다</h3><p>아이디어, 규칙, 난이도, 마음에 드는 그림과 음악, 고쳐야 할 문제를 골랐다.</p></div>
+      <div class="card clay"><div class="k">Codex가 한 일</div><h3>손발이 되어 실행했다</h3><p>파일을 가져오고, 코드를 고치고, 이미지를 만들고, 테스트하고, 배포했다.</p></div>
     </div>
-    <div class="kicker">혼자 오래 일하니까, 출발할 때 <span class="hi-y">도착점을 정해줘야</span> 한다.</div>
+    <div class="kicker">AI가 빨리 움직여도 <span class="hi">방향과 합격 기준</span>은 사람이 정한다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">종류</div>
-    <h2><span class="hi">무엇을 만질 수 있느냐</span>로<br>나뉜다</h2>
-    <div class="ladder">
-      <div class="rung r4"><span class="lv">04</span><span class="nm">코드</span><span class="ds">직접 프로그램을 짠다 · Claude Code</span></div>
-      <div class="rung r3"><span class="lv">03</span><span class="nm">내 컴퓨터</span><span class="ds">내 파일과 앱을 열고 고치고 저장한다 · Computer Use, Cowork</span></div>
-      <div class="rung r2"><span class="lv">02</span><span class="nm">브라우저</span><span class="ds">웹을 직접 클릭하고 입력한다 · Browser Use</span></div>
-      <div class="rung r1"><span class="lv">01</span><span class="nm">웹 읽기</span><span class="ds">여러 사이트를 찾아 읽고 정리한다 · Deep Research</span></div>
+    <div class="eyebrow">전체 지도</div>
+    <h2>제출 버전 통합 · 6단계</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">가져오기</div><div class="d">프로젝트 폴더 + 아케이드 파일</div></div>
+      <div class="step"><div class="n">02</div><div class="t">첫 배포</div><div class="d">Vercel 주소 + 아케이드 등록</div></div>
+      <div class="step"><div class="n">03</div><div class="t">그래픽</div><div class="d">배경·보스·맵 요소 생성</div></div>
+      <div class="step"><div class="n">04</div><div class="t">음악</div><div class="d">DGX Spark에서 생성·적용</div></div>
+      <div class="step"><div class="n">05</div><div class="t">검수</div><div class="d">고치고 확인하고 재배포</div></div>
+      <div class="step"><div class="n">06</div><div class="t">협업</div><div class="d">GitHub에 기록하고 공유</div></div>
     </div>
-    <div class="axis">↑ 위로 갈수록 할 수 있는 일이 많아진다</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">중요</div>
-    <h2>할 수 있는 게 많아지면<br><span class="hi">사고도 커진다</span></h2>
-    <div class="grid g2">
-      <div class="card tag-ai"><div class="k">01 · 웹 읽기</div><p>잘못돼도 <b>틀린 정보</b>가 나올 뿐. 내가 확인하면 된다.</p></div>
-      <div class="card tag-me"><div class="k">03 · 내 컴퓨터</div><p>잘못되면 <b>내 파일이 사라지거나 바뀐다.</b> 되돌리기 어렵다.</p></div>
-    </div>
-    <div class="kicker">권한과 책임은 <span class="hi">같이</span> 올라간다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">기억하지?</div>
-    <h2>에이전트는<br>연료를 많이 먹는다</h2>
-    <p class="lead">혼자 여러 단계를 도는 동안, 매 단계마다<br>지금까지의 내용을 <b class="hi-y">다시 읽고 또 읽는다.</b></p>
-    <div class="kicker">그래서 목표 · 규칙 · 완료 기준을 정해주는 게 <span class="hi">아끼는 방법</span>이기도 하다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">시연 · 10분</div>
-    <h2>이제 진짜로<br>일하는 걸 본다</h2>
-    <p class="lead">선생님 화면에서 에이전트에게 일을 맡긴다.<br>보면서 이 세 가지를 찾아보자.</p>
+    <div class="eyebrow gold">01 · 가져오기</div>
+    <h2>작업할 <span class="hi-g">집</span>부터 만든다</h2>
     <div class="grid g3">
-      <div class="card tag-ai"><div class="k">관전 ①</div><h3>계획</h3><p>일을 어떻게 나눠서 시작하나?</p></div>
-      <div class="card tag-both"><div class="k">관전 ②</div><h3>멈춤</h3><p>어디서 사람한테 물어보나?</p></div>
-      <div class="card tag-me"><div class="k">관전 ③</div><h3>자가 확인</h3><p>빠뜨린 걸 스스로 찾아내나?</p></div>
+      <div class="card"><div class="k">프로젝트 폴더</div><h3>게임의 집</h3><p>코드, 그림, 음악, 설명이 한곳에 모인다.</p></div>
+      <div class="card teal"><div class="k">아케이드</div><h3>출발점</h3><p>아이들이 플레이하고 리믹스한 작업 파일을 가져온다.</p></div>
+      <div class="card clay"><div class="k">Codex</div><h3>작업자</h3><p>폴더 안을 읽고 독립 웹사이트 구조로 정리한다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">시연 과제</div>
-    <h2>포켓몬 도감 폴더 만들기</h2>
-    <div class="prompt"><span class="lbl">목표</span>  <span class="val">포켓몬 1~10번 도감 폴더 만들기</span>
-
-<span class="lbl">규칙</span>  <span class="val">· 출처는 PokéAPI 한 곳만 사용</span>
-      <span class="val">· 파일 이름은 001_이상해씨.png 형식</span>
-      <span class="val">· 특징은 타입 · 키 · 몸무게 · 한 줄 설명만</span>
-
-<span class="lbl">완료</span>  <span class="val">포켓몬도감/ 안에 이미지 10장 + 도감.md 표 1개</span>
-<span class="lbl">기준</span>  <span class="val">빠진 번호가 있으면 먼저 알려줄 것</span></div>
-    <div class="kicker">목표 · 규칙 · 완료 기준 — <span class="hi-y">방금 배운 세 칸</span> 그대로다.</div>
+    <div class="eyebrow teal">첫 요청의 모양</div>
+    <h2>번호만 말하지 말고<br><span class="hi-t">목적</span>까지 말한다</h2>
+    <div class="prompt"><span class="lbl">출발</span>  <span class="val">아케이드 53번 게임을 가져와줘.</span>
+<span class="lbl">목적</span>  <span class="val">별도 웹사이트로 배포할 수 있는 프로젝트로 구성해줘.</span>
+<span class="lbl">합칠 것</span> <span class="val">59번의 보스와 58번의 투척 방식을 참고해줘.</span>
+<span class="lbl">확인</span>  <span class="val">게임 플레이가 달라지거나 깨지지 않는지 테스트해줘.</span></div>
+    <div class="kicker">좋은 요청은 <span class="hi-t">어디서 → 무엇을 → 왜 → 어떻게 확인</span>이 보인다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">왜 이렇게 썼나</div>
-    <h2>"한 곳만 써"가<br>왜 중요할까</h2>
-    <div class="grid g2">
-      <div class="card"><div class="k">규칙 없이 맡기면</div><p>아무 사이트나 뒤진다 → 이름이 틀리고, 정보가 제각각이고, 한참 걸린다</p></div>
-      <div class="card tag-ai"><div class="k">한 곳을 정해주면</div><p>정확하고 빠르다. <b>어디서 가져왔는지 내가 안다</b> → 확인할 수 있다</p></div>
-    </div>
-    <div class="kicker">규칙을 주는 건 제한이 아니라 <span class="hi-c">길을 알려주는 것</span>이다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">실험</div>
-    <h2>일하는 도중에<br>규칙을 바꿔보자</h2>
-    <div class="banner"><p class="big">"설명을 초등학생 말투로 바꿔줘"</p></div>
-    <p class="lead" style="margin-top:24px;">에이전트가 <b class="hi-y">세운 계획을 스스로 고치는 순간</b>을 보게 된다.<br>이게 챗봇과 가장 다른 점이다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">써먹기</div>
-    <h2>우리가 진짜 쓸 만한 것들</h2>
-    <div class="grid g2">
-      <div class="card tag-ai">
-        <div class="k">브라우저 · 웹을 돌아다닌다</div>
-        <p>· 사고 싶은 것 여러 쇼핑몰 가격 비교표<br>· 조건 맞는 무료 폰트 · 배경음악 찾아 모으기<br>· 관심 분야 대회 · 공모전 마감일 정리</p>
-      </div>
-      <div class="card tag-both">
-        <div class="k">컴퓨터 · 내 파일을 만진다</div>
-        <p>· 엉망인 다운로드 폴더 종류별로 정리<br>· 웹툰 컷 30장 순서대로 이름 바꾸기<br>· 지금까지 만든 작품 목록을 표로</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">안전 규칙</div>
-    <div class="banner">
-      <p class="big">읽고 모으는 건 맡겨도,<br><span class="hi">로그인 · 결제 · 올리기</span>는 안 맡긴다.</p>
-    </div>
-    <p class="lead" style="margin-top:26px;">에이전트는 <b>내가 로그인한 상태</b>로 웹을 돌아다닌다.<br>주문하거나 글을 올리는 건, 진짜로 일어난다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">한 입만 · Diligence</div>
-    <h2>포켓몬 그림은<br>누구 것일까?</h2>
-    <ul class="plain">
-      <li data-n="01"><b>수업에서 보고 공부하는 것</b><span>괜찮다</span></li>
-      <li data-n="02"><b>인터넷에 올려서 공개하는 것</b><span>다른 문제다. 만든 회사의 것이니까</span></li>
-    </ul>
-    <div class="kicker">"내가 만든 것"과 "내가 가져온 것"을 <span class="hi-y">구분해두자.</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">이제 각자</div>
-    <h1>자유 과제<br><span class="hi-c">시작</span></h1>
-    <p class="lead" style="margin-top:24px;">첫 단계인 <b>조사</b>는 에이전트에게 맡겨보자.<br>돌리기 전에 <b class="hi-y">세 줄</b>을 먼저 적는다.</p>
-    <div class="prompt"><span class="lbl">목표</span>  <span class="val">내가 알고 싶은 것 한 줄</span>
-<span class="lbl">조건</span>  <span class="val">지켜야 할 것 두 개</span>
-<span class="lbl">완료</span>  <span class="val">"다 됐다"가 어떤 모습인지</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">기다리는 동안</div>
-    <h2>5분에서 10분,<br>뭘 할까?</h2>
-    <p class="lead">에이전트가 일하는 동안 <b class="hi">멍하니 기다리지 않는 것.</b><br>오늘 진짜 연습할 습관은 이거다.</p>
+    <div class="eyebrow gold">02 · 첫 배포</div>
+    <h2>한 게임에<br>세 개의 자리가 생겼다</h2>
     <div class="grid g3">
-      <div class="card"><div class="k">할 일 A</div><p>다음 덩어리 미리 준비하기</p></div>
-      <div class="card"><div class="k">할 일 B</div><p>"내가 할 일" 칸 먼저 처리하기</p></div>
-      <div class="card"><div class="k">할 일 C</div><p>결과를 어떻게 확인할지 정해두기</p></div>
+      <div class="card"><div class="k">내 컴퓨터</div><h3>프로젝트 폴더</h3><p>실제로 고치는 작업실</p></div>
+      <div class="card clay"><div class="k">Vercel</div><h3>독립 웹 주소</h3><p>누구나 실행할 수 있는 완성판</p></div>
+      <div class="card teal"><div class="k">아케이드</div><h3>우리 반 전시장</h3><p>친구들이 찾고 플레이하는 입구</p></div>
     </div>
+    <div class="kicker">작업실과 공연장과 안내판은 <span class="hi">서로 다른 역할</span>이다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">결과가 왔다</div>
-    <h2>바로 쓰지 말고<br><span class="hi-y">출처 3개</span>만 눌러보자</h2>
+    <div class="eyebrow">배포 뒤 확인</div>
+    <h2>주소가 생겼다고<br>끝이 아니다</h2>
     <ul class="plain">
-      <li data-n="01"><b>링크가 진짜 열리나?</b></li>
-      <li data-n="02"><b>거기에 그 내용이 정말 있나?</b></li>
-      <li data-n="03"><b>언제 쓰인 글인가?</b></li>
+      <li data-n="01"><b>실제 주소가 열리는가?</b><span>내 컴퓨터가 아니라 인터넷에서 확인</span></li>
+      <li data-n="02"><b>그림과 음악이 빠짐없이 나오는가?</b><span>파일 경로가 틀리면 배포본에서만 안 보일 수 있다</span></li>
+      <li data-n="03"><b>휴대폰과 아이패드에서도 조작되는가?</b></li>
+      <li data-n="04"><b>아케이드에 제목과 주소가 맞게 등록됐는가?</b></li>
     </ul>
-    <div class="kicker">에이전트는 오래 혼자 일한다 = <span class="hi">틀려도 끝까지 간다.</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">세 시간을 한 줄로</div>
-    <div class="banner">
-      <p class="big">틀렸을 때<br><span class="hi">내가 알아챌 수 있는 일</span>만<br>맡긴다.</p>
-    </div>
-    <div class="kicker">토큰을 알면 아껴 쓰고 · 나눌 줄 알면 잘 맡기고 · 확인할 줄 알면 안전하다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">나가기 전에</div>
-    <h2>한 줄만 적고 가자</h2>
+    <div class="eyebrow gold">03 · 그래픽</div>
+    <h2>그림을 만드는 것과<br><span class="hi-g">게임에 쓰는 것</span>은 다르다</h2>
     <div class="grid g2">
-      <div class="card tag-ai"><div class="k">오늘 맡긴 일 중에</div><h3>결과를 내가 확인할 수 있었던 것</h3></div>
-      <div class="card tag-me"><div class="k">오늘 맡긴 일 중에</div><h3>확인할 수 없었던 것</h3></div>
+      <div class="card teal"><div class="k">만들기</div><p>배경, 보스, 발판, 문, 가시처럼 필요한 그림을 같은 화풍으로 생성한다.</p></div>
+      <div class="card clay"><div class="k">적용하기</div><p>투명 배경, 비율, 크기, 잘림, 충돌 위치를 게임 코드와 맞춘다.</p></div>
     </div>
-    <div class="kicker">이번 주 미션 — 집에서 에이전트에게 <span class="hi-y">일 하나</span> 맡겨보고, 위 두 칸을 채워오기.</div>
+    <div class="banner"><p class="big">예쁜 그림도 캐릭터 발이 떠 보이거나<br>벽보다 판정이 크면 <span class="hi">실패</span>다.</p></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">실제 제출판</div>
+    <h2>그래픽을 얼마나 바꿨을까?</h2>
+    <div class="grid g3">
+      <div class="card clay"><div class="k">배경</div><h1 class="hi" style="font-size:clamp(42px,6vw,72px)">10</h1><p>스테이지별 다크 판타지 배경</p></div>
+      <div class="card gold"><div class="k">보스</div><h1 class="hi-g" style="font-size:clamp(42px,6vw,72px)">5</h1><p>크고 선명한 보스 이미지</p></div>
+      <div class="card teal"><div class="k">맵 요소</div><h1 class="hi-t" style="font-size:clamp(42px,6vw,72px)">13</h1><p>발판, 가시, 용암, 문 등</p></div>
+    </div>
+    <div class="kicker">숫자보다 중요한 것 — <span class="hi-t">모두 같은 세계의 물건처럼 보이게</span> 만들었다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">반복 루프</div>
+    <h2>플레이가 곧 요구사항이 된다</h2>
+    <div class="flow">
+      <div class="step"><div class="n">PLAY</div><div class="t">직접 해본다</div><div class="d">보는 것만으로 못 찾는 문제</div></div>
+      <div class="step"><div class="n">NOTICE</div><div class="t">이상함을 말한다</div><div class="d">어디서 무엇이 왜 불편한지</div></div>
+      <div class="step"><div class="n">FIX</div><div class="t">Codex가 고친다</div><div class="d">코드·그림·수치를 수정</div></div>
+      <div class="step"><div class="n">VERIFY</div><div class="t">다시 확인한다</div><div class="d">문제 해결 + 다른 곳은 그대로</div></div>
+    </div>
+    <div class="kicker">한 번에 완벽한 프롬프트보다 <span class="hi">좋은 관찰 한 줄</span>이 더 강하다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">우리가 실제로 찾은 것</div>
+    <h2>버그는 플레이어의 말로 시작했다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>“시작하자마자 얼음 때문에 죽어.”</b><span>시작 안전구역과 장애물 위치 수정</span></li>
+      <li data-n="02"><b>“보스를 안 깨도 다음 판이 열려.”</b><span>보스 클리어 기록과 잠금 규칙 추가</span></li>
+      <li data-n="03"><b>“빙판 위에서 발이 떠 보여.”</b><span>PNG 투명 여백과 충돌면 정렬</span></li>
+      <li data-n="04"><b>“아이폰 가로 화면에서 버튼이 가려.”</b><span>터치 조작과 가로모드 UI 개선</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">04 · 외부 AI 컴퓨터</div>
+    <h2>내 맥에 없는 힘을<br><span class="hi-g">빌려 썼다</span></h2>
+    <div class="compare">
+      <div class="card"><div class="k">Codex가 있는 컴퓨터</div><h3>지휘실</h3><p>외부 컴퓨터에 접속하고, 모델을 설정하고, 결과 파일을 가져와 게임에 연결한다.</p></div>
+      <div class="arrow">↔</div>
+      <div class="card gold"><div class="k">DGX Spark</div><h3>AI 작업실</h3><p>큰 사운드 생성 모델을 돌려 스테이지별 배경음악을 만든다.</p></div>
+    </div>
+    <div class="kicker">AI도 모든 일을 한 컴퓨터에서 하지 않는다. <span class="hi-g">맞는 도구가 있는 곳</span>에 일을 보낸다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">음악 제작 흐름</div>
+    <h2>15곡이 게임 안으로 들어오기까지</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">설계</div><div class="d">타이틀 1 + 일반 8 + 보스 5 + 엔딩 1</div></div>
+      <div class="step"><div class="n">02</div><div class="t">생성</div><div class="d">DGX에서 장면별 연주곡 제작</div></div>
+      <div class="step"><div class="n">03</div><div class="t">선별</div><div class="d">분위기와 시작·끝을 사람이 확인</div></div>
+      <div class="step"><div class="n">04</div><div class="t">적용</div><div class="d">파일명과 스테이지를 연결</div></div>
+      <div class="step"><div class="n">05</div><div class="t">재생 검사</div><div class="d">전환, 음량, 앞무음 확인</div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">좋은 음악 요청</div>
+    <h2>“멋진 음악”보다<br>장면의 조건을 준다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">무엇을 넣을까</div><p>장면 분위기, 악기, 속도, 시작 5초의 인상, 곡의 전개와 마무리</p></div>
+      <div class="card clay"><div class="k">무엇을 뺄까</div><p>보컬·대사·환경음, 효과음을 가리는 과한 중음역, 갑작스러운 큰 소리</p></div>
+    </div>
+    <div class="kicker">게임 음악은 혼자 멋있는 곡이 아니라 <span class="hi-t">플레이와 함께 잘 들리는 곡</span>이어야 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">05 · 다시 정리하고 배포</div>
+    <h2>마지막은 “더 만들기”가 아니라<br><span class="hi-g">합격 검사</span>다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>게임을 처음부터 끝까지 플레이</b><span>일반 8개 스테이지와 보스 5개</span></li>
+      <li data-n="02"><b>모바일과 터치 환경 확인</b></li>
+      <li data-n="03"><b>그림·음악 파일 누락과 콘솔 오류 확인</b></li>
+      <li data-n="04"><b>빌드한 뒤 Vercel에 다시 배포</b></li>
+      <li data-n="05"><b>운영 주소에서 한 번 더 확인</b></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">완료 기준</div>
+    <h2>“다 했어”를<br>눈으로 확인할 수 있게</h2>
+    <div class="prompt"><span class="lbl">코드</span>   <span class="val">빌드와 문법 검사가 통과한다.</span>
+<span class="lbl">플레이</span> <span class="val">각 스테이지가 시작되고 클리어된다.</span>
+<span class="lbl">화면</span>   <span class="val">PC·아이폰·아이패드에서 조작 가능하다.</span>
+<span class="lbl">파일</span>   <span class="val">그림과 음악 주소가 모두 열린다.</span>
+<span class="lbl">배포</span>   <span class="val">실제 운영 주소에 새 버전이 보인다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">06 · GitHub</div>
+    <h2>작업 폴더를<br><span class="hi-g">공동 노트</span>로 만든다</h2>
+    <div class="grid g3">
+      <div class="card"><div class="k">기록</div><h3>무엇을 바꿨나</h3><p>커밋으로 변경 내용을 남긴다.</p></div>
+      <div class="card teal"><div class="k">복구</div><h3>언제로 돌아갈까</h3><p>문제가 생기면 이전 기록을 찾는다.</p></div>
+      <div class="card clay"><div class="k">협업</div><h3>함께 어떻게 고칠까</h3><p>같은 프로젝트를 내려받아 이어서 작업한다.</p></div>
+    </div>
+    <div class="kicker">GitHub는 완성 파일 보관함만이 아니라 <span class="hi">작업의 시간표</span>다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">GitHub의 세 동작</div>
+    <h2>저장 → 기록 → 공유</h2>
+    <div class="flow">
+      <div class="step"><div class="n">SAVE</div><div class="t">파일 저장</div><div class="d">내 컴퓨터에 수정 내용 반영</div></div>
+      <div class="step"><div class="n">COMMIT</div><div class="t">변경 기록</div><div class="d">“모바일 조작 수정”처럼 이름 붙이기</div></div>
+      <div class="step"><div class="n">PUSH</div><div class="t">GitHub로 공유</div><div class="d">다른 사람이 받을 수 있게 올리기</div></div>
+    </div>
+    <div class="kicker">Vercel을 GitHub와 연결하면 <span class="hi-t">push가 새 배포</span>로 이어질 수도 있다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">가장 중요한 배움</div>
+    <div class="banner"><p class="big">아이디어 → 첫 버전 → 플레이 → 관찰 → 수정 → 공개<br><span class="hi">이 루프가 작품을 만든다.</span></p></div>
+    <p class="lead" style="margin-top:24px">Codex는 긴 일을 이어서 해냈지만,<br>무엇이 재미있는지와 언제 합격인지는 우리가 정했다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>내 프로젝트라면<br>무엇을 한 번 더 고칠까?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">관찰</div><h3>플레이하면서 이상한 점 한 가지</h3><p>“어디서, 무엇이, 어떻게 이상한지”로 적기</p></div>
+      <div class="card clay"><div class="k">완료 기준</div><h3>고쳐졌다는 걸 어떻게 확인할지</h3><p>직접 볼 수 있는 기준 한 가지 적기</p></div>
+    </div>
+    <div class="kicker">이번 주 미션 — 내 작품 하나를 골라 <span class="hi-g">관찰 한 줄 + 합격 기준 한 줄</span> 써오기.</div>
   </section>
 
 </div>
-
 <script>
   const slides=Array.from(document.querySelectorAll('.slide'));
-  const bar=document.getElementById('bar'), count=document.getElementById('count');
-  let i=0; const pad=n=>String(n).padStart(2,'0');
-  function show(n){
-    i=Math.max(0,Math.min(slides.length-1,n));
-    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
-    bar.style.width=((i+1)/slides.length*100)+'%';
-    count.textContent=pad(i+1)+' / '+pad(slides.length);
-  }
-  document.addEventListener('keydown',e=>{
-    if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1);}
-    if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1);}
-    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
-  });
-  document.getElementById('deck').addEventListener('click',e=>{show(e.clientX<window.innerWidth*0.28?i-1:i+1);});
-  let x0=null;
-  document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',e=>{
-    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
-    if(Math.abs(dx)>45)show(dx<0?i+1:i-1); x0=null;
-  },{passive:true});
-  show(0);
+  const bar=document.getElementById('bar'),count=document.getElementById('count');
+  let i=0;const pad=n=>String(n).padStart(2,'0');
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});
+  document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));
+  let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
 </script>
 </body>
 </html>
