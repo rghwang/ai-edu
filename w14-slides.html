@@ -45,14 +45,25 @@
     <div class="eyebrow">W14 · 함께 만드는 것</div>
     <h1>같은 세계에서<br><span class="hi">만나기</span></h1>
     <div class="rule"></div>
-    <p class="lead">친구가 지금 <b class="hi-t">어디 있는지 보이고</b>, 내가 찍은 자리가 <b class="hi-t">맵에 남는</b> 게임.<br>그리고 그걸 가능하게 하는 <b class="hi">세 가지 도구</b>.</p>
+    <p class="lead">각자 캐릭터로 돌아다니고, 지나간 자리에 <b class="hi-t">발자국이 남는</b> 게임.<br>그리고 그걸 가능하게 하는 <b class="hi">세 가지 도구</b>.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">먼저 들어가 보자</div>
     <h2>지금 <span class="hi-g">접속</span>해 봅니다</h2>
-    <div class="url">class-space.vercel.app</div>
-    <div class="kicker">이름과 색을 고르고 들어가면 — <span class="hi">서로가 보인다.</span></div>
+    <div class="url">our-class-space.vercel.app</div>
+    <div class="kicker">이름·캐릭터·색을 고르고 들어가면 — <span class="hi">서로가 움직이는 게 보인다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">조작</div>
+    <h2>돌아다니고,<br><span class="hi">발자국</span>을 남긴다</h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">이동</div><h3>방향키 · W A S D</h3><p>내 캐릭터가 화면 안을 걸어다닌다.</p></div>
+      <div class="card clay"><div class="k">발자국</div><h3>스페이스</h3><p>지금 서 있는 자리에 내 색 발자국이 찍힌다.</p></div>
+      <div class="card gold"><div class="k">아이패드</div><h3>화면을 누르면</h3><p>그쪽으로 걸어간다. 발자국은 아래 버튼으로.</p></div>
+    </div>
+    <div class="kicker">해보면서 찾을 것 — <span class="hi">무엇이 남고 무엇이 사라지나?</span></div>
   </section>
 
   <section class="slide">
@@ -102,8 +113,8 @@
     <h2>여기가 <span class="hi-t">새로운</span> 부분</h2>
     <p class="lead">지금까지 우리 게임은 <b class="hi">데이터를 맡길 곳이 없었다.</b><br>Supabase는 두 가지를 해준다.</p>
     <div class="grid g2">
-      <div class="card teal"><div class="k">저장</div><h3>표에 적어둔다</h3><p>누가 어느 칸을 칠했는지 기록으로 남긴다. 컴퓨터를 꺼도 남는다.</p></div>
-      <div class="card gold"><div class="k">실시간</div><h3>바뀌면 알려준다</h3><p>누가 칸을 칠하면 접속한 모두에게 즉시 전달한다.</p></div>
+      <div class="card teal"><div class="k">저장</div><h3>표에 적어둔다</h3><p>누가 어디에 발자국을 남겼는지 기록해 둔다. 컴퓨터를 꺼도 남는다.</p></div>
+      <div class="card gold"><div class="k">실시간</div><h3>바뀌면 알려준다</h3><p>누가 발자국을 남기면 접속한 모두에게 즉시 전달한다.</p></div>
     </div>
   </section>
 
@@ -134,8 +145,8 @@
         <rect x="664" y="204" width="182" height="34" rx="8" fill="#fbf5e6" stroke="#e6cf9a" stroke-width="2"/>
         <rect x="664" y="246" width="182" height="34" rx="8" fill="#f0f5f2" stroke="#b9d0c9" stroke-width="2"/>
         <g font-family="'IBM Plex Sans KR',sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">
-          <text x="755" y="226" fill="#a9761a">커서 — 안 남음</text>
-          <text x="755" y="268" fill="#3f6b63">칠한 칸 — 남음</text>
+          <text x="755" y="226" fill="#a9761a">캐릭터 위치 — 안 남음</text>
+          <text x="755" y="268" fill="#3f6b63">발자국 — 남음</text>
         </g>
         <g stroke="#3f6b63" stroke-width="3" fill="none" stroke-linecap="round">
           <line x1="204" y1="73" x2="248" y2="73"/>
@@ -168,17 +179,17 @@
     <div class="eyebrow gold">오늘의 큰 생각</div>
     <h2>데이터에는<br><span class="hi-g">두 종류</span>가 있다</h2>
     <div class="grid g2">
-      <div class="card gold"><div class="k">사라지는 데이터</div><h3>지금 누가, 어디에</h3><p>친구의 커서 위치. 접속을 끊으면 <b>없어져야 맞다.</b> 저장할 이유가 없다.</p></div>
-      <div class="card teal"><div class="k">남는 데이터</div><h3>맵에 찍은 칸</h3><p>내가 차지한 자리. 컴퓨터를 꺼도 <b>남아 있어야 맞다.</b> 저장해야 한다.</p></div>
+      <div class="card gold"><div class="k">사라지는 데이터</div><h3>지금 누가, 어디에</h3><p>친구 캐릭터의 위치. 접속을 끊으면 <b>없어져야 맞다.</b> 저장할 이유가 없다.</p></div>
+      <div class="card teal"><div class="k">남는 데이터</div><h3>내가 남긴 발자국</h3><p>지나간 자리의 흔적. 컴퓨터를 꺼도 <b>남아 있어야 맞다.</b> 저장해야 한다.</p></div>
     </div>
     <div class="kicker">오늘 배우는 건 기술이 아니라 <span class="hi">“무엇을 남기고 무엇을 버릴까”</span>라는 판단이다.</div>
   </section>
 
   <section class="slide">
     <div class="eyebrow">생각해보기</div>
-    <h2>커서는 왜<br><span class="hi">저장하지 않을까?</span></h2>
+    <h2>캐릭터 위치는 왜<br><span class="hi">저장하지 않을까?</span></h2>
     <div class="grid g2">
-      <div class="card clay"><div class="k">만약 저장한다면</div><h3>1초에 수십 번</h3><p>마우스가 움직일 때마다 기록이 쌓인다. 금세 표가 터진다.</p></div>
+      <div class="card clay"><div class="k">만약 저장한다면</div><h3>1초에 수십 번</h3><p>1초에 15번씩 위치가 쌓인다. 금세 표가 터진다.</p></div>
       <div class="card teal"><div class="k">그리고 무의미하다</div><h3>3초 전 위치를 왜?</h3><p>“지금 어디 있나”는 지금만 쓸모 있다. 지나가면 값이 없다.</p></div>
     </div>
     <div class="kicker">좋은 프로그램은 <span class="hi">저장하지 않기로 결정한 것</span>이 분명하다.</div>
@@ -196,14 +207,15 @@
 
   <section class="slide">
     <div class="eyebrow gold">표 설계</div>
-    <h2>칸 하나에<br>무엇을 <span class="hi-g">적어둘까?</span></h2>
-    <div class="prompt"><span class="lbl">tiles</span>  (칸 정보를 담는 표)
+    <h2>발자국 하나에<br>무엇을 <span class="hi-g">적어둘까?</span></h2>
+    <div class="prompt"><span class="lbl">marks</span>  (발자국을 담는 표)
 
-  <span class="val">x</span>        가로 몇 번째 칸인가
-  <span class="val">y</span>        세로 몇 번째 칸인가
-  <span class="val">color</span>    누구 색으로 칠해졌나
-  <span class="val">name</span>     누가 찍었나
-  <span class="val">updated_at</span>  언제 찍었나</div>
+  <span class="val">x</span>          가로 어디쯤인가
+  <span class="val">y</span>          세로 어디쯤인가
+  <span class="val">color</span>      누구 색인가
+  <span class="val">emoji</span>      어떤 캐릭터가 남겼나
+  <span class="val">name</span>       누가 남겼나
+  <span class="val">created_at</span> 언제 남겼나</div>
     <div class="kicker">이것보다 적으면 게임이 안 되고, 많으면 오늘 안에 못 끝낸다.</div>
   </section>
 
@@ -229,8 +241,8 @@
     <div class="eyebrow teal">초등 트랙</div>
     <h2>오늘 할 일 <span class="hi-t">네 가지</span></h2>
     <ul class="plain">
-      <li data-n="01">게임에 들어가서 <b>같이 놀아본다</b><span>친구 커서가 움직이는 걸 확인</span></li>
-      <li data-n="02">브라우저를 껐다 켜본다<span>내 칸은 남아 있고, 친구 커서는 사라졌다</span></li>
+      <li data-n="01">게임에 들어가서 <b>같이 놀아본다</b><span>친구 캐릭터가 돌아다니는 걸 확인</span></li>
+      <li data-n="02">브라우저를 껐다 켜본다<span>내 발자국은 남아 있고, 친구 캐릭터는 사라졌다</span></li>
       <li data-n="03">코드에서 <b>🔧 표시</b>를 찾는다<span>config.js 안에 고쳐도 되는 곳이 표시돼 있다</span></li>
       <li data-n="04">하나를 고쳐서 <b>진짜로 합친다</b><span>가지 만들기 → 고치기 → 올리기 → 합치기</span></li>
     </ul>
@@ -240,11 +252,11 @@
     <div class="eyebrow gold">초등 트랙</div>
     <h2>고를 수 있는 <span class="hi-g">과제</span></h2>
     <div class="grid g3">
-      <div class="card teal"><div class="k">★</div><h3>새 색 추가하기</h3><p><span class="mono">config.js</span> 의 COLORS 에 내 색을 넣는다.</p></div>
-      <div class="card teal"><div class="k">★</div><h3>맵 크기 바꾸기</h3><p>COLS, ROWS 숫자를 바꿔 더 넓게 또는 좁게.</p></div>
-      <div class="card gold"><div class="k">★★</div><h3>지우개 만들기</h3><p>흰색을 넣으면 지우개가 된다. 왜 그럴까?</p></div>
+      <div class="card teal"><div class="k">★</div><h3>새 캐릭터 추가</h3><p><span class="mono">config.js</span> 의 CHARACTERS 에 이모지를 넣는다.</p></div>
+      <div class="card teal"><div class="k">★</div><h3>속도 바꾸기</h3><p>SPEED 숫자를 바꿔 더 빠르게 또는 느리게.</p></div>
+      <div class="card gold"><div class="k">★★</div><h3>발자국 크게</h3><p><span class="mono">style.css</span> 의 .mark 크기를 바꾼다.</p></div>
       <div class="card gold"><div class="k">★★</div><h3>점수판 정렬 바꾸기</h3><p>많은 순 말고 이름순으로 바꿔본다.</p></div>
-      <div class="card clay"><div class="k">★★★</div><h3>칸 수 제한</h3><p>한 사람이 20칸까지만 칠할 수 있게.</p></div>
+      <div class="card clay"><div class="k">★★★</div><h3>발자국 수 제한</h3><p>한 사람이 30개까지만 남길 수 있게.</p></div>
       <div class="card clay"><div class="k">★★★</div><h3>내 아이디어</h3><p>직접 생각한 규칙 하나.</p></div>
     </div>
   </section>
@@ -280,8 +292,8 @@
     <div class="eyebrow teal">중등 트랙</div>
     <h2>표를 설계할 때<br>물어볼 <span class="hi-t">세 가지</span></h2>
     <ul class="plain">
-      <li data-n="01">한 줄이 <b>무엇 하나</b>를 뜻하나?<span>칸 하나? 사람 하나? 메시지 하나?</span></li>
-      <li data-n="02">같은 것이 <b>두 줄</b>로 생기면 안 되는 건 뭔가?<span>땅따먹기에서는 같은 (x, y)가 두 줄이면 안 된다</span></li>
+      <li data-n="01">한 줄이 <b>무엇 하나</b>를 뜻하나?<span>발자국 하나? 사람 하나? 메시지 하나?</span></li>
+      <li data-n="02">같은 것이 <b>두 줄</b>로 생기면 안 되는 건 뭔가?<span>발자국은 여러 개 겹쳐도 되지만, 사람 이름은 하나만 있어야 한다면?</span></li>
       <li data-n="03">나중에 <b>찾아볼</b> 일이 있나?<span>있다면 그 기준이 표의 칸으로 있어야 한다</span></li>
     </ul>
     <div class="kicker">설계를 먼저 하면 코드는 짧아진다. <span class="hi">반대로 하면 계속 고친다.</span></div>
@@ -299,11 +311,11 @@
 
   <section class="slide">
     <div class="eyebrow">중요한 질문</div>
-    <h2>남의 칸을<br><span class="hi">지울 수 있을까?</span></h2>
-    <p class="lead">지금 우리 게임은 <b class="hi">누구나 뭐든 할 수 있다.</b><br>친구가 칠한 칸을 통째로 덮어버릴 수도 있다.</p>
+    <h2>남의 발자국을<br><span class="hi">지울 수 있을까?</span></h2>
+    <p class="lead">해봤더니 <b class="hi-t">막혀 있다.</b> 지우기는 아무에게도 열어두지 않았기 때문이다.<br>그런데 아직 열려 있는 구멍이 하나 있다.</p>
     <div class="grid g2">
-      <div class="card clay"><div class="k">그래서 필요한 것</div><h3>규칙</h3><p>“내 칸만 바꿀 수 있다” 같은 약속을 서버에 걸어둔다.</p></div>
-      <div class="card teal"><div class="k">오늘은</div><h3>일단 열어둔다</h3><p>대신 무엇이 위험한지는 알고 넘어간다. 다음에 잠근다.</p></div>
+      <div class="card clay"><div class="k">그래서 필요한 것</div><h3>이름을 속일 수 있다</h3><p>남의 이름으로 발자국을 남길 수 있다. 막으려면 <b>로그인</b>이 필요하다.</p></div>
+      <div class="card teal"><div class="k">오늘은</div><h3>알고 넘어간다</h3><p>무엇이 열려 있는지 아는 것이 먼저다. 잠그는 건 다음 시간에.</p></div>
     </div>
   </section>
 
@@ -325,15 +337,15 @@
   <section class="slide">
     <div class="eyebrow gold">한 줄로 정리</div>
     <h2 style="max-width:23ch">함께 논다는 건<br><span class="hi-g">같은 데이터를 본다</span>는 뜻</h2>
-    <p class="lead">화면이 여러 개여도 <b class="hi-t">진실은 서버에 하나</b>다.<br>그래서 친구가 찍은 칸이 내 화면에도 나타난다.</p>
+    <p class="lead">화면이 여러 개여도 <b class="hi-t">진실은 서버에 하나</b>다.<br>그래서 친구가 남긴 발자국이 내 화면에도 나타난다.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow teal">나가기 전에</div>
     <h2>무엇이 남고<br>무엇이 사라졌나?</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">남은 것</div><h3>왜 남아야 했나</h3><p>칠한 칸이 사라졌다면 게임이 어떻게 됐을까?</p></div>
-      <div class="card clay"><div class="k">사라진 것</div><h3>왜 사라져야 했나</h3><p>친구 커서가 계속 남아 있었다면 어땠을까?</p></div>
+      <div class="card teal"><div class="k">남은 것</div><h3>왜 남아야 했나</h3><p>발자국이 사라졌다면 게임이 어떻게 됐을까?</p></div>
+      <div class="card clay"><div class="k">사라진 것</div><h3>왜 사라져야 했나</h3><p>나간 친구 캐릭터가 계속 서 있었다면 어땠을까?</p></div>
     </div>
     <div class="kicker">집 미션 — 다음 버전에 <span class="hi-g">넣고 싶은 규칙</span> 한 가지 적어오기.</div>
   </section>
