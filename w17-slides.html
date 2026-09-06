@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W17 · 작은 AI, 큰 AI</title>
+<title>W17 · AI의 크기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -26,66 +26,199 @@
 <body>
 <a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
+  <style>
+    .tbl{width:100%;max-width:920px;border-collapse:collapse;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .tbl th,.tbl td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--line);font-size:clamp(12px,1.35vw,17px)}
+    .tbl th{background:var(--paper-2);font-family:var(--mono);font-size:clamp(10px,1vw,12px);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700}
+    .tbl tr:last-child td{border-bottom:0}
+    .tbl td b{color:var(--clay-deep)}
+    .tbl td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.hi td{background:#fbf0e6}
+    .scale{display:flex;align-items:flex-end;gap:clamp(6px,1.2vw,16px);margin-top:28px;max-width:900px}
+    .scale .b{flex:1;background:var(--card);border:1px solid var(--line);border-bottom:4px solid var(--teal);border-radius:10px 10px 0 0;padding:12px 10px;text-align:center}
+    .scale .b:nth-child(2){border-bottom-color:var(--amber)}
+    .scale .b:nth-child(3){border-bottom-color:var(--clay)}
+    .scale .b .t{font-family:var(--mono);font-size:clamp(10px,1vw,12px);color:var(--mute);letter-spacing:.08em}
+    .scale .b .v{font-family:var(--disp);font-weight:800;font-size:clamp(17px,2.4vw,30px);margin-top:6px;line-height:1.1}
+    .scale .b .d{font-size:clamp(10px,1.05vw,13px);color:var(--mute);margin-top:6px;line-height:1.45}
+    @media(max-height:520px) and (orientation:landscape){.tbl th,.tbl td{padding:6px 10px}}
+  </style>
+
   <section class="slide active">
     <div class="eyebrow">W17 · AI 이해하기</div>
-    <h1>작은 AI,<br><span class="hi">큰 AI</span></h1>
+    <h1>AI의 <span class="hi">크기</span></h1>
     <div class="rule"></div>
-    <p class="lead">직접 만든 <b class="hi-t">작은 모델</b>과 우리가 늘 쓰던 <b class="hi-t">큰 모델</b>을 나란히 놓고,<br>어디서부터 갈라지는지 찾아낸다.</p>
+    <p class="lead">“큰 모델”은 대체 <b class="hi-t">뭐가 큰</b> 걸까?<br>파라미터 · 메모리 · 학습 데이터 · GPU — 안을 열어본다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">오늘의 결과물</div>
-    <h2>우리가 만든<br><span class="hi-g">채점표 한 장</span></h2>
+    <div class="eyebrow gold">오늘의 질문</div>
+    <h2>왜 어떤 AI는<br>내 노트북에서 <span class="hi-g">못 돌까?</span></h2>
     <div class="grid g3">
-      <div class="card"><div class="k">채점표</div><h3>우리가 직접</h3><p>무엇을 잘한 걸로 칠지 먼저 정한다. 이게 오늘의 진짜 결과물.</p></div>
-      <div class="card"><div class="k">갈림 지점</div><h3>어디서부터</h3><p>쉬운 건 비슷하다. 어디서부터 확 갈라지는지를 찾는다.</p></div>
-      <div class="card"><div class="k">판정</div><h3>근거를 대고</h3><p>“느낌상”은 안 된다. 채점표의 어느 항목인지 말한다.</p></div>
+      <div class="card"><div class="k">궁금한 것 1</div><h3>크기의 정체</h3><p>“7B”, “70B” 같은 숫자는 무엇을 세는 걸까.</p></div>
+      <div class="card"><div class="k">궁금한 것 2</div><h3>왜 GPU인가</h3><p>왜 비싼 그래픽카드가 필요할까.</p></div>
+      <div class="card"><div class="k">궁금한 것 3</div><h3>내 것으로</h3><p>인터넷 없이 내 컴퓨터에서 돌릴 수 있을까.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">먼저 바꿀 생각</div>
-    <h2>지금까지 쓴 AI는<br>전부 <span class="hi">큰 것</span>이었다</h2>
+    <div class="eyebrow teal">01 · 파라미터</div>
+    <h2>AI 안에는<br><span class="hi-t">손잡이</span>가 들어 있다</h2>
+    <p class="lead">AI는 배우면서 수많은 숫자를 조금씩 돌려 맞춘다.<br>그 <b class="hi">숫자 하나하나가 파라미터</b>다.</p>
     <div class="grid g2">
-      <div class="card clay"><div class="k">우리가 몰랐던 것</div><h3>AI는 하나가 아니다</h3><p>크기도, 성격도, 잘하는 것도 다 다른 여러 모델이 있다.</p></div>
-      <div class="card teal"><div class="k">오늘 알게 될 것</div><h3>크기가 뭘 바꾸나</h3><p>크면 무조건 좋은 걸까? 어디서 차이가 나고 어디서 안 나는가.</p></div>
+      <div class="card teal"><div class="k">학습이란</div><h3>손잡이를 맞추는 일</h3><p>글을 읽으며 “다음 글자”를 맞히도록 손잡이를 조금씩 돌린다.</p></div>
+      <div class="card clay"><div class="k">모델이란</div><h3>다 맞춰진 손잡이 묶음</h3><p>학습이 끝나면 남는 건 그 숫자들뿐이다. 그게 파일로 저장된다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">크기</div>
-    <h2>모델의 크기는<br><span class="hi-t">외운 양</span>이 아니라</h2>
-    <p class="lead">AI 안에는 배우면서 조금씩 돌려놓은 <b class="hi">손잡이</b>가 들어 있다.<br>그 손잡이의 개수가 모델의 크기다.</p>
-    <div class="grid g2">
-      <div class="card"><div class="k">손잡이가 적으면</div><h3>단순한 규칙만</h3><p>쉬운 건 하지만 복잡해지면 헷갈린다.</p></div>
-      <div class="card"><div class="k">손잡이가 많으면</div><h3>미묘한 것까지</h3><p>대신 만드는 데 돈·시간·전기가 훨씬 많이 든다.</p></div>
+    <div class="eyebrow">02 · 얼마나 많냐면</div>
+    <h2><span class="hi">10억 개</span>가 기본 단위</h2>
+    <div class="scale">
+      <div class="b"><div class="t">작은 모델</div><div class="v">1B</div><div class="d">10억 개<br>휴대폰에서도 돈다</div></div>
+      <div class="b"><div class="t">중간 모델</div><div class="v">7~8B</div><div class="d">70~80억 개<br>좋은 노트북이면 가능</div></div>
+      <div class="b"><div class="t">큰 모델</div><div class="v">수백 B</div><div class="d">수천억 개<br>컴퓨터 창고가 필요</div></div>
     </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">오늘의 두 선수</div>
-    <h2>얼마나 <span class="hi">차이</span>나냐면</h2>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">작은 모델</div><h3>우리 집 컴퓨터 안에</h3><p>한 대에 들어간다. 인터넷이 끊겨도 돈다. 대답이 빠르다.</p></div>
-      <div class="card clay"><div class="k">큰 모델</div><h3>거대한 컴퓨터 창고에</h3><p>혼자서는 못 돌린다. 인터넷으로 빌려 쓴다. 느리지만 깊다.</p></div>
-    </div>
-    <div class="kicker">둘은 <span class="hi">같은 방식</span>으로 만들어졌다. 규모만 다르다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">규칙</div>
-    <h2>어느 게 어느 건지<br><span class="hi-g">모른 채로</span> 채점한다</h2>
-    <p class="lead">답을 먼저 알면 눈이 흐려진다. <b class="hi">가</b>와 <b class="hi">나</b>로만 부르고,<br>정체는 마지막에 공개한다.</p>
     <div class="banner">
-      <h3>왜 가리나?</h3>
-      <p style="color:var(--mute);margin-top:10px">“큰 게 더 좋겠지”라고 믿으면 그렇게 보인다.<br>가려 놓으면 진짜 차이만 남는다.</p>
+      <div class="big">10억을 <span class="hi-t">1초에 하나씩</span> 세면?</div>
+      <p style="color:var(--mute);margin-top:12px">쉬지 않고 세어도 <b>약 32년</b>이 걸린다. 그게 <b>가장 작은</b> 모델의 손잡이 개수다.</p>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">순서 1</div>
-    <h2>질문보다<br><span class="hi">채점표</span>가 먼저</h2>
-    <p class="lead">W14에서 영상을 통과·불합격으로 갈랐던 것과 <b class="hi-t">똑같은 동작</b>이다.<br>기준을 먼저 만들고, 그다음에 본다.</p>
+    <div class="eyebrow gold">03 · 메모리</div>
+    <h2>손잡이는<br><span class="hi-g">자리를 차지한다</span></h2>
+    <p class="lead">숫자 하나를 저장하는 데 보통 <b class="hi">2바이트</b>가 든다.<br>그래서 필요한 메모리는 그냥 곱셈이다.</p>
+    <div class="prompt">파라미터 수  ×  2바이트  =  필요한 메모리
+
+  70억 개  ×  2바이트  =  <span class="val">약 14 GB</span></div>
+    <div class="kicker">이게 <span class="hi">모델을 켜기만 하는 데</span> 드는 양이다. 실제로 쓰려면 조금 더 든다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">03 · 메모리</div>
+    <h2>크기별로 보면</h2>
+    <table class="tbl">
+      <thead><tr><th>모델</th><th>파라미터</th><th>필요 메모리</th><th>어디서 도나</th></tr></thead>
+      <tbody>
+        <tr><td>아주 작은</td><td class="n">1B</td><td class="n">약 2 GB</td><td>휴대폰·태블릿</td></tr>
+        <tr class="hi"><td>중간</td><td class="n">7B</td><td class="n">약 14 GB</td><td><b>좋은 그래픽카드</b></td></tr>
+        <tr><td>큰</td><td class="n">70B</td><td class="n">약 140 GB</td><td>여러 장 묶어야</td></tr>
+        <tr><td>아주 큰</td><td class="n">400B+</td><td class="n">약 800 GB+</td><td>컴퓨터 창고</td></tr>
+      </tbody>
+    </table>
+    <div class="kicker">게임용 그래픽카드가 보통 <span class="hi">8~24GB</span>다. 어디서 막히는지 보이지?</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">04 · 줄여 담기</div>
+    <h2>숫자를 <span class="hi-t">거칠게</span> 저장하면<br>작아진다</h2>
+    <p class="lead">2바이트 대신 <b class="hi">0.5바이트</b>로 저장하는 방법이 있다.<br>사진 화질을 낮추면 용량이 줄어드는 것과 같다.</p>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">그냥 저장</div><h3>7B → 약 14 GB</h3><p>정확하지만 무겁다.</p></div>
+      <div class="card teal"><div class="k">줄여 담기(양자화)</div><h3>7B → 약 4 GB</h3><p>조금 흐려지지만 노트북에서 돈다.</p></div>
+    </div>
+    <div class="kicker">그래서 “못 돌리던 모델”이 <span class="hi">갑자기 돌아가기도</span> 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">05 · GPU</div>
+    <h2>왜 하필<br><span class="hi-g">그래픽카드</span>일까?</h2>
+    <div class="grid g2">
+      <div class="card"><div class="k">CPU</div><h3>똑똑한 사람 몇 명</h3><p>어려운 일을 순서대로 잘 처리한다. 사람 수가 적다.</p></div>
+      <div class="card teal"><div class="k">GPU</div><h3>단순 계산 잘하는 사람 수천 명</h3><p>쉬운 곱셈을 <b>한꺼번에</b> 수천 개 한다.</p></div>
+    </div>
+    <p class="lead" style="margin-top:22px">AI가 하는 일은 <b class="hi">거대한 곱셈과 덧셈의 반복</b>이다.<br>어려운 게 아니라 <b class="hi">많은</b> 것이다. 그래서 GPU가 이긴다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">06 · 진짜 병목</div>
+    <h2>빠르기보다<br><span class="hi">들어가느냐</span></h2>
+    <div class="banner">
+      <div class="big">모델이 메모리에 <span class="hi-t">안 들어가면</span><br>느린 게 아니라 <span class="hi">아예 안 켜진다</span></div>
+      <p style="color:var(--mute);margin-top:14px">그래서 AI를 돌릴 때 제일 먼저 보는 건 속도가 아니라 <b>메모리 용량</b>이다.</p>
+    </div>
+    <div class="kicker">책을 빨리 읽는 것과 <span class="hi">책상에 책이 다 올라가는 것</span>은 다른 문제다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">07 · 우리 것</div>
+    <h2>우리 반 <span class="hi-t">DGX Spark</span></h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">통합 메모리</div><h3>128 GB</h3><p>CPU와 GPU가 같은 메모리를 나눠 쓴다.</p></div>
+      <div class="card gold"><div class="k">그래서</div><h3>큰 모델도 로컬에서</h3><p>게임용 그래픽카드로는 못 여는 크기를 열 수 있다.</p></div>
+      <div class="card clay"><div class="k">한계</div><h3>동시에 여러 개는 어렵다</h3><p>메모리를 나눠 쓰니 작업을 줄 세워야 한다.</p></div>
+    </div>
+    <div class="kicker">W14에서 영상 만들 때 <span class="hi">한 번에 하나씩</span> 나왔던 이유가 이거다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">08 · 학습 데이터</div>
+    <h2>손잡이만 많으면<br><span class="hi-g">똑똑해질까?</span></h2>
+    <p class="lead">아니다. 손잡이를 맞추려면 <b class="hi">읽을 글</b>이 있어야 한다.<br>그 글의 양을 세는 단위가 — 기억나지? <b class="hi-t">토큰</b>이다.</p>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">손잡이만 늘리면</div><h3>비어 있는 큰 그릇</h3><p>담을 게 없으면 클수록 낭비다.</p></div>
+      <div class="card teal"><div class="k">데이터도 늘리면</div><h3>제대로 채워진다</h3><p>큰 모델은 <b>수조 개</b> 토큰을 읽으며 배운다.</p></div>
+    </div>
+    <div class="kicker">대략 <span class="hi">손잡이 하나당 글자 수십 개</span>는 읽어야 제값을 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">09 · 만들 때 / 쓸 때</div>
+    <h2>학습과 사용은<br>완전히 <span class="hi">다른 일</span></h2>
+    <table class="tbl">
+      <thead><tr><th></th><th>학습 (만들 때)</th><th>추론 (쓸 때)</th></tr></thead>
+      <tbody>
+        <tr><td><b>하는 일</b></td><td>손잡이를 맞춘다</td><td>맞춰진 손잡이로 답한다</td></tr>
+        <tr><td><b>걸리는 시간</b></td><td>몇 주 ~ 몇 달</td><td>몇 초</td></tr>
+        <tr class="hi"><td><b>필요한 메모리</b></td><td><b>훨씬 많이</b> (여러 배)</td><td>모델이 들어갈 만큼</td></tr>
+        <tr><td><b>누가 하나</b></td><td>회사·연구소</td><td>우리</td></tr>
+      </tbody>
+    </table>
+    <div class="kicker">우리가 로컬에서 하는 건 거의 다 <span class="hi">쓰는 쪽</span>이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">10 · 로컬 모델</div>
+    <h2>내 컴퓨터 안에서<br>도는 <span class="hi-t">AI</span></h2>
+    <p class="lead">모델 파일을 내려받아 <b class="hi">내 기계에서만</b> 돌린다.<br>인터넷도, 남의 서버도 필요 없다.</p>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">좋은 점</div><h3>내 것만 본다</h3><p>내 글이 밖으로 나가지 않는다.</p></div>
+      <div class="card teal"><div class="k">좋은 점</div><h3>끊기지 않는다</h3><p>인터넷이 없어도, 요금 걱정 없이.</p></div>
+      <div class="card clay"><div class="k">아쉬운 점</div><h3>크기에 갇힌다</h3><p>내 메모리에 들어가는 만큼만 쓸 수 있다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">11 · 골라 쓰기</div>
+    <h2>무엇이 더 좋은 게 아니라<br><span class="hi-g">무엇에 맞느냐</span></h2>
+    <table class="tbl">
+      <thead><tr><th></th><th>로컬 모델</th><th>큰 클라우드 모델</th></tr></thead>
+      <tbody>
+        <tr><td><b>어려운 문제</b></td><td>약함</td><td><b>강함</b></td></tr>
+        <tr><td><b>속도</b></td><td><b>빠름</b></td><td>기다려야</td></tr>
+        <tr><td><b>비밀 지키기</b></td><td><b>안전</b></td><td>남의 서버로 간다</td></tr>
+        <tr><td><b>비용</b></td><td>전기값</td><td>쓸수록 돈</td></tr>
+        <tr class="hi"><td><b>어울리는 일</b></td><td>정리·분류·요약</td><td>여러 단계 추론</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">오늘 해볼 것</div>
+    <h2>직접 만든 작은 모델 vs<br><span class="hi">큰 모델</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">채점표 먼저</div><div class="d">무엇을 잘한 걸로 칠지 우리가 정한다.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">가리고 묻기</div><div class="d">어느 쪽인지 모른 채 ‘가’와 ‘나’로만 본다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">쉬운 것부터</div><div class="d">한 단계씩 어렵게 올린다.</div></div>
+      <div class="step"><div class="n">04</div><div class="t">갈림 지점</div><div class="d">어디서부터 무너지는지 찾는다.</div></div>
+    </div>
+    <div class="kicker">찾을 문장 — “<span class="hi-t">○○부터</span> 작은 모델이 무너졌다”</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">채점표</div>
+    <h2>무엇을 <span class="hi-t">볼</span> 것인가</h2>
     <ul class="plain">
       <li data-n="01">맞았나?<span>사실이 틀리지 않았는가</span></li>
       <li data-n="02">끝까지 했나?<span>중간에 멈추거나 딴 얘기로 새지 않았는가</span></li>
@@ -93,75 +226,23 @@
       <li data-n="04">한국어가 자연스럽나?<span>번역기 같은 말투가 아닌가</span></li>
       <li data-n="05">시킨 걸 했나?<span>물어본 것에 답했는가</span></li>
     </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">순서 2</div>
-    <h2>쉬운 질문부터<br><span class="hi-t">천천히 올린다</span></h2>
-    <div class="flow">
-      <div class="step"><div class="n">1라운드</div><div class="t">아주 쉬움</div><div class="d">“사과는 무슨 색이야?” 아마 둘 다 맞힌다.</div></div>
-      <div class="step"><div class="n">2라운드</div><div class="t">조금 어려움</div><div class="d">세 문장으로 요약하기, 규칙 지켜 쓰기.</div></div>
-      <div class="step"><div class="n">3라운드</div><div class="t">여러 단계</div><div class="d">계산하고, 그 결과로 다시 판단하기.</div></div>
-      <div class="step"><div class="n">4라운드</div><div class="t">함정</div><div class="d">답이 없는 질문. 모른다고 말할 수 있나?</div></div>
-    </div>
-    <div class="kicker">한 번에 어려운 걸 던지면 <span class="hi">어디서 갈렸는지</span>를 못 본다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">핵심</div>
-    <h2>찾을 것은 승패가 아니라<br><span class="hi">갈림 지점</span></h2>
-    <p class="lead">“큰 게 이겼다”는 오늘 배울 게 없는 답이다.<br>우리가 적어야 할 문장은 이거다.</p>
-    <div class="banner">
-      <div class="big">“<span class="hi-t">○○부터</span> 작은 모델이 무너졌다”</div>
-      <p style="color:var(--mute);margin-top:14px">몇 단계짜리 질문부터? 어떤 종류의 질문부터?<br>그 경계를 찾은 팀이 오늘의 승자다.</p>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">뒤집기</div>
-    <h2>작은 모델이<br><span class="hi-g">이기는 것</span>도 있다</h2>
-    <div class="grid g3">
-      <div class="card"><div class="k">속도</div><h3>훨씬 빠르다</h3><p>간단한 일이라면 기다릴 이유가 없다.</p></div>
-      <div class="card"><div class="k">내 것</div><h3>내 컴퓨터에서 돈다</h3><p>인터넷도, 남의 서버도 필요 없다. 비밀도 안 새어나간다.</p></div>
-      <div class="card"><div class="k">비용</div><h3>전기를 적게 먹는다</h3><p>큰 모델은 한 번 물어볼 때마다 자원을 크게 쓴다.</p></div>
-    </div>
-    <div class="kicker">그래서 질문은 “뭐가 더 좋아?”가 아니라 <span class="hi">“이 일엔 뭐가 맞아?”</span>다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">세상도 한다</div>
-    <h2>LLM 아레나</h2>
-    <p class="lead">세계의 사람들이 <b class="hi-t">똑같은 방식</b>으로 모델을 겨루게 하는 곳.<br>어느 쪽인지 모른 채 답 두 개를 보고 더 나은 쪽을 고른다.</p>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">우리가 오늘 한 것</div><h3>가 / 나 블라인드</h3><p>4명이 채점표로 판정.</p></div>
-      <div class="card clay"><div class="k">아레나가 하는 것</div><h3>수십만 명이 판정</h3><p>같은 원리, 규모만 다르다. 우리가 한 게 진짜 방법이었다는 뜻.</p></div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">이어지는 이야기</div>
-    <h2>기억나지?<br><span class="hi">연료</span> 이야기</h2>
-    <p class="lead">W11에서 토큰을 배웠다. 큰 모델은 같은 질문에도<br><b class="hi">더 많은 연료</b>를 쓴다. 그래서 크기를 아는 건 <b class="hi-t">아끼는 법</b>을 아는 것이기도 하다.</p>
-    <div class="banner">
-      <h3>도구를 고를 줄 안다는 것</h3>
-      <p style="color:var(--mute);margin-top:10px">망치로 못을 박고 드라이버로 나사를 돌린다.<br>큰 모델은 좋은 도구지, 모든 일의 정답이 아니다.</p>
-    </div>
+    <div class="kicker">W14에서 발자국을 <span class="hi">합격·불합격으로 갈랐던</span> 것과 같은 동작이다.</div>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">한 줄로 정리</div>
-    <h2 style="max-width:22ch">크기는 <span class="hi-g">무엇을 살 수 있는지</span>를 정한다</h2>
-    <p class="lead">더 큰 모델은 더 어려운 걸 해내지만,<br>그만큼 <b class="hi">시간·돈·전기</b>를 쓴다. 공짜인 크기는 없다.</p>
+    <h2 style="max-width:24ch">크기는 <span class="hi-g">메모리</span>가 정하고,<br>실력은 <span class="hi-g">데이터</span>가 정한다</h2>
+    <p class="lead">파라미터가 많으면 메모리가 많이 필요하고,<br>그만큼 <b class="hi">읽힌 글</b>이 있어야 제값을 한다.<br>둘 다 있어야 “큰 모델”이 된다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">나가기 전에</div>
+    <div class="eyebrow">나가기 전에</div>
     <h2>어디서 갈렸나?</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">우리가 찾은 경계</div><h3>몇 라운드부터?</h3><p>어떤 종류의 질문에서 차이가 벌어졌는지 한 문장으로.</p></div>
-      <div class="card clay"><div class="k">놀란 점</div><h3>예상과 달랐던 것</h3><p>작은 모델이 의외로 잘한 것이 있었나?</p></div>
+      <div class="card teal"><div class="k">우리가 찾은 경계</div><h3>몇 단계부터?</h3><p>어떤 종류의 질문에서 차이가 벌어졌는지 한 문장으로.</p></div>
+      <div class="card clay"><div class="k">놀란 점</div><h3>예상과 달랐던 것</h3><p>작은 모델이 의외로 잘한 일이 있었나?</p></div>
     </div>
-    <div class="kicker">집 미션 — 작은 모델이 <span class="hi-g">이길 만한 일</span> 하나를 찾아오기.</div>
+    <div class="kicker">집 미션 — 내 노트북 메모리를 확인하고, <span class="hi-g">몇 B짜리 모델</span>까지 돌릴 수 있을지 계산해 오기.</div>
   </section>
 </div>
 <script>
