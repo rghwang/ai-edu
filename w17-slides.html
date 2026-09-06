@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W17 · 작은 AI, 큰 AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
+<div class="deck" id="deck">
+  <section class="slide active">
+    <div class="eyebrow">W17 · AI 이해하기</div>
+    <h1>작은 AI,<br><span class="hi">큰 AI</span></h1>
+    <div class="rule"></div>
+    <p class="lead">직접 만든 <b class="hi-t">작은 모델</b>과 우리가 늘 쓰던 <b class="hi-t">큰 모델</b>을 나란히 놓고,<br>어디서부터 갈라지는지 찾아낸다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 결과물</div>
+    <h2>우리가 만든<br><span class="hi-g">채점표 한 장</span></h2>
+    <div class="grid g3">
+      <div class="card"><div class="k">채점표</div><h3>우리가 직접</h3><p>무엇을 잘한 걸로 칠지 먼저 정한다. 이게 오늘의 진짜 결과물.</p></div>
+      <div class="card"><div class="k">갈림 지점</div><h3>어디서부터</h3><p>쉬운 건 비슷하다. 어디서부터 확 갈라지는지를 찾는다.</p></div>
+      <div class="card"><div class="k">판정</div><h3>근거를 대고</h3><p>“느낌상”은 안 된다. 채점표의 어느 항목인지 말한다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">먼저 바꿀 생각</div>
+    <h2>지금까지 쓴 AI는<br>전부 <span class="hi">큰 것</span>이었다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">우리가 몰랐던 것</div><h3>AI는 하나가 아니다</h3><p>크기도, 성격도, 잘하는 것도 다 다른 여러 모델이 있다.</p></div>
+      <div class="card teal"><div class="k">오늘 알게 될 것</div><h3>크기가 뭘 바꾸나</h3><p>크면 무조건 좋은 걸까? 어디서 차이가 나고 어디서 안 나는가.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">크기</div>
+    <h2>모델의 크기는<br><span class="hi-t">외운 양</span>이 아니라</h2>
+    <p class="lead">AI 안에는 배우면서 조금씩 돌려놓은 <b class="hi">손잡이</b>가 들어 있다.<br>그 손잡이의 개수가 모델의 크기다.</p>
+    <div class="grid g2">
+      <div class="card"><div class="k">손잡이가 적으면</div><h3>단순한 규칙만</h3><p>쉬운 건 하지만 복잡해지면 헷갈린다.</p></div>
+      <div class="card"><div class="k">손잡이가 많으면</div><h3>미묘한 것까지</h3><p>대신 만드는 데 돈·시간·전기가 훨씬 많이 든다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">오늘의 두 선수</div>
+    <h2>얼마나 <span class="hi">차이</span>나냐면</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">작은 모델</div><h3>우리 집 컴퓨터 안에</h3><p>한 대에 들어간다. 인터넷이 끊겨도 돈다. 대답이 빠르다.</p></div>
+      <div class="card clay"><div class="k">큰 모델</div><h3>거대한 컴퓨터 창고에</h3><p>혼자서는 못 돌린다. 인터넷으로 빌려 쓴다. 느리지만 깊다.</p></div>
+    </div>
+    <div class="kicker">둘은 <span class="hi">같은 방식</span>으로 만들어졌다. 규모만 다르다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">규칙</div>
+    <h2>어느 게 어느 건지<br><span class="hi-g">모른 채로</span> 채점한다</h2>
+    <p class="lead">답을 먼저 알면 눈이 흐려진다. <b class="hi">가</b>와 <b class="hi">나</b>로만 부르고,<br>정체는 마지막에 공개한다.</p>
+    <div class="banner">
+      <h3>왜 가리나?</h3>
+      <p style="color:var(--mute);margin-top:10px">“큰 게 더 좋겠지”라고 믿으면 그렇게 보인다.<br>가려 놓으면 진짜 차이만 남는다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">순서 1</div>
+    <h2>질문보다<br><span class="hi">채점표</span>가 먼저</h2>
+    <p class="lead">W14에서 영상을 통과·불합격으로 갈랐던 것과 <b class="hi-t">똑같은 동작</b>이다.<br>기준을 먼저 만들고, 그다음에 본다.</p>
+    <ul class="plain">
+      <li data-n="01">맞았나?<span>사실이 틀리지 않았는가</span></li>
+      <li data-n="02">끝까지 했나?<span>중간에 멈추거나 딴 얘기로 새지 않았는가</span></li>
+      <li data-n="03">지어냈나?<span>모르는 걸 아는 척 만들어내지 않았는가</span></li>
+      <li data-n="04">한국어가 자연스럽나?<span>번역기 같은 말투가 아닌가</span></li>
+      <li data-n="05">시킨 걸 했나?<span>물어본 것에 답했는가</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">순서 2</div>
+    <h2>쉬운 질문부터<br><span class="hi-t">천천히 올린다</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">1라운드</div><div class="t">아주 쉬움</div><div class="d">“사과는 무슨 색이야?” 아마 둘 다 맞힌다.</div></div>
+      <div class="step"><div class="n">2라운드</div><div class="t">조금 어려움</div><div class="d">세 문장으로 요약하기, 규칙 지켜 쓰기.</div></div>
+      <div class="step"><div class="n">3라운드</div><div class="t">여러 단계</div><div class="d">계산하고, 그 결과로 다시 판단하기.</div></div>
+      <div class="step"><div class="n">4라운드</div><div class="t">함정</div><div class="d">답이 없는 질문. 모른다고 말할 수 있나?</div></div>
+    </div>
+    <div class="kicker">한 번에 어려운 걸 던지면 <span class="hi">어디서 갈렸는지</span>를 못 본다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">핵심</div>
+    <h2>찾을 것은 승패가 아니라<br><span class="hi">갈림 지점</span></h2>
+    <p class="lead">“큰 게 이겼다”는 오늘 배울 게 없는 답이다.<br>우리가 적어야 할 문장은 이거다.</p>
+    <div class="banner">
+      <div class="big">“<span class="hi-t">○○부터</span> 작은 모델이 무너졌다”</div>
+      <p style="color:var(--mute);margin-top:14px">몇 단계짜리 질문부터? 어떤 종류의 질문부터?<br>그 경계를 찾은 팀이 오늘의 승자다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">뒤집기</div>
+    <h2>작은 모델이<br><span class="hi-g">이기는 것</span>도 있다</h2>
+    <div class="grid g3">
+      <div class="card"><div class="k">속도</div><h3>훨씬 빠르다</h3><p>간단한 일이라면 기다릴 이유가 없다.</p></div>
+      <div class="card"><div class="k">내 것</div><h3>내 컴퓨터에서 돈다</h3><p>인터넷도, 남의 서버도 필요 없다. 비밀도 안 새어나간다.</p></div>
+      <div class="card"><div class="k">비용</div><h3>전기를 적게 먹는다</h3><p>큰 모델은 한 번 물어볼 때마다 자원을 크게 쓴다.</p></div>
+    </div>
+    <div class="kicker">그래서 질문은 “뭐가 더 좋아?”가 아니라 <span class="hi">“이 일엔 뭐가 맞아?”</span>다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">세상도 한다</div>
+    <h2>LLM 아레나</h2>
+    <p class="lead">세계의 사람들이 <b class="hi-t">똑같은 방식</b>으로 모델을 겨루게 하는 곳.<br>어느 쪽인지 모른 채 답 두 개를 보고 더 나은 쪽을 고른다.</p>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">우리가 오늘 한 것</div><h3>가 / 나 블라인드</h3><p>4명이 채점표로 판정.</p></div>
+      <div class="card clay"><div class="k">아레나가 하는 것</div><h3>수십만 명이 판정</h3><p>같은 원리, 규모만 다르다. 우리가 한 게 진짜 방법이었다는 뜻.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">이어지는 이야기</div>
+    <h2>기억나지?<br><span class="hi">연료</span> 이야기</h2>
+    <p class="lead">W11에서 토큰을 배웠다. 큰 모델은 같은 질문에도<br><b class="hi">더 많은 연료</b>를 쓴다. 그래서 크기를 아는 건 <b class="hi-t">아끼는 법</b>을 아는 것이기도 하다.</p>
+    <div class="banner">
+      <h3>도구를 고를 줄 안다는 것</h3>
+      <p style="color:var(--mute);margin-top:10px">망치로 못을 박고 드라이버로 나사를 돌린다.<br>큰 모델은 좋은 도구지, 모든 일의 정답이 아니다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <h2 style="max-width:22ch">크기는 <span class="hi-g">무엇을 살 수 있는지</span>를 정한다</h2>
+    <p class="lead">더 큰 모델은 더 어려운 걸 해내지만,<br>그만큼 <b class="hi">시간·돈·전기</b>를 쓴다. 공짜인 크기는 없다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>어디서 갈렸나?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">우리가 찾은 경계</div><h3>몇 라운드부터?</h3><p>어떤 종류의 질문에서 차이가 벌어졌는지 한 문장으로.</p></div>
+      <div class="card clay"><div class="k">놀란 점</div><h3>예상과 달랐던 것</h3><p>작은 모델이 의외로 잘한 것이 있었나?</p></div>
+    </div>
+    <div class="kicker">집 미션 — 작은 모델이 <span class="hi-g">이길 만한 일</span> 하나를 찾아오기.</div>
+  </section>
+</div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+</script>
+</body>
+</html>

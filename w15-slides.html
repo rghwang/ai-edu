@@ -3,337 +3,288 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W15 · AI 에이전트</title>
+<title>W15 · 세로 드라마 만들기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
-    --ink:#23201a; --mute:#5a5347;
-    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
-    --mono:'Space Mono', ui-monospace, monospace;
-    --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
-    --disp:'Hahmlet', serif;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
-  body{background-color:var(--paper); color:var(--ink); font-family:var(--sans); overflow:hidden; -webkit-font-smoothing:antialiased;}
-  .deck{position:fixed; inset:0;}
-  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
-    padding:clamp(32px,6vw,110px); background-color:var(--paper);
-    background-image:radial-gradient(1100px 600px at 78% -12%, rgba(63,107,99,.10), transparent 60%),
-                     radial-gradient(900px 520px at 8% 108%, rgba(216,151,58,.12), transparent 62%);}
-  .slide.active{display:flex; animation:in .38s ease both;}
-  @keyframes in{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
-
-  .bar{position:fixed; left:0; top:0; height:4px; background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal)); width:0; z-index:40; transition:width .3s ease;}
-  .count{position:fixed; right:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:13px; color:var(--mute); z-index:40; letter-spacing:.06em;}
-  .hint{position:fixed; left:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:12px; color:#a89c83; z-index:40;}
-  .home{position:fixed; right:clamp(18px,3vw,38px); top:clamp(14px,2.4vw,22px); font-family:var(--sans); font-size:13px; color:var(--clay-deep); text-decoration:none; font-weight:600; z-index:40; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px;}
-
-  .eyebrow{font-family:var(--sans); font-size:clamp(11px,1.15vw,14px); letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep); font-weight:700; margin-bottom:22px;}
-  .eyebrow.coral{color:var(--clay-deep);} .eyebrow.yellow{color:var(--gold);}
-  h1{font-family:var(--disp); font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.08; letter-spacing:-.02em;}
-  h2{font-family:var(--disp); font-size:clamp(28px,4.6vw,56px); font-weight:800; line-height:1.18; letter-spacing:-.015em; margin-bottom:18px;}
-  h3{font-family:var(--disp); font-size:clamp(19px,2.1vw,26px); font-weight:700; line-height:1.3;}
-  .lead{font-size:clamp(17px,1.85vw,24px); color:var(--mute); line-height:1.65; max-width:46ch; font-weight:500;}
-  .big{font-family:var(--disp); font-size:clamp(24px,3.6vw,44px); font-weight:800; line-height:1.35; letter-spacing:-.01em;}
-  .mono{font-family:var(--mono);}
-  .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
-  .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
-
-  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
-  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
-  .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
-  .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
-  .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
-  .card.on{border-color:var(--clay); background-color:#fbf0e6;} .card.on .k{color:var(--clay-deep);}
-  .card.dim{opacity:.5;}
-  .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
-  .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
-  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
-  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
-  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
-
-  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
-  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
-  ul.plain li:last-child{border-bottom:none;}
-  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
-  ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
-
-  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
-  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
-  .chip.a{border-color:#b9d0c9; color:var(--teal);}
-  .chip.b{border-color:#e6cf9a; color:var(--gold);}
-  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
-  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
-
-  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
-  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
-  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
-  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
-  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
-  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
-  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
-  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
-
-  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
-  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
-
-  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
-  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
-  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
-  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
-  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
-
-  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
-  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
-  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
-  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
-  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
-  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
-  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
-
-  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
-  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
-  .prompt .val{color:var(--ink);}
-
-  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
-  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
-
-  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
-  @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
 </style>
 </head>
 <body>
-<a class="home" href="index.html">현황판 ↗</a>
-<div class="bar" id="bar"></div>
-<div class="count" id="count"></div>
-<div class="hint">← → 또는 클릭</div>
-
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
 
   <section class="slide active">
-    <div class="eyebrow">W15 · 토대 3 / 3</div>
-    <h1>스스로 일하는 AI<br><span class="hi-c">에이전트</span></h1>
+    <div class="eyebrow">W15 · AI 영상 제작</div>
+    <h1>세로 드라마<br><span class="hi">만들기</span></h1>
     <div class="rule"></div>
-    <p class="lead">지난 두 수업에서 AI가 여러 도구로 <b>긴 일을 이어가는 모습</b>을 봤다.<br>이번엔 그 원리를 배우고 직접 <b class="hi-y">한꺼번에</b> 맡겨본다.</p>
+    <p class="lead">MiniMax H3와 외부 AI 컴퓨터(DGX Spark)로<br><b class="hi-t">한국어 대사가 있는 30~45초 드라마</b>를 한 팀이 함께 만든다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">차이</div>
-    <h2>챗봇과 에이전트</h2>
-    <div class="vs">
-      <div class="card"><div class="k">챗봇</div><h3>답을 준다</h3><p>물어보면 알려준다. 실행은 내가 한다.</p></div>
-      <div class="mid">vs</div>
-      <div class="card tag-ai"><div class="k">에이전트</div><h3>일을 한다</h3><p>목표를 주면 스스로 여러 단계를 실행한다.</p></div>
-    </div>
-    <div class="banner" style="border-color:var(--line); background-color:var(--panel);">
-      <p class="big">"떡볶이 레시피 알려줘" <span class="mono" style="color:var(--mute); font-size:.55em;">→ 챗봇</span><br>
-      "재료 사와서 만들어놔" <span class="mono" style="color:var(--mute); font-size:.55em;">→ 에이전트</span></p>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">작동 방식</div>
-    <h2>에이전트는 이렇게 움직인다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>목표를 받는다</b></li>
-      <li data-n="02"><b>스스로 계획을 세운다</b><span>어떤 순서로 할지 자기가 정한다</span></li>
-      <li data-n="03"><b>도구를 써서 실행한다</b><span>검색하고, 파일을 열고, 클릭하고, 저장한다</span></li>
-      <li data-n="04"><b>확인하고 고친다</b><span>빠진 게 있으면 되돌아가 다시 한다</span></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">그래서</div>
-    <h2>시키는 방법이 바뀐다</h2>
-    <div class="grid g2">
-      <div class="card dim"><div class="k">챗봇에게</div><h3>결과물을 지시</h3><p>"포켓몬 10마리 표로 정리해줘"</p></div>
-      <div class="card on"><div class="k">에이전트에게</div><h3>목표 + 규칙 + 완료 기준</h3><p>무엇을 하려는지, 지켜야 할 조건, 그리고 <b>"다 됐다"가 무슨 뜻인지</b>까지</p></div>
-    </div>
-    <div class="kicker">혼자 오래 일하니까, 출발할 때 <span class="hi-y">도착점을 정해줘야</span> 한다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">종류</div>
-    <h2><span class="hi">무엇을 만질 수 있느냐</span>로<br>나뉜다</h2>
-    <div class="ladder">
-      <div class="rung r4"><span class="lv">04</span><span class="nm">코드</span><span class="ds">직접 프로그램을 짠다 · Claude Code</span></div>
-      <div class="rung r3"><span class="lv">03</span><span class="nm">내 컴퓨터</span><span class="ds">내 파일과 앱을 열고 고치고 저장한다 · Computer Use, Cowork</span></div>
-      <div class="rung r2"><span class="lv">02</span><span class="nm">브라우저</span><span class="ds">웹을 직접 클릭하고 입력한다 · Browser Use</span></div>
-      <div class="rung r1"><span class="lv">01</span><span class="nm">웹 읽기</span><span class="ds">여러 사이트를 찾아 읽고 정리한다 · Deep Research</span></div>
-    </div>
-    <div class="axis">↑ 위로 갈수록 할 수 있는 일이 많아진다</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">중요</div>
-    <h2>할 수 있는 게 많아지면<br><span class="hi">사고도 커진다</span></h2>
-    <div class="grid g2">
-      <div class="card tag-ai"><div class="k">01 · 웹 읽기</div><p>잘못돼도 <b>틀린 정보</b>가 나올 뿐. 내가 확인하면 된다.</p></div>
-      <div class="card tag-me"><div class="k">03 · 내 컴퓨터</div><p>잘못되면 <b>내 파일이 사라지거나 바뀐다.</b> 되돌리기 어렵다.</p></div>
-    </div>
-    <div class="kicker">권한과 책임은 <span class="hi">같이</span> 올라간다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow yellow">기억하지?</div>
-    <h2>에이전트는<br>연료를 많이 먹는다</h2>
-    <p class="lead">혼자 여러 단계를 도는 동안, 매 단계마다<br>지금까지의 내용을 <b class="hi-y">다시 읽고 또 읽는다.</b></p>
-    <div class="kicker">그래서 목표 · 규칙 · 완료 기준을 정해주는 게 <span class="hi">아끼는 방법</span>이기도 하다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">시연 · 10분</div>
-    <h2>이제 진짜로<br>일하는 걸 본다</h2>
-    <p class="lead">선생님 화면에서 에이전트에게 일을 맡긴다.<br>보면서 이 세 가지를 찾아보자.</p>
+    <div class="eyebrow gold">오늘의 결과물</div>
+    <h2>한 팀 · 한 작품 ·<br><span class="hi-g">세로 9:16</span></h2>
     <div class="grid g3">
-      <div class="card tag-ai"><div class="k">관전 ①</div><h3>계획</h3><p>일을 어떻게 나눠서 시작하나?</p></div>
-      <div class="card tag-both"><div class="k">관전 ②</div><h3>멈춤</h3><p>어디서 사람한테 물어보나?</p></div>
-      <div class="card tag-me"><div class="k">관전 ③</div><h3>자가 확인</h3><p>빠뜨린 걸 스스로 찾아내나?</p></div>
+      <div class="card"><div class="k">길이</div><h3>30~45초</h3><p>짧지만 상황과 반전이 보인다.</p></div>
+      <div class="card teal"><div class="k">대사</div><h3>한국어 4줄</h3><p>한 사람이 한 줄씩 맡는다. 한 테이크엔 한 사람의 한 줄만.</p></div>
+      <div class="card clay"><div class="k">마지막</div><h3>다음이 궁금한 훅</h3><p>“그래서 어떻게 됐지?”가 남는다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">시연 과제</div>
-    <h2>포켓몬 도감 폴더 만들기</h2>
-    <div class="prompt"><span class="lbl">목표</span>  <span class="val">포켓몬 1~10번 도감 폴더 만들기</span>
-
-<span class="lbl">규칙</span>  <span class="val">· 출처는 PokéAPI 한 곳만 사용</span>
-      <span class="val">· 파일 이름은 001_이상해씨.png 형식</span>
-      <span class="val">· 특징은 타입 · 키 · 몸무게 · 한 줄 설명만</span>
-
-<span class="lbl">완료</span>  <span class="val">포켓몬도감/ 안에 이미지 10장 + 도감.md 표 1개</span>
-<span class="lbl">기준</span>  <span class="val">빠진 번호가 있으면 먼저 알려줄 것</span></div>
-    <div class="kicker">목표 · 규칙 · 완료 기준 — <span class="hi-y">방금 배운 세 칸</span> 그대로다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">왜 이렇게 썼나</div>
-    <h2>"한 곳만 써"가<br>왜 중요할까</h2>
+    <div class="eyebrow teal">먼저 바꿀 생각</div>
+    <h2>AI 영상은 완성품이 아니라<br><span class="hi-t">촬영한 재료</span>다</h2>
     <div class="grid g2">
-      <div class="card"><div class="k">규칙 없이 맡기면</div><p>아무 사이트나 뒤진다 → 이름이 틀리고, 정보가 제각각이고, 한참 걸린다</p></div>
-      <div class="card tag-ai"><div class="k">한 곳을 정해주면</div><p>정확하고 빠르다. <b>어디서 가져왔는지 내가 안다</b> → 확인할 수 있다</p></div>
+      <div class="card clay"><div class="k">한 번에 부탁</div><h3>“드라마 하나 만들어줘”</h3><p>얼굴, 옷, 장소, 대사와 입 모양이 중간에 바뀌기 쉽다.</p></div>
+      <div class="card teal"><div class="k">우리 방식</div><h3>한 줄씩 촬영하고 검사</h3><p>통과한 움직이는 영상만 골라 마지막에 이어 붙인다.</p></div>
     </div>
-    <div class="kicker">규칙을 주는 건 제한이 아니라 <span class="hi-c">길을 알려주는 것</span>이다.</div>
+    <div class="kicker">영상 AI는 <span class="hi">감독 없이 혼자 완성하는 기계</span>가 아니다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">실험</div>
-    <h2>일하는 도중에<br>규칙을 바꿔보자</h2>
-    <div class="banner"><p class="big">"설명을 초등학생 말투로 바꿔줘"</p></div>
-    <p class="lead" style="margin-top:24px;">에이전트가 <b class="hi-y">세운 계획을 스스로 고치는 순간</b>을 보게 된다.<br>이게 챗봇과 가장 다른 점이다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">써먹기</div>
-    <h2>우리가 진짜 쓸 만한 것들</h2>
-    <div class="grid g2">
-      <div class="card tag-ai">
-        <div class="k">브라우저 · 웹을 돌아다닌다</div>
-        <p>· 사고 싶은 것 여러 쇼핑몰 가격 비교표<br>· 조건 맞는 무료 폰트 · 배경음악 찾아 모으기<br>· 관심 분야 대회 · 공모전 마감일 정리</p>
-      </div>
-      <div class="card tag-both">
-        <div class="k">컴퓨터 · 내 파일을 만진다</div>
-        <p>· 엉망인 다운로드 폴더 종류별로 정리<br>· 웹툰 컷 30장 순서대로 이름 바꾸기<br>· 지금까지 만든 작품 목록을 표로</p>
-      </div>
+    <div class="eyebrow">전체 지도</div>
+    <h2>드라마 제작 · 5단계</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">이야기</div><div class="d">상황·반전·마지막 훅</div></div>
+      <div class="step"><div class="n">02</div><div class="t">바이블</div><div class="d">인물과 장소를 고정</div></div>
+      <div class="step"><div class="n">03</div><div class="t">한 줄 촬영</div><div class="d">화자 한 명씩 후보 생성</div></div>
+      <div class="step"><div class="n">04</div><div class="t">합격 검사</div><div class="d">소리·얼굴·움직임 확인</div></div>
+      <div class="step"><div class="n">05</div><div class="t">편집</div><div class="d">통과본 연결 + 자막</div></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">안전 규칙</div>
-    <div class="banner">
-      <p class="big">읽고 모으는 건 맡겨도,<br><span class="hi">로그인 · 결제 · 올리기</span>는 안 맡긴다.</p>
+    <div class="eyebrow gold">01 · 이야기</div>
+    <h2>짧은 드라마는<br>다섯 칸이면 된다</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">이상한 상황</div><div class="d">평소와 다른 한 가지</div></div>
+      <div class="step"><div class="n">02</div><div class="t">원인</div><div class="d">왜 그런지 단서</div></div>
+      <div class="step"><div class="n">03</div><div class="t">결과</div><div class="d">누구에게 무슨 일이 생기나</div></div>
+      <div class="step"><div class="n">04</div><div class="t">감정</div><div class="d">인물이 어떻게 반응하나</div></div>
+      <div class="step"><div class="n">05</div><div class="t">훅</div><div class="d">다음 장면의 정확한 질문</div></div>
     </div>
-    <p class="lead" style="margin-top:26px;">에이전트는 <b>내가 로그인한 상태</b>로 웹을 돌아다닌다.<br>주문하거나 글을 올리는 건, 진짜로 일어난다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">한 입만 · Diligence</div>
-    <h2>포켓몬 그림은<br>누구 것일까?</h2>
+    <div class="eyebrow teal">예시 · 늦은 밤 편의점</div>
+    <h2>대사가 앞 대사를<br>밀어줘야 한다</h2>
     <ul class="plain">
-      <li data-n="01"><b>수업에서 보고 공부하는 것</b><span>괜찮다</span></li>
-      <li data-n="02"><b>인터넷에 올려서 공개하는 것</b><span>다른 문제다. 만든 회사의 것이니까</span></li>
+      <li data-n="A1"><b>“왜 제 우산이 여기 있어요?”</b><span>이상한 상황</span></li>
+      <li data-n="B1"><b>“어제 두고 가셨잖아요.”</b><span>원인처럼 보이는 대답</span></li>
+      <li data-n="A2"><b>“저 오늘 처음 왔는데요.”</b><span>원인이 무너진다</span></li>
+      <li data-n="B2"><b>“그럼 어제 온 사람은 누구였죠?”</b><span>다음 장면이 필요한 훅</span></li>
     </ul>
-    <div class="kicker">"내가 만든 것"과 "내가 가져온 것"을 <span class="hi-y">구분해두자.</span></div>
+    <div class="kicker">각 줄은 짧고, <span class="hi-t">왜 다음 사람이 말하는지</span> 분명해야 한다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">이제 각자</div>
-    <h1>자유 과제<br><span class="hi-c">시작</span></h1>
-    <p class="lead" style="margin-top:24px;">첫 단계인 <b>조사</b>는 에이전트에게 맡겨보자.<br>돌리기 전에 <b class="hi-y">세 줄</b>을 먼저 적는다.</p>
-    <div class="prompt"><span class="lbl">목표</span>  <span class="val">내가 알고 싶은 것 한 줄</span>
-<span class="lbl">조건</span>  <span class="val">지켜야 할 것 두 개</span>
-<span class="lbl">완료</span>  <span class="val">"다 됐다"가 어떤 모습인지</span></div>
+    <div class="eyebrow gold">02 · 인물 바이블</div>
+    <h2>매번 같은 사람으로<br>보이게 하는 약속</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">인물 A</div><p>가상의 성인 나이대, 얼굴 인상, 머리, 옷, 원하는 것, 상대를 보는 방향</p></div>
+      <div class="card clay"><div class="k">인물 B</div><p>가상의 성인 나이대, 얼굴 인상, 머리, 옷, 원하는 것, 상대를 보는 방향</p></div>
+    </div>
+    <div class="banner"><p class="big">다음 장면에서도 바뀌면 안 되는 말은<br><span class="hi">거의 똑같이 반복</span>한다.</p></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow coral">기다리는 동안</div>
-    <h2>5분에서 10분,<br>뭘 할까?</h2>
-    <p class="lead">에이전트가 일하는 동안 <b class="hi">멍하니 기다리지 않는 것.</b><br>오늘 진짜 연습할 습관은 이거다.</p>
+    <div class="eyebrow teal">장소 바이블</div>
+    <h2>세계도 약속을 지켜야 한다</h2>
     <div class="grid g3">
-      <div class="card"><div class="k">할 일 A</div><p>다음 덩어리 미리 준비하기</p></div>
-      <div class="card"><div class="k">할 일 B</div><p>"내가 할 일" 칸 먼저 처리하기</p></div>
-      <div class="card"><div class="k">할 일 C</div><p>결과를 어떻게 확인할지 정해두기</p></div>
+      <div class="card"><div class="k">어디 · 언제</div><h3>장소와 시간</h3><p>늦은 밤 편의점, 비 오는 날</p></div>
+      <div class="card gold"><div class="k">빛 · 분위기</div><h3>보이는 느낌</h3><p>따뜻한 실내등, 젖은 유리창</p></div>
+      <div class="card clay"><div class="k">절대 금지</div><h3>나오면 안 되는 것</h3><p>읽을 수 있는 글자, 로고, 다른 사람</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow yellow">결과가 왔다</div>
-    <h2>바로 쓰지 말고<br><span class="hi-y">출처 3개</span>만 눌러보자</h2>
-    <ul class="plain">
-      <li data-n="01"><b>링크가 진짜 열리나?</b></li>
-      <li data-n="02"><b>거기에 그 내용이 정말 있나?</b></li>
-      <li data-n="03"><b>언제 쓰인 글인가?</b></li>
-    </ul>
-    <div class="kicker">에이전트는 오래 혼자 일한다 = <span class="hi">틀려도 끝까지 간다.</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow coral">오늘 수업을 한 줄로</div>
-    <div class="banner">
-      <p class="big">틀렸을 때<br><span class="hi">내가 알아챌 수 있는 일</span>만<br>맡긴다.</p>
-    </div>
-    <div class="kicker">토큰을 알면 아껴 쓰고 · 나눌 줄 알면 잘 맡기고 · 확인할 줄 알면 안전하다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">나가기 전에</div>
-    <h2>한 줄만 적고 가자</h2>
+    <div class="eyebrow gold">03 · 한 줄 촬영</div>
+    <h2>한 화면에는<br><span class="hi-g">말하는 사람 한 명</span></h2>
     <div class="grid g2">
-      <div class="card tag-ai"><div class="k">오늘 맡긴 일 중에</div><h3>결과를 내가 확인할 수 있었던 것</h3></div>
-      <div class="card tag-me"><div class="k">오늘 맡긴 일 중에</div><h3>확인할 수 없었던 것</h3></div>
+      <div class="card teal"><div class="k">좋은 단위</div><h3>A의 한 줄</h3><p>입이 보이는 A만 촬영. B는 화면 밖의 시선으로 느껴지게 한다.</p></div>
+      <div class="card clay"><div class="k">다음 촬영</div><h3>B의 한 줄</h3><p>이번에는 B의 입이 보이고, A가 있는 방향을 바라본다.</p></div>
     </div>
-    <div class="kicker">이번 주 미션 — 집에서 에이전트에게 <span class="hi-y">일 하나</span> 맡겨보고, 위 두 칸을 채워오기.</div>
+    <div class="kicker">두 사람이 동시에 말하면 <span class="hi">목소리와 입 모양</span>을 통제하기 훨씬 어렵다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">프롬프트의 뼈대</div>
+    <h2>같은 인물 + 다른 연기</h2>
+    <div class="prompt"><span class="lbl">인물 고정</span>  <span class="val">성인 인물의 나이대·얼굴·머리·옷</span>
+<span class="lbl">장소 고정</span>  <span class="val">편의점·밤·조명·금지 요소</span>
+<span class="lbl">화면</span>      <span class="val">가슴 위 크기, 상대를 보는 시선, 입이 보임</span>
+<span class="lbl">연기</span>      <span class="val">우산을 내려다본 뒤 숨을 짧게 멈춘다</span>
+<span class="lbl">대사</span>      <span class="val">정확히: “왜 제 우산이 여기 있어요?”</span>
+<span class="lbl">소리</span>      <span class="val">자연스러운 서울말 한 명만, 음악·해설 없음</span></div>
+    <div class="kicker">“놀란 표정”보다 <span class="hi-t">눈을 내리고 숨을 멈춘다</span>처럼 연기할 행동을 준다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">H3의 목소리</div>
+    <h2>영상 안에서 나온<br><span class="hi-g">원래 대사</span>를 쓴다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">사용</div><h3>H3 네이티브 대사</h3><p>배우의 입 모양과 함께 생성된 실제 한국어 목소리</p></div>
+      <div class="card clay"><div class="k">사용하지 않음</div><h3>나중에 덮은 목소리</h3><p>외부 TTS나 내레이션으로 틀린 대사를 가리지 않는다.</p></div>
+    </div>
+    <div class="kicker">자막은 맞는 대사를 <span class="hi-t">도와주는 것</span>이지, 틀린 대사를 숨기는 것이 아니다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">왜 후보가 필요한가</div>
+    <h2>첫 촬영이 바로<br>합격하지 않을 수 있다</h2>
+    <div class="grid g3">
+      <div class="card clay"><div class="k">대사</div><p>끝말이 잘리거나 다른 단어를 말한다.</p></div>
+      <div class="card gold"><div class="k">인물</div><p>중간에 얼굴이나 옷이 바뀐다.</p></div>
+      <div class="card teal"><div class="k">화면</div><p>입이 안 보이거나 글자·로고가 생긴다.</p></div>
+    </div>
+    <div class="banner"><p class="big">생성한 영상은 결과가 아니라<br><span class="hi">오디션 후보</span>다.</p></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">04 · 소리 합격문</div>
+    <h2>귀로만 듣지 말고<br>대사를 다시 읽는다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>원래 문장을 정확히 말했나?</b></li>
+      <li data-n="02"><b>마지막 음절까지 남아 있나?</b></li>
+      <li data-n="03"><b>두 번째 목소리나 해설이 섞이지 않았나?</b></li>
+      <li data-n="04"><b>음악이나 이상한 언어가 생기지 않았나?</b></li>
+      <li data-n="05"><b>보이는 입과 소리가 자연스럽게 맞나?</b></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">04 · 화면 합격문</div>
+    <h2>처음 · 가운데 · 끝을<br>모두 본다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>같은 얼굴·머리·옷인가?</b></li>
+      <li data-n="02"><b>같은 장소와 조명인가?</b></li>
+      <li data-n="03"><b>얼굴과 입이 잘리지 않았나?</b></li>
+      <li data-n="04"><b>영상이 계속 자연스럽게 움직이나?</b></li>
+      <li data-n="05"><b>화면에 자막·글자가 구워지지 않았나?</b><span>H3가 멋대로 한국어 자막을 넣을 때가 있다 — 게다가 오타가 섞인다. 이건 편집으로 못 지우니 무조건 재촬영</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">재촬영 규칙</div>
+    <h2>실패한 줄만<br>다시 만든다</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">실패 이유</div><div class="d">대사·얼굴·시선 중 무엇인가</div></div>
+      <div class="step"><div class="n">02</div><div class="t">새 후보</div><div class="d">다른 시도로 그 줄만 재생성</div></div>
+      <div class="step"><div class="n">03</div><div class="t">두 번 실패</div><div class="d">뜻은 유지하고 말을 쉽게</div></div>
+      <div class="step"><div class="n">04</div><div class="t">통과본 보관</div><div class="d">합격본은 덮어쓰지 않는다</div></div>
+    </div>
+    <div class="kicker">잘된 네 줄을 버리고 전체를 다시 만들지 않는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">05 · 편집</div>
+    <h2>통과한 움직이는 영상만<br>이어 붙인다</h2>
+    <ul class="plain">
+      <li data-n="01"><b>A와 B의 통과 테이크를 대사 순서로 연결</b></li>
+      <li data-n="02"><b>말끝이 잘리지 않게 실제 길이를 확인</b></li>
+      <li data-n="03"><b>확정된 말에 맞춰 자막 추가</b></li>
+      <li data-n="04"><b>완성본 전체 대사를 다시 확인</b></li>
+      <li data-n="05"><b>휴대폰에서 세로 영상으로 재생 확인</b></li>
+    </ul>
+    <div class="kicker">정지 화면 늘리기·가짜 카메라 이동·다른 목소리 덮기는 사용하지 않는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">촬영은 줄을 선다</div>
+    <h2>한 번에 <span class="hi">한 컷</span>씩,<br>컷당 약 <span class="hi">2분</span></h2>
+    <p class="lead">AI 컴퓨터는 영상을 <b class="hi-t">동시에 여러 개 못 만든다.</b><br>네 명이 한꺼번에 걸어도 순서대로 하나씩 나온다.</p>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">그래서 좋은 점</div><h3>2분마다 하나씩 나온다</h3><p>기다렸다 몰아서 보는 것보다 낫다. 나오는 대로 바로 검수한다.</p></div>
+      <div class="card clay"><div class="k">그래서 중요한 것</div><h3>뽑기 전에 잘 쓰기</h3><p>2분을 기다려야 하니, 대충 걸고 다시 뽑는 게 손해다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">기다리는 2분</div>
+    <h2>아무도 <span class="hi-t">멍때리지</span> 않는다</h2>
+    <div class="grid g2">
+      <div class="card"><div class="k">내 컷이 나오는 중</div><h3>실패 대비 2차 프롬프트</h3><p>떨어질 수도 있다. 다음 시도를 미리 써둔다.</p></div>
+      <div class="card"><div class="k">나머지 세 명</div><h3>직전 컷 채점 · 내 줄 다듬기</h3><p>합격문으로 앞 컷을 판정하고, 자기 줄 프롬프트를 손본다.</p></div>
+    </div>
+    <div class="kicker">촬영을 걸어둔 사람도 <span class="hi">자유롭다</span> — 만드는 건 컴퓨터가 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">우리 팀 역할</div>
+    <h2>모두가 감독이다</h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">작가</div><h3>왜 다음 말을 하지?</h3><p>상황, 원인, 결과, 훅이 이어지는지 확인</p></div>
+      <div class="card gold"><div class="k">감독</div><h3>어떻게 보이고 행동하지?</h3><p>시선, 표정 대신 작은 행동, 화면 크기 결정</p></div>
+      <div class="card clay"><div class="k">검수자</div><h3>정말 합격인가?</h3><p>대사와 화면 체크리스트로 통과 여부 판단</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">2시간 진행표</div>
+    <h2>짧게 정하고<br>검수에 시간을 쓴다</h2>
+    <div class="timeline">
+      <div class="slot"><div class="time">0:00–0:15</div><h3>이야기 카드</h3><p>상황·반전·훅을 정한다.</p></div>
+      <div class="slot"><div class="time">0:15–0:30</div><h3>바이블</h3><p>인물·장소·금지를 고정한다.</p></div>
+      <div class="slot"><div class="time">0:30–0:45</div><h3>대사 4줄</h3><p>각자 한 줄씩. 한 줄에 한 생각만.</p></div>
+      <div class="slot"><div class="time">0:45–1:25</div><h3>H3 촬영</h3><p>한 번에 한 컷씩 줄 서서. 컷당 약 2분.</p></div>
+      <div class="slot"><div class="time">1:25–1:40</div><h3>검수·재촬영</h3><p>실패한 줄만 다시 만든다.</p></div>
+      <div class="slot"><div class="time">1:40–1:55</div><h3>편집·자막</h3><p>통과본을 세로 영상으로 연결한다.</p></div>
+      <div class="slot"><div class="time">1:55–2:00</div><h3>시사회</h3><p>좋았던 한 컷과 고칠 한 컷.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">안전 약속</div>
+    <h2>가상의 성인 인물로<br>우리 이야기를 만든다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">한다</div><p>직접 만든 가상 인물·가상 상표·가상 장소, 팀이 쓴 대사 사용</p></div>
+      <div class="card clay"><div class="k">하지 않는다</div><p>친구나 유명인의 얼굴 흉내, 개인정보, 실제 학교·전화번호·로고 노출</p></div>
+    </div>
+    <div class="kicker">공개하기 전에는 <span class="hi">모두가 보여도 괜찮은 내용인지</span> 다시 확인한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">오늘의 시작 카드</div>
+    <h2>네 줄을 채우면<br>촬영을 시작할 수 있다</h2>
+    <div class="prompt"><span class="lbl">이상한 상황</span>  <span class="val">평소와 다른 한 가지</span>
+<span class="lbl">구체적 결과</span>  <span class="val">누구에게 무슨 일이 생기는가</span>
+<span class="lbl">인물의 선택</span>  <span class="val">그 사람은 무엇을 하려 하는가</span>
+<span class="lbl">마지막 질문</span>  <span class="val">다음 장면에서 꼭 답해야 하는 것</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <div class="banner"><p class="big">AI에게 드라마를 맡기는 게 아니라,<br>우리가 <span class="hi">AI 배우를 감독</span>한다.</p></div>
+    <p class="lead" style="margin-top:24px">좋은 작품은 생성 횟수가 아니라<br><b class="hi-t">이야기 약속을 지킨 통과본</b>으로 만든다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>우리 작품의<br>합격 장면은 무엇이었나?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">가장 잘된 한 컷</div><h3>왜 통과시켰는지</h3><p>대사·연기·연속성 중 하나를 근거로 말한다.</p></div>
+      <div class="card clay"><div class="k">다음에 고칠 한 컷</div><h3>어떤 지시를 바꿀지</h3><p>“더 잘” 말고 바꿀 행동 한 가지를 적는다.</p></div>
+    </div>
+    <div class="kicker">집 미션 — 2화의 <span class="hi-g">마지막 훅 한 줄</span>만 써오기.</div>
   </section>
 
 </div>
-
 <script>
-  const slides=Array.from(document.querySelectorAll('.slide'));
-  const bar=document.getElementById('bar'), count=document.getElementById('count');
-  let i=0; const pad=n=>String(n).padStart(2,'0');
-  function show(n){
-    i=Math.max(0,Math.min(slides.length-1,n));
-    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
-    bar.style.width=((i+1)/slides.length*100)+'%';
-    count.textContent=pad(i+1)+' / '+pad(slides.length);
-  }
-  document.addEventListener('keydown',e=>{
-    if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1);}
-    if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1);}
-    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
-  });
-  document.getElementById('deck').addEventListener('click',e=>{show(e.clientX<window.innerWidth*0.28?i-1:i+1);});
-  let x0=null;
-  document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',e=>{
-    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
-    if(Math.abs(dx)>45)show(dx<0?i+1:i-1); x0=null;
-  },{passive:true});
-  show(0);
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
 </script>
 </body>
 </html>

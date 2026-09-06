@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W14 · 세로 드라마 만들기</title>
+<title>W14 · 같은 세계에서 만나기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -26,241 +26,317 @@
 <body>
 <a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
+  <style>
+    .figbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(10px,1.4vw,18px);margin-top:18px;max-width:900px}
+    .figbox svg{display:block;width:100%;height:auto;max-height:48vh}
+    .url{font-family:var(--mono);font-size:clamp(15px,2.2vw,30px);font-weight:700;color:var(--clay-deep);background:var(--card);border:2px dashed var(--clay);border-radius:14px;padding:clamp(14px,2vw,24px);margin-top:22px;display:inline-block;word-break:break-all}
+    .track{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.8vw,20px);margin-top:26px}
+    .track .col{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,2vw,24px)}
+    .track .col.a{border-top:4px solid var(--teal)}
+    .track .col.b{border-top:4px solid var(--clay)}
+    .track .col .who{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:700}
+    .track .col h3{margin-top:9px}
+    .track .col p{font-size:clamp(12px,1.25vw,15px);color:var(--mute);line-height:1.6;margin-top:9px}
+    @media(max-width:780px){.track{grid-template-columns:1fr}}
+    @media(max-height:520px) and (orientation:landscape){.figbox svg{max-height:38vh}}
+  </style>
 
   <section class="slide active">
-    <div class="eyebrow">W14 · AI 영상 제작</div>
-    <h1>세로 드라마<br><span class="hi">만들기</span></h1>
+    <div class="eyebrow">W14 · 함께 만드는 것</div>
+    <h1>같은 세계에서<br><span class="hi">만나기</span></h1>
     <div class="rule"></div>
-    <p class="lead">MiniMax H3와 외부 AI 컴퓨터(DGX Spark)로<br><b class="hi-t">한국어 대사가 있는 30~45초 드라마</b>를 한 팀이 함께 만든다.</p>
+    <p class="lead">친구가 지금 <b class="hi-t">어디 있는지 보이고</b>, 내가 찍은 자리가 <b class="hi-t">맵에 남는</b> 게임.<br>그리고 그걸 가능하게 하는 <b class="hi">세 가지 도구</b>.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">오늘의 결과물</div>
-    <h2>한 팀 · 한 작품 ·<br><span class="hi-g">세로 9:16</span></h2>
+    <div class="eyebrow gold">먼저 들어가 보자</div>
+    <h2>지금 <span class="hi-g">접속</span>해 봅니다</h2>
+    <div class="url">class-tiles.vercel.app</div>
+    <div class="kicker">이름과 색을 고르고 들어가면 — <span class="hi">서로가 보인다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">먼저 인정할 것</div>
+    <h2>지금까지 우리 게임은<br><span class="hi">혼자만의 세계</span>였다</h2>
     <div class="grid g3">
-      <div class="card"><div class="k">길이</div><h3>30~45초</h3><p>짧지만 상황과 반전이 보인다.</p></div>
-      <div class="card teal"><div class="k">대사</div><h3>한국어 4~6줄</h3><p>한 테이크에는 한 사람의 한 줄만.</p></div>
-      <div class="card clay"><div class="k">마지막</div><h3>다음이 궁금한 훅</h3><p>“그래서 어떻게 됐지?”가 남는다.</p></div>
+      <div class="card clay"><div class="k">새로고침하면</div><h3>다 사라진다</h3><p>점수도 진행 상황도 남지 않는다.</p></div>
+      <div class="card clay"><div class="k">친구가 열면</div><h3>완전히 다른 게임</h3><p>내가 뭘 했는지 친구 화면엔 흔적도 없다.</p></div>
+      <div class="card clay"><div class="k">그래서</div><h3>같이 놀 수가 없다</h3><p>번갈아 하는 건 같이 노는 게 아니다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">먼저 바꿀 생각</div>
-    <h2>AI 영상은 완성품이 아니라<br><span class="hi-t">촬영한 재료</span>다</h2>
+    <div class="eyebrow teal">오늘의 도구</div>
+    <h2>세 가지가<br>각자 <span class="hi-t">다른 일</span>을 한다</h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">GitHub</div><h3>코드를 보관한다</h3><p>여러 명이 같은 코드를 <b>같이</b> 고칠 수 있게 해준다.</p></div>
+      <div class="card gold"><div class="k">Vercel</div><h3>주소를 만들어 준다</h3><p>내 코드를 인터넷 주소로 바꿔 누구나 열 수 있게 한다.</p></div>
+      <div class="card clay"><div class="k">Supabase</div><h3>데이터를 맡아 준다</h3><p>저장하고, 바뀌면 모두에게 실시간으로 알려준다.</p></div>
+    </div>
+    <div class="kicker">셋 다 <span class="hi">없으면 안 되는</span> 이유를 하나씩 보자.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">01 · GitHub</div>
+    <h2>여러 명이<br>같은 코드를 <span class="hi">고치는 법</span></h2>
     <div class="grid g2">
-      <div class="card clay"><div class="k">한 번에 부탁</div><h3>“드라마 하나 만들어줘”</h3><p>얼굴, 옷, 장소, 대사와 입 모양이 중간에 바뀌기 쉽다.</p></div>
-      <div class="card teal"><div class="k">우리 방식</div><h3>한 줄씩 촬영하고 검사</h3><p>통과한 움직이는 영상만 골라 마지막에 이어 붙인다.</p></div>
+      <div class="card clay"><div class="k">GitHub 없이</div><h3>파일을 주고받는다</h3><p>“최종.html”, “최종_진짜.html”, “최종_이번엔진짜.html”… 누가 뭘 고쳤는지 아무도 모른다.</p></div>
+      <div class="card teal"><div class="k">GitHub 로</div><h3>가지를 쳐서 고친다</h3><p>각자 자기 <b>가지(branch)</b>에서 고치고, 확인한 다음 하나로 합친다.</p></div>
     </div>
-    <div class="kicker">영상 AI는 <span class="hi">감독 없이 혼자 완성하는 기계</span>가 아니다.</div>
+    <div class="kicker">W13에서 이미 써봤다. 오늘은 <span class="hi">여러 명이 동시에</span> 써본다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">전체 지도</div>
-    <h2>드라마 제작 · 5단계</h2>
+    <div class="eyebrow gold">02 · Vercel</div>
+    <h2>내 컴퓨터의 파일이<br><span class="hi-g">주소</span>가 되는 순간</h2>
     <div class="flow">
-      <div class="step"><div class="n">01</div><div class="t">이야기</div><div class="d">상황·반전·마지막 훅</div></div>
-      <div class="step"><div class="n">02</div><div class="t">바이블</div><div class="d">인물과 장소를 고정</div></div>
-      <div class="step"><div class="n">03</div><div class="t">한 줄 촬영</div><div class="d">화자 한 명씩 후보 생성</div></div>
-      <div class="step"><div class="n">04</div><div class="t">합격 검사</div><div class="d">소리·얼굴·움직임 확인</div></div>
-      <div class="step"><div class="n">05</div><div class="t">편집</div><div class="d">통과본 연결 + 자막</div></div>
+      <div class="step"><div class="n">01</div><div class="t">코드를 올린다</div><div class="d">GitHub에 push 한다.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">Vercel이 알아챈다</div><div class="d">바뀐 걸 자동으로 가져간다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">주소가 생긴다</div><div class="d">전 세계 어디서나 열린다.</div></div>
+    </div>
+    <div class="kicker">W12에서 배운 <span class="hi">배포</span>가 바로 이것.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">03 · Supabase</div>
+    <h2>여기가 <span class="hi-t">새로운</span> 부분</h2>
+    <p class="lead">지금까지 우리 게임은 <b class="hi">데이터를 맡길 곳이 없었다.</b><br>Supabase는 두 가지를 해준다.</p>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">저장</div><h3>표에 적어둔다</h3><p>누가 어느 칸을 칠했는지 기록으로 남긴다. 컴퓨터를 꺼도 남는다.</p></div>
+      <div class="card gold"><div class="k">실시간</div><h3>바뀌면 알려준다</h3><p>누가 칸을 칠하면 접속한 모두에게 즉시 전달한다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">01 · 이야기</div>
-    <h2>짧은 드라마는<br>다섯 칸이면 된다</h2>
+    <div class="eyebrow">이어보면</div>
+    <h2>셋이 <span class="hi">이렇게</span> 이어진다</h2>
+    <div class="figbox">
+      <svg viewBox="0 0 900 380" role="img" aria-label="GitHub에서 Vercel로 배포되고 브라우저가 Supabase와 통신하는 구조">
+        <rect x="0" y="0" width="900" height="380" fill="#fffaf0"/>
+        <rect x="24" y="30" width="180" height="86" rx="12" fill="#f0f5f2" stroke="#3f6b63" stroke-width="2.5"/>
+        <rect x="256" y="30" width="180" height="86" rx="12" fill="#fbf5e6" stroke="#a9761a" stroke-width="2.5"/>
+        <rect x="150" y="196" width="196" height="104" rx="12" fill="#efe5d2" stroke="#d8cbb1" stroke-width="2.5"/>
+        <rect x="404" y="196" width="196" height="104" rx="12" fill="#efe5d2" stroke="#d8cbb1" stroke-width="2.5"/>
+        <rect x="640" y="150" width="230" height="150" rx="14" fill="#fbf0e6" stroke="#bd5a32" stroke-width="2.5"/>
+        <g font-family="'Hahmlet',serif" font-weight="800" fill="#23201a" text-anchor="middle">
+          <text x="114" y="70" font-size="20" fill="#2f544e">GitHub</text>
+          <text x="346" y="70" font-size="20" fill="#8a6014">Vercel</text>
+          <text x="248" y="238" font-size="17">내 화면</text>
+          <text x="502" y="238" font-size="17">친구 화면</text>
+          <text x="755" y="186" font-size="20" fill="#9c4622">Supabase</text>
+        </g>
+        <g font-family="'IBM Plex Sans KR',sans-serif" font-size="12.5" fill="#5a5347" text-anchor="middle">
+          <text x="114" y="94">코드 보관</text>
+          <text x="346" y="94">주소 만들기</text>
+          <text x="248" y="262">브라우저</text>
+          <text x="502" y="262">브라우저</text>
+        </g>
+        <rect x="664" y="204" width="182" height="34" rx="8" fill="#fbf5e6" stroke="#e6cf9a" stroke-width="2"/>
+        <rect x="664" y="246" width="182" height="34" rx="8" fill="#f0f5f2" stroke="#b9d0c9" stroke-width="2"/>
+        <g font-family="'IBM Plex Sans KR',sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">
+          <text x="755" y="226" fill="#a9761a">커서 — 안 남음</text>
+          <text x="755" y="268" fill="#3f6b63">칠한 칸 — 남음</text>
+        </g>
+        <g stroke="#3f6b63" stroke-width="3" fill="none" stroke-linecap="round">
+          <line x1="204" y1="73" x2="248" y2="73"/>
+        </g>
+        <polygon points="248,73 236,67 236,79" fill="#3f6b63"/>
+        <g stroke="#a9761a" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 6">
+          <path d="M346,116 L346,160 L248,160 L248,192"/>
+          <path d="M346,116 L346,160 L502,160 L502,192"/>
+        </g>
+        <polygon points="248,196 242,184 254,184" fill="#a9761a"/>
+        <polygon points="502,196 496,184 508,184" fill="#a9761a"/>
+        <g stroke="#bd5a32" stroke-width="3" fill="none" stroke-linecap="round">
+          <path d="M346,248 L376,248"/>
+          <path d="M600,248 L634,248"/>
+        </g>
+        <g fill="#bd5a32">
+          <polygon points="376,248 364,242 364,254"/><polygon points="346,248 358,242 358,254"/>
+          <polygon points="634,248 622,242 622,254"/><polygon points="600,248 612,242 612,254"/>
+        </g>
+        <path d="M376,248 L376,330 L634,330 L634,262" stroke="#bd5a32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <g font-family="'Space Mono',monospace" font-size="12" fill="#5a5347">
+          <text x="212" y="62">push</text>
+          <text x="356" y="146">배포</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 큰 생각</div>
+    <h2>데이터에는<br><span class="hi-g">두 종류</span>가 있다</h2>
+    <div class="grid g2">
+      <div class="card gold"><div class="k">사라지는 데이터</div><h3>지금 누가, 어디에</h3><p>친구의 커서 위치. 접속을 끊으면 <b>없어져야 맞다.</b> 저장할 이유가 없다.</p></div>
+      <div class="card teal"><div class="k">남는 데이터</div><h3>맵에 찍은 칸</h3><p>내가 차지한 자리. 컴퓨터를 꺼도 <b>남아 있어야 맞다.</b> 저장해야 한다.</p></div>
+    </div>
+    <div class="kicker">오늘 배우는 건 기술이 아니라 <span class="hi">“무엇을 남기고 무엇을 버릴까”</span>라는 판단이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">생각해보기</div>
+    <h2>커서는 왜<br><span class="hi">저장하지 않을까?</span></h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">만약 저장한다면</div><h3>1초에 수십 번</h3><p>마우스가 움직일 때마다 기록이 쌓인다. 금세 표가 터진다.</p></div>
+      <div class="card teal"><div class="k">그리고 무의미하다</div><h3>3초 전 위치를 왜?</h3><p>“지금 어디 있나”는 지금만 쓸모 있다. 지나가면 값이 없다.</p></div>
+    </div>
+    <div class="kicker">좋은 프로그램은 <span class="hi">저장하지 않기로 결정한 것</span>이 분명하다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">실시간이란</div>
+    <h2>계속 <span class="hi-t">물어보는</span> 게 아니라<br><span class="hi-t">알려주는</span> 것</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">옛날 방식</div><h3>“바뀐 거 있어요?”</h3><p>1초마다 서버에 물어본다. 대부분 “없어요”만 돌아온다. 낭비다.</p></div>
+      <div class="card teal"><div class="k">우리가 쓸 방식</div><h3>“바뀌면 알려주세요”</h3><p>한 번 신청해두면 바뀔 때만 서버가 먼저 말해준다.</p></div>
+    </div>
+    <div class="kicker">이걸 <span class="hi">구독</span>이라고 한다. 유튜브 구독과 같은 뜻이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">표 설계</div>
+    <h2>칸 하나에<br>무엇을 <span class="hi-g">적어둘까?</span></h2>
+    <div class="prompt"><span class="lbl">tiles</span>  (칸 정보를 담는 표)
+
+  <span class="val">x</span>        가로 몇 번째 칸인가
+  <span class="val">y</span>        세로 몇 번째 칸인가
+  <span class="val">color</span>    누구 색으로 칠해졌나
+  <span class="val">name</span>     누가 찍었나
+  <span class="val">updated_at</span>  언제 찍었나</div>
+    <div class="kicker">이것보다 적으면 게임이 안 되고, 많으면 오늘 안에 못 끝낸다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">여기서부터</div>
+    <h2>둘로 <span class="hi">갈라진다</span></h2>
+    <div class="track">
+      <div class="col a">
+        <div class="who">초등 트랙</div>
+        <h3>있는 게임에 기여하기</h3>
+        <p>이미 돌아가는 프로젝트를 받아서, 내가 고친 부분을 진짜로 합친다. <b>GitHub 협업</b>을 몸으로 배운다.</p>
+      </div>
+      <div class="col b">
+        <div class="who">중등 트랙</div>
+        <h3>내 앱을 처음부터</h3>
+        <p>내가 만들고 싶은 것을 정하고, 표를 직접 설계하고, 세 도구를 스스로 연결한다.</p>
+      </div>
+    </div>
+    <div class="kicker">앞의 개념은 <span class="hi">똑같이</span> 쓰인다. 손이 하는 일만 다르다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">초등 트랙</div>
+    <h2>오늘 할 일 <span class="hi-t">네 가지</span></h2>
+    <ul class="plain">
+      <li data-n="01">게임에 들어가서 <b>같이 놀아본다</b><span>친구 커서가 움직이는 걸 확인</span></li>
+      <li data-n="02">브라우저를 껐다 켜본다<span>내 칸은 남아 있고, 친구 커서는 사라졌다</span></li>
+      <li data-n="03">코드에서 <b>🔧 표시</b>를 찾는다<span>config.js 안에 고쳐도 되는 곳이 표시돼 있다</span></li>
+      <li data-n="04">하나를 고쳐서 <b>진짜로 합친다</b><span>가지 만들기 → 고치기 → 올리기 → 합치기</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">초등 트랙</div>
+    <h2>고를 수 있는 <span class="hi-g">과제</span></h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">★</div><h3>새 색 추가하기</h3><p><span class="mono">config.js</span> 의 COLORS 에 내 색을 넣는다.</p></div>
+      <div class="card teal"><div class="k">★</div><h3>맵 크기 바꾸기</h3><p>COLS, ROWS 숫자를 바꿔 더 넓게 또는 좁게.</p></div>
+      <div class="card gold"><div class="k">★★</div><h3>지우개 만들기</h3><p>흰색을 넣으면 지우개가 된다. 왜 그럴까?</p></div>
+      <div class="card gold"><div class="k">★★</div><h3>점수판 정렬 바꾸기</h3><p>많은 순 말고 이름순으로 바꿔본다.</p></div>
+      <div class="card clay"><div class="k">★★★</div><h3>칸 수 제한</h3><p>한 사람이 20칸까지만 칠할 수 있게.</p></div>
+      <div class="card clay"><div class="k">★★★</div><h3>내 아이디어</h3><p>직접 생각한 규칙 하나.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">초등 트랙</div>
+    <h2>합치는 <span class="hi">순서</span></h2>
+    <div class="prompt"><span class="lbl">1</span> git switch -c <span class="val">지호-새색깔</span>     내 가지를 만든다
+
+<span class="lbl">2</span> (코드를 고친다)
+
+<span class="lbl">3</span> git add -A
+   git commit -m <span class="val">"보라색 두 종류 추가"</span>
+
+<span class="lbl">4</span> git push -u origin <span class="val">지호-새색깔</span>
+
+<span class="lbl">5</span> GitHub 에서 <span class="val">Pull Request</span> 열기</div>
+    <div class="kicker">선생님이 확인하고 합치면 — <span class="hi">몇 초 뒤 실제 주소에 반영된다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">중등 트랙</div>
+    <h2>내 앱을 <span class="hi">설계</span>한다</h2>
     <div class="flow">
-      <div class="step"><div class="n">01</div><div class="t">이상한 상황</div><div class="d">평소와 다른 한 가지</div></div>
-      <div class="step"><div class="n">02</div><div class="t">원인</div><div class="d">왜 그런지 단서</div></div>
-      <div class="step"><div class="n">03</div><div class="t">결과</div><div class="d">누구에게 무슨 일이 생기나</div></div>
-      <div class="step"><div class="n">04</div><div class="t">감정</div><div class="d">인물이 어떻게 반응하나</div></div>
-      <div class="step"><div class="n">05</div><div class="t">훅</div><div class="d">다음 장면의 정확한 질문</div></div>
+      <div class="step"><div class="n">01</div><div class="t">무엇을</div><div class="d">여러 사람이 같이 쓰면 좋아지는 것. 혼자 쓸 거면 서버가 필요 없다.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">무엇이 남나</div><div class="d">저장할 것과 안 할 것을 먼저 가른다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">표 설계</div><div class="d">남길 것을 표의 칸(열)으로 적는다.</div></div>
+      <div class="step"><div class="n">04</div><div class="t">연결</div><div class="d">GitHub → Vercel → Supabase 를 직접 잇는다.</div></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">예시 · 늦은 밤 편의점</div>
-    <h2>대사가 앞 대사를<br>밀어줘야 한다</h2>
+    <div class="eyebrow teal">중등 트랙</div>
+    <h2>표를 설계할 때<br>물어볼 <span class="hi-t">세 가지</span></h2>
     <ul class="plain">
-      <li data-n="A1"><b>“왜 제 우산이 여기 있어요?”</b><span>이상한 상황</span></li>
-      <li data-n="B1"><b>“어제 두고 가셨잖아요.”</b><span>원인처럼 보이는 대답</span></li>
-      <li data-n="A2"><b>“저 오늘 처음 왔는데요.”</b><span>원인이 무너진다</span></li>
-      <li data-n="B2"><b>“그럼 어제 온 사람은 누구였죠?”</b><span>다음 장면이 필요한 훅</span></li>
+      <li data-n="01">한 줄이 <b>무엇 하나</b>를 뜻하나?<span>칸 하나? 사람 하나? 메시지 하나?</span></li>
+      <li data-n="02">같은 것이 <b>두 줄</b>로 생기면 안 되는 건 뭔가?<span>땅따먹기에서는 같은 (x, y)가 두 줄이면 안 된다</span></li>
+      <li data-n="03">나중에 <b>찾아볼</b> 일이 있나?<span>있다면 그 기준이 표의 칸으로 있어야 한다</span></li>
     </ul>
-    <div class="kicker">각 줄은 짧고, <span class="hi-t">왜 다음 사람이 말하는지</span> 분명해야 한다.</div>
+    <div class="kicker">설계를 먼저 하면 코드는 짧아진다. <span class="hi">반대로 하면 계속 고친다.</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">02 · 인물 바이블</div>
-    <h2>매번 같은 사람으로<br>보이게 하는 약속</h2>
+    <div class="eyebrow gold">안전</div>
+    <h2>열쇠는 <span class="hi-g">두 종류</span></h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">인물 A</div><p>가상의 성인 나이대, 얼굴 인상, 머리, 옷, 원하는 것, 상대를 보는 방향</p></div>
-      <div class="card clay"><div class="k">인물 B</div><p>가상의 성인 나이대, 얼굴 인상, 머리, 옷, 원하는 것, 상대를 보는 방향</p></div>
+      <div class="card teal"><div class="k">anon key</div><h3>남이 봐도 되는 열쇠</h3><p>브라우저 코드에 들어간다. GitHub에 올라가도 괜찮다. 대신 <b>규칙(RLS)</b>으로 지킨다.</p></div>
+      <div class="card clay"><div class="k">service_role key</div><h3>절대 공개하면 안 되는 열쇠</h3><p>모든 걸 할 수 있다. 코드에 넣거나 채팅에 붙여넣지 <b>않는다.</b></p></div>
     </div>
-    <div class="banner"><p class="big">다음 장면에서도 바뀌면 안 되는 말은<br><span class="hi">거의 똑같이 반복</span>한다.</p></div>
+    <div class="kicker">“공개돼도 되는 열쇠”가 있는 이유 — <span class="hi">할 수 있는 일을 미리 좁혀뒀기 때문</span>이다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">장소 바이블</div>
-    <h2>세계도 약속을 지켜야 한다</h2>
-    <div class="grid g3">
-      <div class="card"><div class="k">어디 · 언제</div><h3>장소와 시간</h3><p>늦은 밤 편의점, 비 오는 날</p></div>
-      <div class="card gold"><div class="k">빛 · 분위기</div><h3>보이는 느낌</h3><p>따뜻한 실내등, 젖은 유리창</p></div>
-      <div class="card clay"><div class="k">절대 금지</div><h3>나오면 안 되는 것</h3><p>읽을 수 있는 글자, 로고, 다른 사람</p></div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">03 · 한 줄 촬영</div>
-    <h2>한 화면에는<br><span class="hi-g">말하는 사람 한 명</span></h2>
+    <div class="eyebrow">중요한 질문</div>
+    <h2>남의 칸을<br><span class="hi">지울 수 있을까?</span></h2>
+    <p class="lead">지금 우리 게임은 <b class="hi">누구나 뭐든 할 수 있다.</b><br>친구가 칠한 칸을 통째로 덮어버릴 수도 있다.</p>
     <div class="grid g2">
-      <div class="card teal"><div class="k">좋은 단위</div><h3>A의 한 줄</h3><p>입이 보이는 A만 촬영. B는 화면 밖의 시선으로 느껴지게 한다.</p></div>
-      <div class="card clay"><div class="k">다음 촬영</div><h3>B의 한 줄</h3><p>이번에는 B의 입이 보이고, A가 있는 방향을 바라본다.</p></div>
-    </div>
-    <div class="kicker">두 사람이 동시에 말하면 <span class="hi">목소리와 입 모양</span>을 통제하기 훨씬 어렵다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">프롬프트의 뼈대</div>
-    <h2>같은 인물 + 다른 연기</h2>
-    <div class="prompt"><span class="lbl">인물 고정</span>  <span class="val">성인 인물의 나이대·얼굴·머리·옷</span>
-<span class="lbl">장소 고정</span>  <span class="val">편의점·밤·조명·금지 요소</span>
-<span class="lbl">화면</span>      <span class="val">가슴 위 크기, 상대를 보는 시선, 입이 보임</span>
-<span class="lbl">연기</span>      <span class="val">우산을 내려다본 뒤 숨을 짧게 멈춘다</span>
-<span class="lbl">대사</span>      <span class="val">정확히: “왜 제 우산이 여기 있어요?”</span>
-<span class="lbl">소리</span>      <span class="val">자연스러운 서울말 한 명만, 음악·해설 없음</span></div>
-    <div class="kicker">“놀란 표정”보다 <span class="hi-t">눈을 내리고 숨을 멈춘다</span>처럼 연기할 행동을 준다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">H3의 목소리</div>
-    <h2>영상 안에서 나온<br><span class="hi-g">원래 대사</span>를 쓴다</h2>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">사용</div><h3>H3 네이티브 대사</h3><p>배우의 입 모양과 함께 생성된 실제 한국어 목소리</p></div>
-      <div class="card clay"><div class="k">사용하지 않음</div><h3>나중에 덮은 목소리</h3><p>외부 TTS나 내레이션으로 틀린 대사를 가리지 않는다.</p></div>
-    </div>
-    <div class="kicker">자막은 맞는 대사를 <span class="hi-t">도와주는 것</span>이지, 틀린 대사를 숨기는 것이 아니다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">왜 후보가 필요한가</div>
-    <h2>첫 촬영이 바로<br>합격하지 않을 수 있다</h2>
-    <div class="grid g3">
-      <div class="card clay"><div class="k">대사</div><p>끝말이 잘리거나 다른 단어를 말한다.</p></div>
-      <div class="card gold"><div class="k">인물</div><p>중간에 얼굴이나 옷이 바뀐다.</p></div>
-      <div class="card teal"><div class="k">화면</div><p>입이 안 보이거나 글자·로고가 생긴다.</p></div>
-    </div>
-    <div class="banner"><p class="big">생성한 영상은 결과가 아니라<br><span class="hi">오디션 후보</span>다.</p></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">04 · 소리 합격문</div>
-    <h2>귀로만 듣지 말고<br>대사를 다시 읽는다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>원래 문장을 정확히 말했나?</b></li>
-      <li data-n="02"><b>마지막 음절까지 남아 있나?</b></li>
-      <li data-n="03"><b>두 번째 목소리나 해설이 섞이지 않았나?</b></li>
-      <li data-n="04"><b>음악이나 이상한 언어가 생기지 않았나?</b></li>
-      <li data-n="05"><b>보이는 입과 소리가 자연스럽게 맞나?</b></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">04 · 화면 합격문</div>
-    <h2>처음 · 가운데 · 끝을<br>모두 본다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>같은 얼굴·머리·옷인가?</b></li>
-      <li data-n="02"><b>같은 장소와 조명인가?</b></li>
-      <li data-n="03"><b>얼굴과 입이 잘리지 않았나?</b></li>
-      <li data-n="04"><b>영상이 계속 자연스럽게 움직이나?</b></li>
-      <li data-n="05"><b>원하지 않은 글자·UI·로고가 없나?</b></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">재촬영 규칙</div>
-    <h2>실패한 줄만<br>다시 만든다</h2>
-    <div class="flow">
-      <div class="step"><div class="n">01</div><div class="t">실패 이유</div><div class="d">대사·얼굴·시선 중 무엇인가</div></div>
-      <div class="step"><div class="n">02</div><div class="t">새 후보</div><div class="d">다른 시도로 그 줄만 재생성</div></div>
-      <div class="step"><div class="n">03</div><div class="t">두 번 실패</div><div class="d">뜻은 유지하고 말을 쉽게</div></div>
-      <div class="step"><div class="n">04</div><div class="t">통과본 보관</div><div class="d">합격본은 덮어쓰지 않는다</div></div>
-    </div>
-    <div class="kicker">잘된 네 줄을 버리고 전체를 다시 만들지 않는다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">05 · 편집</div>
-    <h2>통과한 움직이는 영상만<br>이어 붙인다</h2>
-    <ul class="plain">
-      <li data-n="01"><b>A와 B의 통과 테이크를 대사 순서로 연결</b></li>
-      <li data-n="02"><b>말끝이 잘리지 않게 실제 길이를 확인</b></li>
-      <li data-n="03"><b>확정된 말에 맞춰 자막 추가</b></li>
-      <li data-n="04"><b>완성본 전체 대사를 다시 확인</b></li>
-      <li data-n="05"><b>휴대폰에서 세로 영상으로 재생 확인</b></li>
-    </ul>
-    <div class="kicker">정지 화면 늘리기·가짜 카메라 이동·다른 목소리 덮기는 사용하지 않는다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">우리 팀 역할</div>
-    <h2>모두가 감독이다</h2>
-    <div class="grid g3">
-      <div class="card teal"><div class="k">작가</div><h3>왜 다음 말을 하지?</h3><p>상황, 원인, 결과, 훅이 이어지는지 확인</p></div>
-      <div class="card gold"><div class="k">감독</div><h3>어떻게 보이고 행동하지?</h3><p>시선, 표정 대신 작은 행동, 화면 크기 결정</p></div>
-      <div class="card clay"><div class="k">검수자</div><h3>정말 합격인가?</h3><p>대사와 화면 체크리스트로 통과 여부 판단</p></div>
+      <div class="card clay"><div class="k">그래서 필요한 것</div><h3>규칙</h3><p>“내 칸만 바꿀 수 있다” 같은 약속을 서버에 걸어둔다.</p></div>
+      <div class="card teal"><div class="k">오늘은</div><h3>일단 열어둔다</h3><p>대신 무엇이 위험한지는 알고 넘어간다. 다음에 잠근다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">2시간 진행표</div>
-    <h2>짧게 정하고<br>검수에 시간을 쓴다</h2>
+    <div class="eyebrow teal">2시간 진행표</div>
+    <h2>개념은 같이,<br>손은 <span class="hi-t">따로</span></h2>
     <div class="timeline">
-      <div class="slot"><div class="time">0:00–0:15</div><h3>이야기 카드</h3><p>상황·반전·훅을 정한다.</p></div>
-      <div class="slot"><div class="time">0:15–0:30</div><h3>바이블</h3><p>인물·장소·금지를 고정한다.</p></div>
-      <div class="slot"><div class="time">0:30–0:45</div><h3>대사 4~6줄</h3><p>한 줄에 한 생각만 남긴다.</p></div>
-      <div class="slot"><div class="time">0:45–1:25</div><h3>H3 촬영</h3><p>한 줄씩 순서대로 후보를 만든다.</p></div>
-      <div class="slot"><div class="time">1:25–1:40</div><h3>검수·재촬영</h3><p>실패한 줄만 다시 만든다.</p></div>
-      <div class="slot"><div class="time">1:40–1:55</div><h3>편집·자막</h3><p>통과본을 세로 영상으로 연결한다.</p></div>
-      <div class="slot"><div class="time">1:55–2:00</div><h3>시사회</h3><p>좋았던 한 컷과 고칠 한 컷.</p></div>
+      <div class="slot"><div class="time">0:00–0:15</div><h3>같이 놀기</h3><p>접속해서 서로 보이는 걸 확인.</p></div>
+      <div class="slot"><div class="time">0:15–0:45</div><h3>개념 (다 같이)</h3><p>세 도구 · 두 종류 데이터 · 구독.</p></div>
+      <div class="slot"><div class="time">0:45–1:00</div><h3>실험</h3><p>껐다 켜기. 무엇이 남고 사라지나.</p></div>
+      <div class="slot"><div class="time">1:00–1:40</div><h3>갈라져서 작업</h3><p>초등 = 기여 / 중등 = 내 앱 설계.</p></div>
     </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">안전 약속</div>
-    <h2>가상의 성인 인물로<br>우리 이야기를 만든다</h2>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">한다</div><p>직접 만든 가상 인물·가상 상표·가상 장소, 팀이 쓴 대사 사용</p></div>
-      <div class="card clay"><div class="k">하지 않는다</div><p>친구나 유명인의 얼굴 흉내, 개인정보, 실제 학교·전화번호·로고 노출</p></div>
+    <div class="timeline" style="margin-top:12px">
+      <div class="slot"><div class="time">1:40–1:55</div><h3>합치고 확인</h3><p>PR 합치고 실제 주소에 반영되는 걸 본다.</p></div>
+      <div class="slot"><div class="time">1:55–2:00</div><h3>정리</h3><p>무엇이 남고 무엇이 사라졌나.</p></div>
     </div>
-    <div class="kicker">공개하기 전에는 <span class="hi">모두가 보여도 괜찮은 내용인지</span> 다시 확인한다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">오늘의 시작 카드</div>
-    <h2>네 줄을 채우면<br>촬영을 시작할 수 있다</h2>
-    <div class="prompt"><span class="lbl">이상한 상황</span>  <span class="val">평소와 다른 한 가지</span>
-<span class="lbl">구체적 결과</span>  <span class="val">누구에게 무슨 일이 생기는가</span>
-<span class="lbl">인물의 선택</span>  <span class="val">그 사람은 무엇을 하려 하는가</span>
-<span class="lbl">마지막 질문</span>  <span class="val">다음 장면에서 꼭 답해야 하는 것</span></div>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">한 줄로 정리</div>
-    <div class="banner"><p class="big">AI에게 드라마를 맡기는 게 아니라,<br>우리가 <span class="hi">AI 배우를 감독</span>한다.</p></div>
-    <p class="lead" style="margin-top:24px">좋은 작품은 생성 횟수가 아니라<br><b class="hi-t">이야기 약속을 지킨 통과본</b>으로 만든다.</p>
+    <h2 style="max-width:23ch">함께 논다는 건<br><span class="hi-g">같은 데이터를 본다</span>는 뜻</h2>
+    <p class="lead">화면이 여러 개여도 <b class="hi-t">진실은 서버에 하나</b>다.<br>그래서 친구가 찍은 칸이 내 화면에도 나타난다.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow teal">나가기 전에</div>
-    <h2>우리 작품의<br>합격 장면은 무엇이었나?</h2>
+    <h2>무엇이 남고<br>무엇이 사라졌나?</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">가장 잘된 한 컷</div><h3>왜 통과시켰는지</h3><p>대사·연기·연속성 중 하나를 근거로 말한다.</p></div>
-      <div class="card clay"><div class="k">다음에 고칠 한 컷</div><h3>어떤 지시를 바꿀지</h3><p>“더 잘” 말고 바꿀 행동 한 가지를 적는다.</p></div>
+      <div class="card teal"><div class="k">남은 것</div><h3>왜 남아야 했나</h3><p>칠한 칸이 사라졌다면 게임이 어떻게 됐을까?</p></div>
+      <div class="card clay"><div class="k">사라진 것</div><h3>왜 사라져야 했나</h3><p>친구 커서가 계속 남아 있었다면 어땠을까?</p></div>
     </div>
-    <div class="kicker">집 미션 — 2화의 <span class="hi-g">마지막 훅 한 줄</span>만 써오기.</div>
+    <div class="kicker">집 미션 — 다음 버전에 <span class="hi-g">넣고 싶은 규칙</span> 한 가지 적어오기.</div>
   </section>
-
 </div>
 <script>
   const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}

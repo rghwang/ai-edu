@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D 축구 11 대 11 — 2026 월드컵</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { overflow:hidden; font-family:'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background:#111; }
+  #hud { position:fixed; top:0; left:0; width:100%; pointer-events:none; z-index:10; }
+  #scoreboard {
+    margin:14px auto; width:fit-content; display:flex; align-items:center; gap:14px;
+    background:rgba(0,0,0,0.65); border-radius:14px; padding:8px 22px; color:#fff;
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .team { font-size:15px; font-weight:600; }
+  #nameB { color:#5ab0ff; } #nameR { color:#ff6b6b; }
+  #score { font-size:30px; font-weight:800; letter-spacing:2px; }
+  #timer { font-size:16px; font-weight:700; color:#ffd76a; min-width:58px; text-align:center; }
+  #half { font-size:13px; font-weight:700; color:#9fe3a5; }
+  #banner {
+    position:fixed; top:34%; width:100%; text-align:center; font-size:50px; font-weight:900;
+    color:#fff; text-shadow:0 4px 24px rgba(0,0,0,0.85); opacity:0; transition:opacity .25s;
+    z-index:11; letter-spacing:3px;
+  }
+  #controls {
+    position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,0.55); color:#ddd; padding:6px 16px; border-radius:10px;
+    font-size:11.5px; z-index:10; white-space:nowrap; text-align:center;
+  }
+  #bars { position:fixed; bottom:52px; left:50%; transform:translateX(-50%); width:220px; z-index:10; }
+  .barBg { background:rgba(0,0,0,0.5); border-radius:5px; height:9px; margin-top:4px; overflow:hidden; }
+  #gaugeFill { height:100%; width:0%; background:linear-gradient(90deg,#ffe94a,#ff5722); border-radius:5px; }
+  #stamFill { height:100%; width:100%; background:linear-gradient(90deg,#43a047,#aed581); border-radius:5px; }
+  #mini { position:fixed; right:14px; bottom:14px; z-index:10; background:rgba(0,40,0,0.55);
+    border:1px solid rgba(255,255,255,0.25); border-radius:8px; }
+  #overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:20;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#fff;
+    overflow-y:auto; padding:20px;
+  }
+  #ovTitle { font-size:38px; font-weight:900; text-align:center; }
+  #ovDesc { color:#bbb; font-size:14px; line-height:1.7; text-align:center; white-space:pre-line; }
+  #ovResult { font-size:15px; font-weight:600; color:#ffd76a; text-align:center; white-space:pre-line;
+    max-height:32vh; overflow-y:auto; }
+  #ovExtra { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  #ovExtra label { font-size:13px; color:#9fe3a5; display:block; margin-bottom:4px; }
+  #ovExtra select {
+    font-size:15px; padding:7px 12px; border-radius:8px; border:1px solid #555;
+    background:#222; color:#fff;
+  }
+  #ovBtns { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  #ovBtns button {
+    font-size:18px; font-weight:700; padding:11px 28px; border:none; border-radius:12px;
+    background:linear-gradient(135deg,#2e9e4f,#1f7a3a); color:#fff; cursor:pointer;
+  }
+  #ovBtns button.gold { background:linear-gradient(135deg,#c9a227,#8f7314); }
+  #ovBtns button:hover { filter:brightness(1.15); }
+  /* 터치 조작 (모바일/태블릿) */
+  #touchUI { display:none; position:fixed; inset:0; z-index:15; pointer-events:none; }
+  body.touch #touchUI { display:block; }
+  body.touch #controls, body.touch #bars { display:none; }
+  #joyBase {
+    position:absolute; left:26px; bottom:30px; width:120px; height:120px;
+    border-radius:50%; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.3);
+    pointer-events:auto; touch-action:none;
+  }
+  #joyStick {
+    position:absolute; left:38px; top:38px; width:44px; height:44px;
+    border-radius:50%; background:rgba(255,255,255,0.45);
+  }
+  .tbtn {
+    position:absolute; width:62px; height:62px; border-radius:50%;
+    background:rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.4);
+    color:#fff; font-size:13px; font-weight:700; text-align:center; line-height:58px;
+    pointer-events:auto; touch-action:none; user-select:none; -webkit-user-select:none;
+  }
+  .tbtn:active { background:rgba(255,255,255,0.3); }
+  #btnShoot { right:24px; bottom:96px; background:rgba(211,47,47,0.55); }
+  #btnPass  { right:96px; bottom:34px; }
+  #btnLob   { right:96px; bottom:110px; }
+  #btnTackle{ right:24px; bottom:24px; }
+  #btnSprint{ right:170px; bottom:24px; width:54px; height:54px; line-height:50px; font-size:11px; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div id="scoreboard">
+    <span class="team" id="nameB">대한민국</span>
+    <span id="score">0 : 0</span>
+    <span class="team" id="nameR">상대팀</span>
+    <span id="half">전반</span>
+    <span id="timer">90</span>
+  </div>
+</div>
+<div id="banner"></div>
+<div id="bars">
+  <div class="barBg"><div id="gaugeFill"></div></div>
+  <div class="barBg"><div id="stamFill"></div></div>
+</div>
+<div id="controls">이동 WASD · 슛 Space(꾹=강슛) · 패스 E · 롱패스/크로스 R · 스루 T · 칩 C · 감아차기 V · 태클 F · 전환 Q · GK G · 대시 Shift</div>
+<canvas id="mini" width="140" height="200"></canvas>
+<div id="touchUI">
+  <div id="joyBase"><div id="joyStick"></div></div>
+  <div class="tbtn" id="btnShoot">슛</div>
+  <div class="tbtn" id="btnPass">패스</div>
+  <div class="tbtn" id="btnLob">롱</div>
+  <div class="tbtn" id="btnTackle">태클</div>
+  <div class="tbtn" id="btnSprint">대시</div>
+</div>
+<div id="overlay">
+  <div id="ovTitle"></div>
+  <div id="ovDesc"></div>
+  <div id="ovExtra"></div>
+  <div id="ovResult"></div>
+  <div id="ovBtns"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ================= 기본 세팅 =================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a1f2e);
+scene.fog = new THREE.Fog(0x0a1f2e, 150, 320);
+
+const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 500);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xbfd9ff, 0x1a3d1f, 0.9));
+const sun = new THREE.DirectionalLight(0xfff2d6, 1.1);
+sun.position.set(50, 90, 40);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -90; sun.shadow.camera.right = 90;
+sun.shadow.camera.top = 90; sun.shadow.camera.bottom = -90;
+scene.add(sun);
+
+// ================= 경기장 =================
+const FIELD_W = 80, FIELD_L = 120, GOAL_W = 14, GOAL_H = 6;
+const HW = FIELD_W/2, HL = FIELD_L/2;
+const BOX_W = 18, BOX_D = 14;
+
+const grassCanvas = document.createElement('canvas');
+grassCanvas.width = 256; grassCanvas.height = 1024;
+const gctx = grassCanvas.getContext('2d');
+for (let i=0;i<32;i++){
+  gctx.fillStyle = i%2 ? '#2e7d32' : '#388e3c';
+  gctx.fillRect(0, i*32, 256, 32);
+}
+const pitch = new THREE.Mesh(
+  new THREE.PlaneGeometry(FIELD_W+24, FIELD_L+24),
+  new THREE.MeshLambertMaterial({ map:new THREE.CanvasTexture(grassCanvas) })
+);
+pitch.rotation.x = -Math.PI/2;
+pitch.receiveShadow = true;
+scene.add(pitch);
+
+const lineMat = new THREE.MeshBasicMaterial({ color:0xffffff });
+function line(w, l, x, z){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), lineMat);
+  m.rotation.x = -Math.PI/2; m.position.set(x, 0.02, z);
+  scene.add(m);
+}
+line(FIELD_W, 0.3, 0, 0);
+line(FIELD_W, 0.3, 0, -HL); line(FIELD_W, 0.3, 0, HL);
+line(0.3, FIELD_L, -HW, 0); line(0.3, FIELD_L, HW, 0);
+const circle = new THREE.Mesh(new THREE.RingGeometry(9, 9.3, 64), lineMat);
+circle.rotation.x = -Math.PI/2; circle.position.y = 0.02;
+scene.add(circle);
+[-1, 1].forEach(s => {
+  line(BOX_W*2, 0.3, 0, s*(HL-BOX_D));
+  line(0.3, BOX_D, -BOX_W, s*(HL-BOX_D/2)); line(0.3, BOX_D, BOX_W, s*(HL-BOX_D/2));
+  line(18, 0.3, 0, s*(HL-5.5));
+  line(0.3, 5.5, -9, s*(HL-2.75)); line(0.3, 5.5, 9, s*(HL-2.75));
+  const spot = new THREE.Mesh(new THREE.CircleGeometry(0.35, 16), lineMat);
+  spot.rotation.x = -Math.PI/2; spot.position.set(0, 0.02, s*(HL-12));
+  scene.add(spot);
+});
+[[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([sx,sz]) => {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,1.6,6),
+    new THREE.MeshLambertMaterial({ color:0xffe082 }));
+  pole.position.set(sx*HW, 0.8, sz*HL);
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.45),
+    new THREE.MeshLambertMaterial({ color:0xff5252, side:THREE.DoubleSide }));
+  flag.position.set(sx*HW - sx*0.35, 1.35, sz*HL);
+  scene.add(pole, flag);
+});
+
+// 관중석
+const crowdCanvas = document.createElement('canvas');
+crowdCanvas.width = 512; crowdCanvas.height = 128;
+const cctx = crowdCanvas.getContext('2d');
+cctx.fillStyle = '#263238'; cctx.fillRect(0,0,512,128);
+for(let i=0;i<2600;i++){
+  cctx.fillStyle = ['#ef5350','#42a5f5','#ffee58','#eeeeee','#66bb6a','#ab47bc','#ffa726'][i%7];
+  cctx.fillRect(Math.random()*512, Math.random()*128, 2.5, 2.5);
+}
+const crowdTex = new THREE.CanvasTexture(crowdCanvas);
+function stand(w, x, z, rotY){
+  const g = new THREE.Group();
+  const seats = new THREE.Mesh(new THREE.PlaneGeometry(w, 16),
+    new THREE.MeshLambertMaterial({ map:crowdTex }));
+  seats.rotation.x = -Math.PI/3;
+  seats.position.y = 6;
+  g.add(seats);
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(w, 2.2, 1),
+    new THREE.MeshLambertMaterial({ color:0x37474f }));
+  wall.position.set(0, 1.1, 6.5);
+  g.add(wall);
+  g.position.set(x, 0, z);
+  g.rotation.y = rotY;
+  scene.add(g);
+}
+stand(FIELD_L+30, -HW-16, 0, Math.PI/2);
+stand(FIELD_L+30, HW+16, 0, -Math.PI/2);
+stand(FIELD_W+30, 0, -HL-16, 0);
+stand(FIELD_W+30, 0, HL+16, Math.PI);
+
+function makeGoal(z){
+  const g = new THREE.Group();
+  const postMat = new THREE.MeshLambertMaterial({ color:0xffffff });
+  const r = 0.2;
+  const p1 = new THREE.Mesh(new THREE.CylinderGeometry(r, r, GOAL_H, 12), postMat);
+  p1.position.set(-GOAL_W/2, GOAL_H/2, 0);
+  const p2 = p1.clone(); p2.position.x = GOAL_W/2;
+  const bar = new THREE.Mesh(new THREE.CylinderGeometry(r, r, GOAL_W, 12), postMat);
+  bar.rotation.z = Math.PI/2; bar.position.y = GOAL_H;
+  const netMat = new THREE.MeshLambertMaterial({ color:0xdddddd, transparent:true, opacity:0.22, side:THREE.DoubleSide });
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(GOAL_W, GOAL_H), netMat);
+  back.position.set(0, GOAL_H/2, Math.sign(z)*3);
+  const top = new THREE.Mesh(new THREE.PlaneGeometry(GOAL_W, 3), netMat);
+  top.rotation.x = Math.PI/2; top.position.set(0, GOAL_H, Math.sign(z)*1.5);
+  g.add(p1, p2, bar, back, top);
+  g.position.z = z;
+  g.children.forEach(c => c.castShadow = true);
+  scene.add(g);
+}
+makeGoal(-HL); makeGoal(HL);
+
+// ================= 선수 =================
+const BALL_R = 0.7, PLAYER_R = 0.9;
+function makePlayerMesh(color){
+  const g = new THREE.Group();
+  const bodyMat = new THREE.MeshLambertMaterial({ color });
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 1.5, 12), bodyMat);
+  body.position.y = 1.15;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 10),
+    new THREE.MeshLambertMaterial({ color:0xf1c27d }));
+  head.position.y = 2.25;
+  const legMat = new THREE.MeshLambertMaterial({ color:0x222222 });
+  const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.8, 6), legMat);
+  legL.geometry.translate(0, -0.4, 0);   // 엉덩이 기준 회전
+  legL.position.set(-0.25, 0.8, 0);
+  const legR = legL.clone();
+  legR.position.x = 0.25;
+  // 팔
+  const armMat = new THREE.MeshLambertMaterial({ color:0xf1c27d });
+  const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.75, 6), armMat);
+  armL.geometry.translate(0, -0.35, 0);
+  armL.position.set(-0.68, 1.85, 0);
+  const armR = armL.clone();
+  armR.position.x = 0.68;
+  g.add(body, head, legL, legR, armL, armR);
+  g.traverse(c => { if(c.isMesh) c.castShadow = true; });
+  scene.add(g);
+  return { group:g, bodyMat, legL, legR, armL, armR };
+}
+
+const FORMATION = [
+  { x:0,   z:57,  role:'GK' },
+  { x:-16, z:44,  role:'DF' }, { x:-6, z:46, role:'DF' }, { x:6, z:46, role:'DF' }, { x:16, z:44, role:'DF' },
+  { x:-18, z:16,  role:'MF' }, { x:-6, z:22, role:'MF' }, { x:6, z:22, role:'MF' }, { x:18, z:16, role:'MF' },
+  { x:-8,  z:-14, role:'FW' }, { x:8, z:-14, role:'FW' }
+];
+
+function makeTeam(name, dir, color, gkColor){
+  const players = FORMATION.map(f => {
+    const home = new THREE.Vector3(f.x * -dir, 0, f.z * -dir);
+    const mm = makePlayerMesh(f.role==='GK' ? gkColor : color);
+    return {
+      team:name, dir, role:f.role, f0:f, home,
+      pos:home.clone(), vel:new THREE.Vector3(), face:new THREE.Vector3(0,0,dir),
+      kickCd:0, slide:0, slideCd:0, slideDir:new THREE.Vector3(),
+      yellows:0, off:false, st:100,
+      mesh:mm.group, bodyMat:mm.bodyMat, legL:mm.legL, legR:mm.legR, armL:mm.armL, armR:mm.armR
+    };
+  });
+  return { name, dir, players };
+}
+const blue = makeTeam('blue', -1, 0x1e6fd9, 0xffc107);
+const red  = makeTeam('red',  +1, 0xd32f2f, 0x7b1fa2);
+const allPlayers = blue.players.concat(red.players);
+const otherTeam = t => t === blue ? red : blue;
+const teamOf = p => p.team === 'blue' ? blue : red;
+const active = p => !p.off;
+function setJersey(team, hex){
+  team.players.forEach(p => { if(p.role !== 'GK') p.bodyMat.color.setHex(hex); });
+}
+function setDirs(){
+  blue.dir = -1; red.dir = 1;
+  [blue, red].forEach(T => T.players.forEach(p => {
+    p.dir = T.dir;
+    p.home.set(p.f0.x * -T.dir, 0, p.f0.z * -T.dir);
+  }));
+}
+function flipSides(){
+  [blue, red].forEach(T => {
+    T.dir *= -1;
+    T.players.forEach(p => {
+      p.dir = T.dir;
+      p.home.set(p.f0.x * -T.dir, 0, p.f0.z * -T.dir);
+    });
+  });
+}
+
+const ringB = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.3, 32),
+  new THREE.MeshBasicMaterial({ color:0xffe94a, transparent:true, opacity:0.9 }));
+ringB.rotation.x = -Math.PI/2;
+scene.add(ringB);
+const ringR = ringB.clone();
+ringR.material = new THREE.MeshBasicMaterial({ color:0xff8a65, transparent:true, opacity:0.9 });
+ringR.visible = false;
+scene.add(ringR);
+
+const aimMarker = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 10),
+  new THREE.MeshBasicMaterial({ color:0xffe94a }));
+aimMarker.visible = false;
+scene.add(aimMarker);
+
+// 오프사이드 라인 (상대 뒤에서 2번째 수비수 기준)
+const offsideLine = new THREE.Mesh(new THREE.PlaneGeometry(FIELD_W, 0.3),
+  new THREE.MeshBasicMaterial({ color:0x00e5ff, transparent:true, opacity:0.35 }));
+offsideLine.rotation.x = -Math.PI/2;
+offsideLine.position.y = 0.03;
+offsideLine.visible = false;
+scene.add(offsideLine);
+
+// 축구공
+const ballCanvas = document.createElement('canvas');
+ballCanvas.width = 512; ballCanvas.height = 256;
+const bctx = ballCanvas.getContext('2d');
+bctx.fillStyle = '#ffffff'; bctx.fillRect(0, 0, 512, 256);
+function pentagon(cx, cy, r, rot){
+  bctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a = rot + i*Math.PI*2/5;
+    i ? bctx.lineTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r) : bctx.moveTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r);
+  }
+  bctx.closePath(); bctx.fillStyle = '#1a1a1a'; bctx.fill();
+  bctx.strokeStyle = '#888'; bctx.lineWidth = 2; bctx.stroke();
+}
+for(let row=0; row<3; row++)
+  for(let col=0; col<6; col++)
+    pentagon(col*85 + (row%2)*42 + 20, row*85 + 45, 22, row*0.5 + col*0.3);
+const ballMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(BALL_R, 28, 20),
+  new THREE.MeshLambertMaterial({ map:new THREE.CanvasTexture(ballCanvas) })
+);
+ballMesh.castShadow = true;
+scene.add(ballMesh);
+
+// 공 트레일
+const trailMeshes = [];
+for(let i=0;i<12;i++){
+  const m = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6),
+    new THREE.MeshBasicMaterial({ color:0xfff59d, transparent:true, opacity:0 }));
+  m.visible = false;
+  scene.add(m);
+  trailMeshes.push({ mesh:m, age:9 });
+}
+let trailTick = 0;
+
+// 골 폭죽
+const FW_N = 90;
+const fwGeo = new THREE.BufferGeometry();
+const fwPos = new Float32Array(FW_N*3);
+const fwCol = new Float32Array(FW_N*3);
+fwGeo.setAttribute('position', new THREE.BufferAttribute(fwPos, 3));
+fwGeo.setAttribute('color', new THREE.BufferAttribute(fwCol, 3));
+const fwMat = new THREE.PointsMaterial({ size:0.9, vertexColors:true, transparent:true, opacity:0 });
+const fwPoints = new THREE.Points(fwGeo, fwMat);
+scene.add(fwPoints);
+const fwVel = new Float32Array(FW_N*3);
+let fwT = 9;
+function spawnFireworks(x, z){
+  for(let i=0;i<FW_N;i++){
+    fwPos[i*3] = x; fwPos[i*3+1] = 2; fwPos[i*3+2] = z;
+    const a = Math.random()*Math.PI*2, sp = 4 + Math.random()*10;
+    fwVel[i*3] = Math.cos(a)*sp;
+    fwVel[i*3+1] = 6 + Math.random()*9;
+    fwVel[i*3+2] = Math.sin(a)*sp;
+    const c = new THREE.Color().setHSL(Math.random(), 1, 0.6);
+    fwCol[i*3] = c.r; fwCol[i*3+1] = c.g; fwCol[i*3+2] = c.b;
+  }
+  fwGeo.attributes.position.needsUpdate = true;
+  fwGeo.attributes.color.needsUpdate = true;
+  fwT = 0;
+}
+function updateEffects(dt){
+  trailTick += dt;
+  const bSpd = Math.hypot(state.ball.vel.x, state.ball.vel.z);
+  if(bSpd > 16 && trailTick > 0.03 && state.mode !== 'replay'){
+    trailTick = 0;
+    const t = trailMeshes.reduce((a,b) => a.age > b.age ? a : b);
+    t.age = 0;
+    t.mesh.position.copy(state.ball.pos);
+    t.mesh.visible = true;
+  }
+  trailMeshes.forEach(t => {
+    t.age += dt;
+    if(t.age > 0.5){ t.mesh.visible = false; return; }
+    t.mesh.material.opacity = 0.45 * (1 - t.age/0.5);
+    const s = Math.max(0.05, 1 - t.age);
+    t.mesh.scale.set(s, s, s);
+  });
+  if(fwT < 1.6){
+    fwT += dt;
+    for(let i=0;i<FW_N;i++){
+      fwVel[i*3+1] -= 12*dt;
+      fwPos[i*3] += fwVel[i*3]*dt;
+      fwPos[i*3+1] += fwVel[i*3+1]*dt;
+      fwPos[i*3+2] += fwVel[i*3+2]*dt;
+    }
+    fwGeo.attributes.position.needsUpdate = true;
+    fwMat.opacity = Math.max(0, 1 - fwT/1.5);
+  }
+}
+
+// ================= 국가 데이터 =================
+const NATIONS = [
+  { name:'대한민국', color:0x1e6fd9 },
+  { name:'브라질', color:0xffd600 }, { name:'아르헨티나', color:0x8ecff2 },
+  { name:'프랑스', color:0x283593 }, { name:'독일', color:0xeceff1 },
+  { name:'스페인', color:0xc62828 }, { name:'잉글랜드', color:0xf5f5f5 },
+  { name:'포르투갈', color:0x8e0000 }, { name:'네덜란드', color:0xff6f00 },
+  { name:'이탈리아', color:0x00838f }, { name:'일본', color:0x303f9f },
+  { name:'미국', color:0xb0bec5 }, { name:'멕시코', color:0x1b5e20 },
+  { name:'캐나다', color:0xe53935 }, { name:'우루과이', color:0x64b5f6 },
+  { name:'콜롬비아', color:0xfff176 }, { name:'크로아티아', color:0xef9a9a },
+  { name:'벨기에', color:0x424242 }, { name:'스위스', color:0xd32f2f },
+  { name:'덴마크', color:0xbf360c }, { name:'폴란드', color:0xfafafa },
+  { name:'세네갈', color:0x2e7d32 }, { name:'모로코', color:0xb71c1c },
+  { name:'나이지리아', color:0x43a047 }, { name:'가나', color:0xfdd835 },
+  { name:'호주', color:0xffca28 }, { name:'사우디', color:0x66bb6a },
+  { name:'이란', color:0xeeeeee }, { name:'카타르', color:0x880e4f },
+  { name:'에콰도르', color:0xffee58 }, { name:'세르비아', color:0xad1457 },
+  { name:'스웨덴', color:0xffeb3b }, { name:'노르웨이', color:0xef5350 },
+  { name:'그리스', color:0x90caf9 }, { name:'체코', color:0x5c6bc0 },
+  { name:'오스트리아', color:0xff8a80 }, { name:'헝가리', color:0xa5d6a7 },
+  { name:'루마니아', color:0xfff59d }, { name:'우크라이나', color:0xffe082 },
+  { name:'튀르키예', color:0xe53935 }, { name:'칠레', color:0xef9a9a },
+  { name:'페루', color:0xffcdd2 }, { name:'파라과이', color:0x90a4ae },
+  { name:'코스타리카', color:0x7986cb }, { name:'파나마', color:0xbcaaa4 },
+  { name:'이집트', color:0xd50000 }, { name:'튀니지', color:0xff5252 },
+  { name:'알제리', color:0xa5d6a7 }, { name:'카메룬', color:0x33691e },
+  { name:'코트디부아르', color:0xffab40 }, { name:'뉴질랜드', color:0x616161 },
+  { name:'우즈베키스탄', color:0x81d4fa }, { name:'이라크', color:0x8d6e63 },
+  { name:'중국', color:0xef5350 }, { name:'인도네시아', color:0xc62828 },
+  { name:'요르단', color:0xbdbdbd }
+];
+const NATION_MAP = {};
+NATIONS.forEach(n => NATION_MAP[n.name] = n.color);
+
+// ================= 설정/상태 =================
+const HALF_LEN = 90, ET_LEN = 30;
+const settings = { teamName:'대한민국', teamColor:0x1e6fd9, diffIdx:2, twoP:false };
+const DIFF_MULT = [0.5, 0.72, 0.92, 1.12, 1.32, 1.55];
+const DIFF_NAMES = ['유치원', '쉬움', '보통', '어려움', '매우 어려움', '월드클래스'];
+const AI_PK_WIDE = [0.55, 0.38, 0.25, 0.12, 0.07, 0.03];
+
+const state = {
+  running:false, mode:'play',   // play | freeze | restart | penalty | replay
+  periods:[], per:0, time:HALF_LEN, stop:null, events:0, etAdded:false,
+  scoreB:0, scoreR:0,
+  ball:{ pos:new THREE.Vector3(0,BALL_R,0), vel:new THREE.Vector3(), spin:0 },
+  ctrlB:null, ctrlR:null, gkMode:false,
+  chargeB:0, chargeR:0,
+  lastTouchTeam:null, offside:null,
+  freezeT:0, afterFreeze:null,
+  restartT:0, restartInfo:null,
+  pen:null, shootout:null,
+  diff:0.85, matchType:'friendly',
+  subs:{ blue:3, red:3 },
+  replay:null,
+  stats:{ possB:0, possR:0, shotB:0, shotR:0 }, lastStats:''
+};
+function noteShot(T){ if(T === blue) state.stats.shotB++; else state.stats.shotR++; }
+function statsText(){
+  const s = state.stats;
+  const tot = s.possB + s.possR || 1;
+  return '점유율 ' + Math.round(s.possB/tot*100) + '% : ' + Math.round(s.possR/tot*100) +
+    '% · 슛 ' + s.shotB + ' : ' + s.shotR;
+}
+const cup = { stage:'group', md:0, groupOpps:[], otherGroups:[], table:{}, survivors:[], log:[] };
+const GROUP_DIFF = [0.72, 0.78, 0.84];
+const KO_DIFF = { 32:0.8, 16:0.85, 8:0.9, 4:0.95, 2:1.0 };
+const koLabel = n => n === 2 ? '결승' : n === 4 ? '준결승' : n + '강';
+
+const P1 = { up:['KeyW'], down:['KeyS'], left:['KeyA'], right:['KeyD'],
+  shoot:'Space', pass:'KeyE', lob:'KeyR', through:'KeyT', chip:'KeyC', curve:'KeyV',
+  tackle:'KeyF', sprint:['ShiftLeft'], sw:'KeyQ', gk:'KeyG' };
+const P2 = { up:['ArrowUp'], down:['ArrowDown'], left:['ArrowLeft'], right:['ArrowRight'],
+  shoot:'Enter', pass:'Period', lob:'Slash', through:null, chip:null, curve:null,
+  tackle:'Comma', sprint:['ShiftRight'], sw:'KeyM', gk:null };
+
+const keys = {};
+addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter','Slash','Period','Comma'].includes(e.code)) e.preventDefault();
+});
+addEventListener('keyup', e => keys[e.code] = false);
+
+// ================= 사운드 =================
+let audioCtx = null, crowdGain = null;
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // 관중 웅성거림 (노이즈 루프)
+  const len = audioCtx.sampleRate * 2;
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<len;i++) data[i] = (Math.random()*2-1) * 0.5;
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf; src.loop = true;
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass'; filter.frequency.value = 500;
+  crowdGain = audioCtx.createGain();
+  crowdGain.gain.value = 0.018;
+  src.connect(filter); filter.connect(crowdGain); crowdGain.connect(audioCtx.destination);
+  src.start();
+}
+function cheer(){
+  if(!crowdGain) return;
+  const t = audioCtx.currentTime;
+  crowdGain.gain.cancelScheduledValues(t);
+  crowdGain.gain.setValueAtTime(crowdGain.gain.value, t);
+  crowdGain.gain.linearRampToValueAtTime(0.12, t + 0.15);
+  crowdGain.gain.exponentialRampToValueAtTime(0.018, t + 2.5);
+}
+function beep(freq, dur, type, vol){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+const sfxKick = () => beep(180, 0.1, 'square', 0.12);
+const sfxGoal = () => { beep(523,0.15,'sine',0.2); setTimeout(()=>beep(659,0.15,'sine',0.2),140); setTimeout(()=>beep(784,0.3,'sine',0.2),280); };
+const sfxWhistle = () => beep(2100, 0.45, 'sawtooth', 0.06);
+const sfxSlide = () => beep(90, 0.18, 'sawtooth', 0.1);
+
+// ================= UI =================
+const scoreEl = document.getElementById('score');
+const timerEl = document.getElementById('timer');
+const halfEl = document.getElementById('half');
+const bannerEl = document.getElementById('banner');
+const overlayEl = document.getElementById('overlay');
+const nameBEl = document.getElementById('nameB');
+const nameREl = document.getElementById('nameR');
+const gaugeEl = document.getElementById('gaugeFill');
+const stamEl = document.getElementById('stamFill');
+const mini = document.getElementById('mini');
+const mctx = mini.getContext('2d');
+let bannerTimer = null;
+function showBanner(text, color){
+  bannerEl.textContent = text;
+  bannerEl.style.color = color || '#fff';
+  bannerEl.style.opacity = 1;
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => bannerEl.style.opacity = 0, 1500);
+}
+const updateScore = () => scoreEl.textContent = state.scoreB + ' : ' + state.scoreR;
+
+function setOverlay(title, desc, result, buttons, extraFn){
+  document.getElementById('ovTitle').textContent = title;
+  document.getElementById('ovDesc').textContent = desc || '';
+  const r = document.getElementById('ovResult');
+  r.textContent = result || ''; r.style.display = result ? 'block' : 'none';
+  const ex = document.getElementById('ovExtra');
+  ex.innerHTML = '';
+  if(extraFn) extraFn(ex);
+  const box = document.getElementById('ovBtns');
+  box.innerHTML = '';
+  buttons.forEach(b => {
+    const el = document.createElement('button');
+    el.textContent = b.label;
+    if(b.gold) el.className = 'gold';
+    el.onclick = b.cb;
+    box.appendChild(el);
+  });
+  overlayEl.style.display = 'flex';
+}
+
+// ================= 킥오프/골/VAR/리플레이 =================
+function kickoff(kickTeam){
+  allPlayers.forEach(p => {
+    if(p.off) return;
+    p.pos.copy(p.home); p.vel.set(0,0,0);
+    p.face.set(0,0,p.dir); p.slide = 0;
+  });
+  checkSubs();
+  const fw = kickTeam.players[9];
+  if(!fw.off) fw.pos.set(1.8, 0, -kickTeam.dir * 2);
+  state.ball.pos.set(0, BALL_R, 0);
+  state.ball.vel.set(0,0,0);
+  state.ball.spin = 0;
+  state.offside = null;
+  state.lastTouchTeam = kickTeam.name;
+  state.mode = 'play';
+  halfEl.textContent = state.periods[state.per].label;
+}
+
+const REPLAY_MAX = 260;
+let repBuf = [];
+function recordFrame(){
+  const f = new Float32Array(3 + 44);
+  f[0] = state.ball.pos.x; f[1] = state.ball.pos.y; f[2] = state.ball.pos.z;
+  allPlayers.forEach((p, i) => { f[3+i*2] = p.pos.x; f[4+i*2] = p.pos.z; });
+  repBuf.push(f);
+  if(repBuf.length > REPLAY_MAX) repBuf.shift();
+}
+function goal(scoringTeam, skipVar){
+  state.events++;
+  const conceding = otherTeam(scoringTeam);
+  const finish = () => {
+    if(scoringTeam === blue) state.scoreB++; else state.scoreR++;
+    updateScore();
+    showBanner('GOAL!', scoringTeam === blue ? '#5ab0ff' : '#ff6b6b');
+    sfxGoal(); cheer();
+    spawnFireworks(state.ball.pos.x, state.ball.pos.z);
+    // 리플레이
+    if(repBuf.length > 40){
+      state.replay = { frames:repBuf.slice(Math.max(0, repBuf.length-140)), idx:0,
+        goalZ: scoringTeam.dir * HL };
+      state.mode = 'replay';
+    } else {
+      state.mode = 'freeze'; state.freezeT = 1.6;
+    }
+    state.afterFreeze = () => kickoff(conceding);
+  };
+  if(!skipVar && Math.random() < 0.18){
+    state.mode = 'freeze';
+    state.freezeT = 2.2;
+    showBanner('📺 VAR 판독 중...', '#ffd76a');
+    state.afterFreeze = () => {
+      if(Math.random() < 0.72) finish();
+      else {
+        showBanner('골 취소! (오프사이드)', '#ff5252');
+        sfxWhistle();
+        doRestart('goalkick', conceding, new THREE.Vector3(0, 0, -conceding.dir*(HL-7)));
+      }
+    };
+  } else finish();
+}
+
+// ================= 재개 (스로인/코너/골킥/프리킥+수비벽) =================
+function doRestart(type, team, spot){
+  state.mode = 'restart';
+  state.restartT = 1.1;
+  spot.x = THREE.MathUtils.clamp(spot.x, -HW+1.5, HW-1.5);
+  spot.z = THREE.MathUtils.clamp(spot.z, -HL+1.5, HL-1.5);
+  state.restartInfo = { type, team, spot };
+  state.ball.pos.set(spot.x, BALL_R, spot.z);
+  state.ball.vel.set(0,0,0);
+  state.ball.spin = 0;
+  state.offside = null;
+  const names = { throwin:'스로인', corner:'코너킥', goalkick:'골킥', offside:'오프사이드', freekick:'프리킥' };
+  showBanner(names[type], team === blue ? '#5ab0ff' : '#ff6b6b');
+  if(type === 'offside' || type === 'freekick') sfxWhistle();
+}
+function resolveRestart(){
+  const { type, team, spot } = state.restartInfo;
+  checkSubs();
+  let taker;
+  if(type === 'goalkick') taker = team.players[0];
+  else {
+    const cands = team.players.slice(1).filter(active);
+    taker = cands.reduce((a,b) => a.pos.distanceTo(spot) < b.pos.distanceTo(spot) ? a : b);
+  }
+  const inward = new THREE.Vector3(-(Math.sign(spot.x)||0.3), 0, -(Math.sign(spot.z)||0.3)).normalize();
+  taker.pos.set(spot.x - inward.x*1.6, 0, spot.z - inward.z*1.6);
+  taker.vel.set(0,0,0);
+  if(type === 'throwin'){
+    // 손 던지기: 공을 머리 위에서 안쪽으로 토스
+    state.ball.pos.set(taker.pos.x, 2.6, taker.pos.z);
+    state.ball.vel.set(inward.x*7, 2.5, inward.z*7);
+  }
+  if(type === 'freekick'){
+    // 수비벽: 골대 30m 이내면 수비수 3명 배치
+    const def = otherTeam(team);
+    const goalPos = new THREE.Vector3(0, 0, -def.dir*HL);
+    const toGoal = goalPos.clone().sub(spot).setY(0);
+    if(toGoal.length() < 32){
+      const dir = toGoal.normalize();
+      const perp = new THREE.Vector3(-dir.z, 0, dir.x);
+      const wallers = def.players.slice(1).filter(active)
+        .sort((a,b) => a.pos.distanceTo(spot) - b.pos.distanceTo(spot)).slice(0, 3);
+      wallers.forEach((w, i) => {
+        w.pos.set(spot.x + dir.x*7 + perp.x*(i-1)*1.8, 0, spot.z + dir.z*7 + perp.z*(i-1)*1.8);
+        w.vel.set(0,0,0);
+      });
+    }
+  }
+  state.lastTouchTeam = team.name;
+  state.mode = 'play';
+}
+
+// ================= 오프사이드 =================
+function registerKick(kicker){
+  state.lastTouchTeam = kicker.team;
+  const T = teamOf(kicker), opp = otherTeam(T), d = T.dir;
+  const ballZ = state.ball.pos.z;
+  const flagged = new Set();
+  T.players.forEach(p => {
+    if(p === kicker || p.off) return;
+    const pz = p.pos.z * d;
+    if(pz <= 0) return;
+    if(pz <= ballZ * d) return;
+    const defendersAhead = opp.players.filter(o => active(o) && o.pos.z * d > pz).length;
+    if(defendersAhead < 2) flagged.add(p);
+  });
+  state.offside = flagged.size ? { team:T.name, set:flagged } : null;
+}
+function onTouch(player){
+  if(state.offside){
+    if(player.team === state.offside.team){
+      if(state.offside.set.has(player)){
+        doRestart('offside', otherTeam(teamOf(player)), player.pos.clone());
+        return true;
+      }
+      state.offside = null;
+    } else state.offside = null;
+  }
+  state.lastTouchTeam = player.team;
+  return false;
+}
+function kickBall(player, dir, power, up, spin){
+  state.ball.vel.set(dir.x*power, up, dir.z*power);
+  state.ball.spin = spin || 0;
+  sfxKick();
+  registerKick(player);
+  player.kickCd = 0.7;
+}
+
+// ================= 태클/파울/핸드볼/어드밴티지/카드 =================
+function startSlide(p, dir){
+  if(p.slide > 0 || p.slideCd > 0 || p.off) return;
+  p.slide = 0.42;
+  p.slideCd = 1.3;
+  p.slideDir.copy(dir).setY(0).normalize();
+  sfxSlide();
+}
+function sendOff(p){
+  p.off = true;
+  p.mesh.visible = false;
+  if(state.ctrlB === p) state.ctrlB = null;
+  if(state.ctrlR === p) state.ctrlR = null;
+}
+function foul(offender, spot, reason){
+  state.events++;
+  const offT = teamOf(offender), vict = otherTeam(offT);
+  // 어드밴티지: 피해팀이 공을 소유하고 공이 빠르게 살아있으면 진행
+  const ballSpd = Math.hypot(state.ball.vel.x, state.ball.vel.z);
+  const advantage = !reason && state.lastTouchTeam === vict.name && ballSpd > 6;
+  let msg = reason || '파울!';
+  if(Math.random() < 0.35){
+    offender.yellows++;
+    if(offender.yellows >= 2 && offender.role !== 'GK'){
+      sendOff(offender);
+      msg = '🟥 레드카드 퇴장!';
+    } else msg = '🟨 옐로카드!';
+  }
+  if(advantage && msg === (reason || '파울!')){
+    showBanner('어드밴티지!', '#9fe3a5');
+    return;
+  }
+  sfxWhistle();
+  const inOwnBox = Math.abs(spot.x) < BOX_W && spot.z * (-offT.dir) > HL - BOX_D;
+  if(inOwnBox){
+    showBanner(msg + ' PK!', '#ffd76a');
+    state.mode = 'freeze';
+    state.freezeT = 1.5;
+    state.afterFreeze = () => startPenalty(vict, 'match');
+  } else {
+    showBanner(msg, vict === blue ? '#5ab0ff' : '#ff6b6b');
+    doRestart('freekick', vict, spot.clone());
+  }
+}
+function updateSlides(dt){
+  for(const p of allPlayers){
+    p.slideCd = Math.max(0, p.slideCd - dt);
+    if(p.slide <= 0 || p.off) continue;
+    p.slide -= dt;
+    p.pos.addScaledVector(p.slideDir, 20*dt);
+    p.vel.copy(p.slideDir).multiplyScalar(16);
+    clampToField(p);
+    if(state.mode !== 'play') continue;
+    const b = state.ball;
+    if(flatDist(p, b.pos) < PLAYER_R + BALL_R + 0.7 && b.pos.y < 1.8){
+      if(!onTouch(p)) kickBall(p, p.slideDir, 15, 2.5);
+      p.slide = 0;
+      continue;
+    }
+    const opp = otherTeam(teamOf(p));
+    for(const o of opp.players){
+      if(o.off) continue;
+      if(flatDist(p, o.pos) < 1.5 && flatDist(p, b.pos) > 3){
+        p.slide = 0;
+        foul(p, o.pos.clone());
+        break;
+      }
+    }
+    if(state.mode !== 'play') return;
+  }
+}
+// 스태미나 기반 자동 교체 (팀당 3회, 데드볼 시)
+function checkSubs(){
+  [blue, red].forEach(T => {
+    if(state.subs[T.name] <= 0) return;
+    const tired = T.players.find(p => !p.off && p.st < 25);
+    if(tired){
+      tired.st = 100;
+      tired.yellows = 0;
+      state.subs[T.name]--;
+      state.events++;
+      showBanner('🔄 선수 교체 (' + (T === blue ? nameBEl.textContent : nameREl.textContent) + ')', '#9fe3a5');
+    }
+  });
+}
+
+// ================= 조작 =================
+function flatDist(p, v){ return Math.hypot(p.pos.x - v.x, p.pos.z - v.z); }
+function clampToField(p){
+  p.pos.x = THREE.MathUtils.clamp(p.pos.x, -HW+0.8, HW-0.8);
+  p.pos.z = THREE.MathUtils.clamp(p.pos.z, -HL+0.8, HL-0.8);
+}
+function nearestToBall(players, exclude){
+  let best = null, bd = 1e9;
+  players.forEach(p => {
+    if(p.off || (exclude && exclude(p))) return;
+    const d = p.pos.distanceTo(state.ball.pos);
+    if(d < bd){ bd = d; best = p; }
+  });
+  return best;
+}
+function stMult(p){ return 0.7 + 0.3 * p.st / 100; }
+
+function updateCtrl(T, ctlKey, cur, ctl){
+  const cands = T.players.slice(1).filter(active);
+  if(!cands.length) return null;
+  // GK 모드 (P1만)
+  if(ctl.gk && keys[ctl.gk]){
+    keys[ctl.gk] = false;
+    if(T === blue){
+      state.gkMode = !state.gkMode;
+      return state.gkMode ? T.players[0] : nearestToBall(cands);
+    }
+  }
+  if(T === blue && state.gkMode) return T.players[0];
+  if(!cur || cur.off) cur = nearestToBall(cands);
+  if(keys[ctl.sw]){
+    keys[ctl.sw] = false;
+    return nearestToBall(cands, p => p === cur) || cur;
+  }
+  const nearest = nearestToBall(cands);
+  if(nearest !== cur && nearest.pos.distanceTo(state.ball.pos) + 2.5 < cur.pos.distanceTo(state.ball.pos))
+    return nearest;
+  return cur;
+}
+
+function handleHumanInput(T, ctl, dt){
+  const p = T === blue ? state.ctrlB : state.ctrlR;
+  if(!p || p.off || p.slide > 0) return;
+  const dir = new THREE.Vector3();
+  const down = codes => codes.some(c => keys[c]);
+  const extraArrows = (T === blue && !settings.twoP);
+  if(down(ctl.up)    || (extraArrows && keys['ArrowUp']))    dir.z -= 1;
+  if(down(ctl.down)  || (extraArrows && keys['ArrowDown']))  dir.z += 1;
+  if(down(ctl.left)  || (extraArrows && keys['ArrowLeft']))  dir.x -= 1;
+  if(down(ctl.right) || (extraArrows && keys['ArrowRight'])) dir.x += 1;
+  const sprint = down(ctl.sprint);
+  const base = (sprint ? 19 : 14) * stMult(p);
+  // 스태미나
+  if(dir.lengthSq() > 0){
+    p.st = Math.max(0, p.st - (sprint ? 4.5 : 1.4)*dt);
+    dir.normalize();
+    p.face.copy(dir);
+    p.vel.lerp(dir.clone().multiplyScalar(base), 1 - Math.pow(0.0001, dt));
+  } else {
+    p.st = Math.min(100, p.st + 4*dt);
+    p.vel.multiplyScalar(Math.pow(0.002, dt));
+  }
+  p.pos.addScaledVector(p.vel, dt);
+  clampToField(p);
+
+  if(keys[ctl.tackle]){
+    keys[ctl.tackle] = false;
+    startSlide(p, p.vel.lengthSq() > 4 ? p.vel.clone() : p.face.clone());
+    return;
+  }
+
+  const b = state.ball;
+  const canKick = flatDist(p, b.pos) < PLAYER_R + BALL_R + 0.9 && b.pos.y < 3.2;
+  const isHeader = b.pos.y > 1.4;
+  const face = p.vel.lengthSq() > 4 ? p.vel.clone().setY(0).normalize() : p.face.clone();
+
+  // 파워 게이지 슛 (꾹 누르면 강슛)
+  const chargeKey = T === blue ? 'chargeB' : 'chargeR';
+  if(keys[ctl.shoot] && canKick){
+    state[chargeKey] = Math.min(0.9, state[chargeKey] + dt);
+  } else if(state[chargeKey] > 0){
+    const charge = state[chargeKey];
+    state[chargeKey] = 0;
+    if(canKick){
+      const goalDir = new THREE.Vector3((Math.random()-0.5)*3 - b.pos.x, 0, p.dir*HL - b.pos.z).normalize();
+      const kd = goalDir.multiplyScalar(0.7).add(face.clone().multiplyScalar(0.3)).normalize();
+      const power = 20 + charge*17;
+      kickBall(p, kd, power, isHeader ? 4 : 6 + charge*3);
+      noteShot(T);
+    }
+  }
+  if(!canKick && !keys[ctl.shoot]) state[chargeKey] = 0;
+
+  if(keys[ctl.pass] && canKick){
+    keys[ctl.pass] = false;
+    let best = null, bs = -1e9;
+    T.players.forEach(tm => {
+      if(tm === p || tm.off) return;
+      const to = tm.pos.clone().sub(p.pos); to.y = 0;
+      const dist = to.length();
+      if(dist < 3) return;
+      const dot = to.normalize().dot(face);
+      if(dot < 0.2) return;
+      const score = dot*20 - dist*0.15;
+      if(score > bs){ bs = score; best = tm; }
+    });
+    if(best){
+      const to = best.pos.clone().sub(new THREE.Vector3(b.pos.x,0,b.pos.z)); to.y = 0;
+      const dist = to.length();
+      kickBall(p, to.normalize(), THREE.MathUtils.clamp(dist*1.15, 10, 26), 3.5 + dist*0.06);
+    } else kickBall(p, face, 18, 4);
+  }
+  if(ctl.lob && keys[ctl.lob] && canKick){
+    keys[ctl.lob] = false;
+    // 공격 진영 측면이면 크로스: 박스 안으로
+    const inAttack3rd = p.pos.z * p.dir > HL/3;
+    if(inAttack3rd && Math.abs(p.pos.x) > 18){
+      const target = new THREE.Vector3((Math.random()-0.5)*10, 0, p.dir*(HL-8));
+      const to = target.sub(new THREE.Vector3(b.pos.x,0,b.pos.z)); to.y = 0;
+      const dist = to.length();
+      kickBall(p, to.normalize(), THREE.MathUtils.clamp(dist*0.95, 16, 30), 10);
+    } else {
+      let best = null, bs = -1e9;
+      T.players.forEach(tm => {
+        if(tm === p || tm.off || tm.role === 'GK') return;
+        const to = tm.pos.clone().sub(p.pos); to.y = 0;
+        const dist = to.length();
+        if(dist < 12) return;
+        const dot = to.clone().normalize().dot(face);
+        if(dot < 0) return;
+        const score = dot*10 + tm.pos.z*p.dir*0.5 - Math.abs(dist-30)*0.1;
+        if(score > bs){ bs = score; best = tm; }
+      });
+      if(best){
+        const to = best.pos.clone().sub(new THREE.Vector3(b.pos.x,0,b.pos.z)); to.y = 0;
+        const dist = to.length();
+        kickBall(p, to.normalize(), THREE.MathUtils.clamp(dist*0.95, 18, 34), 9 + dist*0.1);
+      } else kickBall(p, face, 30, 11);
+    }
+  }
+  if(ctl.through && keys[ctl.through] && canKick){
+    keys[ctl.through] = false;
+    // 스루패스: 동료 앞 공간으로
+    let best = null, bs = -1e9;
+    T.players.forEach(tm => {
+      if(tm === p || tm.off || tm.role === 'GK') return;
+      const to = tm.pos.clone().sub(p.pos); to.y = 0;
+      const dot = to.clone().normalize().dot(face);
+      if(dot < 0.1) return;
+      const score = dot*10 + tm.pos.z*p.dir*0.6;
+      if(score > bs){ bs = score; best = tm; }
+    });
+    if(best){
+      const lead = best.pos.clone(); lead.z += p.dir*8;
+      const to = lead.sub(new THREE.Vector3(b.pos.x,0,b.pos.z)); to.y = 0;
+      const dist = to.length();
+      kickBall(p, to.normalize(), THREE.MathUtils.clamp(dist*1.2, 14, 28), 1.5);
+    } else kickBall(p, face, 22, 1.5);
+  }
+  if(ctl.chip && keys[ctl.chip] && canKick){
+    keys[ctl.chip] = false;
+    // 칩슛: GK 키를 넘기는 로빙 슛
+    const goalDir = new THREE.Vector3((Math.random()-0.5)*3 - b.pos.x, 0, p.dir*HL - b.pos.z).normalize();
+    kickBall(p, goalDir, 19, 11);
+    noteShot(T);
+  }
+  if(ctl.curve && keys[ctl.curve] && canKick){
+    keys[ctl.curve] = false;
+    // 감아차기: 회전이 걸린 슛
+    const aimX = -Math.sign(p.pos.x || (Math.random()-0.5)) * 4;
+    const goalDir = new THREE.Vector3(aimX - b.pos.x, 0, p.dir*HL - b.pos.z).normalize();
+    const spin = Math.sign(p.pos.x || 1) * 13 * (p.dir === -1 ? 1 : -1);
+    kickBall(p, goalDir, 26, 7, spin);
+    noteShot(T);
+  }
+}
+
+// ================= 팀 AI =================
+function moveToward(p, target, speed, dt){
+  const dir = new THREE.Vector3(target.x - p.pos.x, 0, target.z - p.pos.z);
+  const sp = speed * stMult(p);
+  if(dir.lengthSq() > 0.04){
+    dir.normalize();
+    p.face.copy(dir);
+    p.vel.lerp(dir.multiplyScalar(sp), 1 - Math.pow(0.001, dt));
+    p.st = Math.max(0, p.st - 0.9*dt);
+  } else {
+    p.vel.multiplyScalar(Math.pow(0.002, dt));
+    p.st = Math.min(100, p.st + 4*dt);
+  }
+  p.pos.addScaledVector(p.vel, dt);
+  clampToField(p);
+}
+
+function aiKick(p){
+  const b = state.ball;
+  if(p.kickCd > 0) return;
+  if(flatDist(p, b.pos) > PLAYER_R + BALL_R + 0.7 || b.pos.y > 3.2) return;
+  const T = teamOf(p), d = p.dir;
+  const isAiRed = T === red && !settings.twoP;
+  const ballFlat = new THREE.Vector3(b.pos.x, 0, b.pos.z);
+  const goalPos = new THREE.Vector3(0, 0, d*HL);
+  const distGoal = ballFlat.distanceTo(goalPos);
+
+  if(p.role === 'GK'){
+    const kd = new THREE.Vector3((Math.random()-0.5)*1.2, 0, d).normalize();
+    kickBall(p, kd, 28, 8);
+    return;
+  }
+  // 헤딩 (공중볼)
+  if(b.pos.y > 1.4){
+    if(distGoal < 22){
+      const aim = new THREE.Vector3((Math.random()-0.5)*GOAL_W*(isAiRed ? 1.2 : 0.7), 0, d*HL);
+      kickBall(p, aim.sub(ballFlat).normalize(), 20, 2);
+    } else {
+      kickBall(p, new THREE.Vector3((Math.random()-0.5), 0, d).normalize(), 14, 4);
+    }
+    return;
+  }
+  const shootRange = isAiRed ? 25 : 32;
+  if(distGoal < shootRange){
+    const spread = isAiRed ? GOAL_W*1.1 : GOAL_W*0.65;
+    const aim = new THREE.Vector3((Math.random()-0.5)*spread, 0, d*HL);
+    kickBall(p, aim.sub(ballFlat).normalize(), isAiRed ? 25 : 28, 5);
+    noteShot(T);
+    return;
+  }
+  if(Math.random() < (isAiRed ? 0.3 : 0.45)){
+    const mates = T.players.filter(m => m !== p && !m.off && m.role !== 'GK' && m.pos.z*d > p.pos.z*d - 2);
+    if(mates.length){
+      const target = mates[Math.floor(Math.random()*mates.length)];
+      const to = target.pos.clone().sub(ballFlat); to.y = 0;
+      const dist = to.length();
+      kickBall(p, to.normalize(), THREE.MathUtils.clamp(dist*1.1, 10, 24), 3 + dist*0.06);
+      return;
+    }
+  }
+  const dribble = goalPos.sub(ballFlat).normalize().multiplyScalar(0.7)
+    .add(p.face.clone().multiplyScalar(0.3)).normalize();
+  kickBall(p, dribble, isAiRed ? 11 : 13, 1.5);
+  p.kickCd = 0.5;
+}
+
+function ctrlOf(T){ return T === blue ? state.ctrlB : (settings.twoP ? state.ctrlR : null); }
+
+function updateTeam(T, dt){
+  const b = state.ball;
+  const humanCtrl = ctrlOf(T);
+  const mult = (T === red && !settings.twoP) ? state.diff : 1;
+  let chaser = nearestToBall(T.players.slice(1));
+  if(humanCtrl && !humanCtrl.off && chaser &&
+     humanCtrl.pos.distanceTo(b.pos) < chaser.pos.distanceTo(b.pos) + 3){
+    chaser = humanCtrl;
+  }
+  for(const p of T.players){
+    if(p.off) continue;
+    p.kickCd = Math.max(0, p.kickCd - dt);
+    if(p === humanCtrl) continue;
+    if(p.slide > 0) continue;
+
+    if(p.role === 'GK'){
+      const gz = -p.dir * (HL - 2.5);
+      const target = new THREE.Vector3(THREE.MathUtils.clamp(b.pos.x*0.75, -GOAL_W/2+1, GOAL_W/2-1), 0, gz);
+      if(Math.abs(b.pos.z - gz) < 13 && Math.abs(b.pos.x) < BOX_W+1){
+        target.set(b.pos.x, 0, b.pos.z);
+      }
+      moveToward(p, target, 9.5*mult, dt);
+      aiKick(p);
+      continue;
+    }
+    if(p === chaser){
+      const ballFlat = new THREE.Vector3(b.pos.x, 0, b.pos.z);
+      const toGoal = new THREE.Vector3(0, 0, p.dir*HL).sub(ballFlat).normalize();
+      const target = ballFlat.clone().addScaledVector(toGoal, -1.2);
+      moveToward(p, target, (T === red ? 10 : 11.5)*mult, dt);
+      if(T === red && !settings.twoP){
+        const dBall = flatDist(p, b.pos);
+        if(dBall > 1.8 && dBall < 4.2 && state.lastTouchTeam === 'blue' && Math.random() < 0.25*dt){
+          startSlide(p, new THREE.Vector3(b.pos.x - p.pos.x, 0, b.pos.z - p.pos.z));
+        }
+      }
+      aiKick(p);
+      continue;
+    }
+    const pull = p.role === 'DF' ? 0.22 : p.role === 'MF' ? 0.38 : 0.3;
+    const target = new THREE.Vector3(
+      p.home.x + (b.pos.x - p.home.x*0.2) * 0.25,
+      0,
+      p.home.z + (b.pos.z - p.home.z) * pull
+    );
+    moveToward(p, target, (T === red ? 8.5 : 9.5)*mult, dt);
+    aiKick(p);
+  }
+}
+
+function separatePlayers(){
+  for(let i=0;i<allPlayers.length;i++){
+    for(let j=i+1;j<allPlayers.length;j++){
+      const a = allPlayers[i], c = allPlayers[j];
+      if(a.off || c.off) continue;
+      const dx = c.pos.x - a.pos.x, dz = c.pos.z - a.pos.z;
+      const d = Math.hypot(dx, dz), minD = PLAYER_R*1.7;
+      if(d < minD && d > 0.001){
+        const push = (minD - d)/2, nx = dx/d, nz = dz/d;
+        a.pos.x -= nx*push; a.pos.z -= nz*push;
+        c.pos.x += nx*push; c.pos.z += nz*push;
+      }
+    }
+  }
+}
+
+function updateCarry(dt){
+  [state.ctrlB, settings.twoP ? state.ctrlR : null].forEach(p => {
+    if(!p || p.off || p.slide > 0) return;
+    const b = state.ball;
+    if(p.kickCd > 0.35) return;
+    if(b.pos.y > 1.2) return;
+    if(p.vel.lengthSq() < 4) return;
+    const d = flatDist(p, b.pos);
+    if(d > 3) return;
+    if(Math.hypot(b.vel.x, b.vel.z) > 14) return;
+    const f = p.vel.clone().setY(0).normalize();
+    const aheadX = p.pos.x + f.x*1.7, aheadZ = p.pos.z + f.z*1.7;
+    const k = Math.min(1, dt*8);
+    b.vel.x = THREE.MathUtils.lerp(b.vel.x, (aheadX - b.pos.x)*6 + p.vel.x, k);
+    b.vel.z = THREE.MathUtils.lerp(b.vel.z, (aheadZ - b.pos.z)*6 + p.vel.z, k);
+  });
+}
+
+function collidePlayerBall(p){
+  if(state.mode !== 'play' || p.off) return;
+  const b = state.ball;
+  const dx = b.pos.x - p.pos.x, dz = b.pos.z - p.pos.z;
+  const d = Math.hypot(dx, dz), minD = PLAYER_R + BALL_R;
+  if(d < minD && b.pos.y < 2.2){
+    // 핸드볼: 빠른 공중볼이 몸에 맞으면 드물게
+    const ballSpd = Math.hypot(b.vel.x, b.vel.z);
+    if(b.pos.y > 1.4 && ballSpd > 13 && p.role !== 'GK' && Math.random() < 0.05){
+      foul(p, p.pos.clone(), '핸드볼!');
+      return;
+    }
+    if(onTouch(p)) return;
+    let nx = d > 0.001 ? dx/d : p.face.x, nz = d > 0.001 ? dz/d : p.face.z;
+    const isCtrl = p === state.ctrlB || (settings.twoP && p === state.ctrlR);
+    if(isCtrl && p.vel.lengthSq() > 4){
+      const f = p.vel.clone().setY(0).normalize();
+      nx = f.x; nz = f.z;
+    }
+    b.pos.x = p.pos.x + nx*minD;
+    b.pos.z = p.pos.z + nz*minD;
+    const speed = Math.max(p.vel.length()*1.15, 5);
+    b.vel.x = nx*speed; b.vel.z = nz*speed;
+    b.spin = 0;
+  }
+}
+
+// ================= 공 물리 =================
+function moveBall(dt){
+  const b = state.ball;
+  b.vel.y -= 22*dt;
+  const airborne = b.pos.y > BALL_R + 0.1;
+  const drag = airborne ? 0.8 : 0.4;
+  b.vel.x *= Math.pow(drag, dt);
+  b.vel.z *= Math.pow(drag, dt);
+  // 감아차기 회전 (마그누스)
+  if(airborne && Math.abs(b.spin) > 0.5){
+    const sp = Math.hypot(b.vel.x, b.vel.z);
+    if(sp > 1){
+      const px = -b.vel.z/sp, pz = b.vel.x/sp;
+      b.vel.x += px * b.spin * dt;
+      b.vel.z += pz * b.spin * dt;
+    }
+    b.spin *= Math.pow(0.5, dt);
+  }
+  b.pos.addScaledVector(b.vel, dt);
+  if(b.pos.y < BALL_R){
+    b.pos.y = BALL_R;
+    b.vel.y = Math.abs(b.vel.y) > 1 ? -b.vel.y*0.45 : 0;
+  }
+  if(state.mode !== 'play'){ syncBallMesh(dt); return; }
+
+  if(Math.abs(b.pos.x) > HW + BALL_R*0.5){
+    const team = state.lastTouchTeam === 'blue' ? red : blue;
+    doRestart('throwin', team, new THREE.Vector3(Math.sign(b.pos.x)*(HW-1.5), 0, b.pos.z));
+    syncBallMesh(dt); return;
+  }
+  for(const s of [-1, 1]){
+    if(b.pos.z * s > HL + BALL_R*0.5){
+      const inMouth = Math.abs(b.pos.x) < GOAL_W/2 - 0.2 && b.pos.y < GOAL_H - 0.2;
+      if(inMouth){
+        goal(blue.dir === s ? blue : red);
+      } else {
+        const defTeam = blue.dir === -s ? blue : red;
+        const attTeam = otherTeam(defTeam);
+        if(state.lastTouchTeam === defTeam.name){
+          const cx = (Math.sign(b.pos.x) || 1) * (HW - 1.5);
+          doRestart('corner', attTeam, new THREE.Vector3(cx, 0, s*(HL-1.5)));
+        } else {
+          doRestart('goalkick', defTeam, new THREE.Vector3(0, 0, s*(HL-7)));
+        }
+      }
+      syncBallMesh(dt); return;
+    }
+  }
+  syncBallMesh(dt);
+}
+function syncBallMesh(dt){
+  const b = state.ball;
+  ballMesh.rotation.x += b.vel.z*dt*1.4;
+  ballMesh.rotation.z -= b.vel.x*dt*1.4;
+}
+
+// ================= PK =================
+function startPenalty(attT, returnMode){
+  const defT = otherTeam(attT), d = attT.dir;
+  state.mode = 'penalty';
+  const spot = new THREE.Vector3(0, BALL_R, d*(HL-12));
+  state.ball.pos.copy(spot);
+  state.ball.vel.set(0,0,0);
+  state.ball.spin = 0;
+  let shooter = attT.players[10];
+  if(shooter.off) shooter = attT.players.slice(1).filter(active).pop();
+  shooter.pos.set(0, 0, spot.z - d*3.2);
+  shooter.face.set(0,0,d);
+  shooter.vel.set(0,0,0);
+  const gk = defT.players[0];
+  gk.pos.set(0, 0, d*(HL-0.8));
+  gk.vel.set(0,0,0);
+  gk.face.set(0,0,-d);
+  allPlayers.forEach(p => {
+    if(p === shooter || p === gk || p.off) return;
+    if(Math.abs(p.pos.x) < BOX_W+2 && p.pos.z*d > HL-BOX_D-3){
+      p.pos.z = d*(HL-BOX_D-5) - (Math.random()*3);
+      p.pos.x = (Math.random()-0.5)*30;
+    }
+    p.vel.set(0,0,0);
+  });
+  const humanAtt = attT === blue || (settings.twoP && attT === red);
+  state.pen = { attT, defT, d, phase:'aim', timer:0, aim:0, shooter, gk,
+                dive:0, saveIt:false, outcome:null, returnMode, resolveT:0, doneT:0, human:humanAtt };
+  showBanner('PK!', '#ffd76a');
+  if(humanAtt) aimMarker.visible = true;
+}
+function shootPen(aim, isAI){
+  const P = state.pen, b = state.ball;
+  P.aim = aim;
+  P.phase = 'moving';
+  P.dive = [-1,0,1][Math.floor(Math.random()*3)];
+  const wide = isAI && Math.random() < AI_PK_WIDE[settings.diffIdx];
+  let targetX = aim*4.6 + (Math.random()-0.5)*0.8;
+  if(wide) targetX = (aim === 0 ? (Math.random()<0.5?-1:1) : Math.sign(aim)) * 9.5;
+  P.saveIt = !wide && P.dive === aim && Math.random() < (isAI ? 0.8 : 0.6);
+  const to = new THREE.Vector3(targetX - b.pos.x, 0, P.d*HL - b.pos.z).normalize();
+  b.vel.set(to.x*27, 3.5, to.z*27);
+  sfxKick();
+  aimMarker.visible = false;
+}
+function updatePenalty(dt){
+  const P = state.pen, b = state.ball;
+  if(P.phase === 'aim'){
+    P.timer += dt;
+    if(P.human){
+      const leftKeys = P.attT === blue ? ['KeyA','ArrowLeft'] : ['ArrowLeft'];
+      const rightKeys = P.attT === blue ? ['KeyD','ArrowRight'] : ['ArrowRight'];
+      const upKeys = P.attT === blue ? ['KeyW','ArrowUp'] : ['ArrowUp'];
+      const shootKey = P.attT === blue ? 'Space' : 'Enter';
+      if(leftKeys.some(k => keys[k])) P.aim = -1;
+      if(rightKeys.some(k => keys[k])) P.aim = 1;
+      if(upKeys.some(k => keys[k])) P.aim = 0;
+      aimMarker.position.set(P.aim*4.6, 1.5, P.d*(HL-0.5));
+      if(keys[shootKey]){ keys[shootKey] = false; shootPen(P.aim, false); }
+    } else {
+      if(P.timer > 1.5) shootPen([-1,0,1][Math.floor(Math.random()*3)], true);
+    }
+    return;
+  }
+  P.resolveT += dt;
+  b.vel.y -= 22*dt;
+  b.pos.addScaledVector(b.vel, dt);
+  if(b.pos.y < BALL_R){ b.pos.y = BALL_R; b.vel.y = Math.abs(b.vel.y) > 1 ? -b.vel.y*0.45 : 0; }
+  syncBallMesh(dt);
+  P.gk.pos.x += (P.dive*4.5 - P.gk.pos.x) * Math.min(1, dt*7);
+  P.gk.face.set(P.dive, 0, -P.d);
+
+  if(!P.outcome){
+    if(P.saveIt && Math.abs(b.pos.z - P.gk.pos.z) < 1.8 && Math.abs(b.pos.x - P.gk.pos.x) < 2.5){
+      b.vel.set((Math.random()-0.5)*10, 5, -P.d*13);
+      P.outcome = 'save';
+      showBanner('선방!', P.defT === blue ? '#5ab0ff' : '#ff6b6b');
+      cheer();
+    } else if(b.pos.z*P.d > HL + 0.5){
+      if(Math.abs(b.pos.x) < GOAL_W/2 && b.pos.y < GOAL_H){
+        P.outcome = 'goal';
+      } else {
+        P.outcome = 'miss';
+        showBanner('노골!', '#ccc');
+      }
+      b.vel.multiplyScalar(0.2);
+    } else if(P.resolveT > 3){
+      P.outcome = 'miss';
+    }
+  } else {
+    P.doneT += dt;
+    if(P.doneT > 1.1) finishPenalty();
+  }
+}
+function finishPenalty(){
+  const P = state.pen;
+  const scored = P.outcome === 'goal';
+  state.pen = null;
+  aimMarker.visible = false;
+  if(P.returnMode === 'match'){
+    if(scored) goal(P.attT, true);
+    else doRestart('goalkick', P.defT, new THREE.Vector3(0, 0, P.d*(HL-7)));
+  } else {
+    shootoutRecord(P.attT, scored);
+  }
+}
+
+// ================= 승부차기 =================
+function startShootout(){
+  state.shootout = { scores:{blue:0, red:0}, taken:{blue:0, red:0}, turn:'blue' };
+  halfEl.textContent = '승부차기';
+  showBanner('승부차기!', '#ffd76a');
+  sfxWhistle();
+  state.mode = 'freeze';
+  state.freezeT = 1.6;
+  state.afterFreeze = () => startPenalty(blue, 'shootout');
+}
+function shootoutRecord(attT, scored){
+  const so = state.shootout;
+  if(scored) so.scores[attT.name]++;
+  so.taken[attT.name]++;
+  timerEl.textContent = so.scores.blue + ':' + so.scores.red;
+  const a = so.scores.blue, r = so.scores.red;
+  const ta = so.taken.blue, tr = so.taken.red;
+  const remA = Math.max(0, 5-ta), remR = Math.max(0, 5-tr);
+  let winner = null;
+  if(a > r + remR) winner = blue;
+  else if(r > a + remA) winner = red;
+  else if(ta >= 5 && tr >= 5 && ta === tr && a !== r) winner = a > r ? blue : red;
+  if(winner){ endMatch(winner); return; }
+  so.turn = so.turn === 'blue' ? 'red' : 'blue';
+  state.mode = 'freeze';
+  state.freezeT = 1.3;
+  const next = so.turn === 'blue' ? blue : red;
+  state.afterFreeze = () => startPenalty(next, 'shootout');
+}
+
+// ================= 경기 흐름 (전후반/추가시간/연장) =================
+function startMatch(type, oppName, oppColor, baseDiff){
+  state.matchType = type;
+  state.diff = Math.min(1.7, baseDiff * DIFF_MULT[settings.diffIdx]);
+  state.scoreB = 0; state.scoreR = 0;
+  state.periods = [ {len:HALF_LEN, label:'전반'}, {len:HALF_LEN, label:'후반'} ];
+  state.per = 0; state.time = HALF_LEN; state.stop = null; state.events = 0; state.etAdded = false;
+  state.running = true;
+  state.shootout = null;
+  state.pen = null;
+  state.replay = null;
+  state.gkMode = false;
+  state.chargeB = 0; state.chargeR = 0;
+  state.subs = { blue:3, red:3 };
+  state.stats = { possB:0, possR:0, shotB:0, shotR:0 };
+  state.lastStats = '';
+  repBuf = [];
+  allPlayers.forEach(p => {
+    p.off = false; p.yellows = 0; p.mesh.visible = true;
+    p.slide = 0; p.slideCd = 0; p.st = 100;
+  });
+  setDirs();
+  setJersey(blue, settings.teamColor);
+  setJersey(red, oppColor);
+  nameBEl.textContent = settings.teamName;
+  nameREl.textContent = oppName;
+  updateScore();
+  timerEl.textContent = HALF_LEN;
+  overlayEl.style.display = 'none';
+  state.ctrlB = blue.players[10];
+  state.ctrlR = settings.twoP ? red.players[10] : null;
+  ringR.visible = false;
+  kickoff(blue);
+  sfxWhistle();
+}
+function endPeriodOrMatch(){
+  state.per++;
+  state.stop = null;
+  state.events = 0;
+  if(state.per < state.periods.length){
+    if(state.per === 1){
+      flipSides();
+      showBanner('하프타임 · 진영 교체', '#9fe3a5');
+    } else {
+      showBanner(state.periods[state.per].label, '#9fe3a5');
+    }
+    sfxWhistle();
+    state.time = state.periods[state.per].len;
+    state.mode = 'freeze';
+    state.freezeT = 2;
+    const kt = state.per % 2 ? red : blue;
+    state.afterFreeze = () => kickoff(kt);
+    return;
+  }
+  // 경기 종료
+  const winner = state.scoreB > state.scoreR ? blue : state.scoreR > state.scoreB ? red : null;
+  const isKO = state.matchType === 'cup' && cup.stage === 'ko';
+  if(!winner && isKO){
+    if(!state.etAdded){
+      state.etAdded = true;
+      state.periods.push({len:ET_LEN, label:'연장전반'}, {len:ET_LEN, label:'연장후반'});
+      showBanner('연장전!', '#ffd76a');
+      sfxWhistle();
+      state.time = ET_LEN;
+      state.mode = 'freeze';
+      state.freezeT = 2;
+      state.afterFreeze = () => kickoff(blue);
+    } else {
+      startShootout();
+    }
+    return;
+  }
+  endMatch(winner);
+}
+
+const USER = () => settings.teamName;
+function endMatch(winner){
+  state.running = false;
+  state.mode = 'play';
+  sfxWhistle();
+  const p = state.scoreB, a = state.scoreR;
+  const scoreTxt = p + ' : ' + a + (state.shootout ? '  (PK ' + state.shootout.scores.blue + ':' + state.shootout.scores.red + ')' : '');
+  state.lastStats = statsText();
+
+  if(state.matchType === 'friendly'){
+    const msg = winner === blue ? '🏆 승리!' : winner === red ? '패배...' : '무승부';
+    setOverlay('경기 종료', msg + '  ' + scoreTxt + '\n' + state.lastStats, '', [
+      { label:'다시 하기', cb:() => startMatch('friendly', nameREl.textContent, red.players[1].bodyMat.color.getHex(), 0.85) },
+      { label:'메뉴로', cb:showMenu }
+    ]);
+    return;
+  }
+  // ===== 월드컵 =====
+  if(cup.stage === 'group'){
+    const opp = cup.groupOpps[cup.md];
+    addResult(USER(), p, opp.name, a);
+    const pair = [[1,2],[0,2],[0,1]][cup.md];
+    const o1 = cup.groupOpps[pair[0]], o2 = cup.groupOpps[pair[1]];
+    const s1 = Math.floor(Math.random()*4), s2 = Math.floor(Math.random()*4);
+    addResult(o1.name, s1, o2.name, s2);
+    cup.log.push('조별 ' + (cup.md+1) + '차전  ' + USER() + ' ' + p + ':' + a + ' ' + opp.name);
+    cup.md++;
+    saveCup();
+    if(cup.md < 3){
+      showGroupNext();
+    } else {
+      finishGroupStage();
+    }
+    return;
+  }
+  // 녹아웃
+  const n = cup.survivors.length;
+  const uIdx = cup.survivors.indexOf(USER());
+  const partner = uIdx % 2 ? uIdx-1 : uIdx+1;
+  const oppName = cup.survivors[partner];
+  if(winner === blue){
+    cup.log.push(koLabel(n) + '  ' + USER() + ' ' + scoreTxt + '  ' + oppName + '  ✅');
+    // 다음 라운드 생존자 계산 (다른 경기 시뮬레이션)
+    const winners = [];
+    for(let i=0;i<n;i+=2){
+      if(i === Math.min(uIdx, partner)) winners.push(USER());
+      else winners.push(cup.survivors[Math.random() < 0.5 ? i : i+1]);
+    }
+    cup.survivors = winners;
+    saveCup();
+    if(winners.length === 1){
+      clearSave();
+      setOverlay('🏆 2026 월드컵 우승!', USER() + '이(가) 세계 챔피언입니다!', cup.log.join('\n'), [
+        { label:'새 월드컵', gold:true, cb:startCup },
+        { label:'메뉴로', cb:showMenu }
+      ]);
+    } else {
+      showKoNext();
+    }
+  } else {
+    cup.log.push(koLabel(n) + '  ' + USER() + ' ' + scoreTxt + '  ' + oppName + '  ❌');
+    clearSave();
+    setOverlay('탈락...', koLabel(n) + '에서 ' + oppName + '에게 패배했습니다.\n' + state.lastStats, cup.log.join('\n'), [
+      { label:'다시 도전', cb:startCup },
+      { label:'메뉴로', cb:showMenu }
+    ]);
+  }
+}
+
+// ================= 월드컵: 조별리그 + 48팀 대진 =================
+function addResult(a, ga, b, gb){
+  const A = cup.table[a], B = cup.table[b];
+  A.gf += ga; A.ga += gb; B.gf += gb; B.ga += ga;
+  if(ga > gb) A.pts += 3; else if(gb > ga) B.pts += 3; else { A.pts++; B.pts++; }
+}
+function sortedTable(){
+  return Object.entries(cup.table).map(([n,s]) => ({ n, ...s }))
+    .sort((x,y) => y.pts - x.pts || (y.gf-y.ga) - (x.gf-x.ga) || y.gf - x.gf);
+}
+function tableText(){
+  return sortedTable().map((r,i) => {
+    const gd = r.gf - r.ga;
+    return (i+1) + '위  ' + r.n + '  ' + r.pts + '점 (득실 ' + (gd >= 0 ? '+' : '') + gd + ')';
+  }).join('\n');
+}
+function showGroupNext(){
+  const next = cup.groupOpps[cup.md];
+  setOverlay('조별리그 ' + cup.md + '차전 종료',
+    '다음 상대: ' + next.name + (state.lastStats ? '\n지난 경기 ' + state.lastStats : ''),
+    '📊 조 순위\n' + tableText() + '\n\n' + cup.log.join('\n'), [
+    { label:(cup.md+1) + '차전 시작', gold:true, cb:() => startMatch('cup', next.name, NATION_MAP[next.name], GROUP_DIFF[cup.md]) },
+    { label:'메뉴로', cb:showMenu }
+  ]);
+}
+function simGroup(names){
+  // 4팀 리그전 시뮬레이션 → 정렬된 순위
+  const t = {};
+  names.forEach(nm => t[nm] = { pts:0, gf:0, ga:0 });
+  for(let i=0;i<4;i++) for(let j=i+1;j<4;j++){
+    const g1 = Math.floor(Math.random()*4), g2 = Math.floor(Math.random()*4);
+    t[names[i]].gf += g1; t[names[i]].ga += g2;
+    t[names[j]].gf += g2; t[names[j]].ga += g1;
+    if(g1>g2) t[names[i]].pts += 3; else if(g2>g1) t[names[j]].pts += 3;
+    else { t[names[i]].pts++; t[names[j]].pts++; }
+  }
+  return Object.entries(t).map(([n,s]) => ({ n, ...s }))
+    .sort((x,y) => y.pts - x.pts || (y.gf-y.ga) - (x.gf-x.ga) || y.gf - x.gf);
+}
+function finishGroupStage(){
+  const myRows = sortedTable();
+  const myRank = myRows.findIndex(r => r.n === USER());
+  // 전체 12개 조: 내 조 + 11개 시뮬레이션 조 → 각 조 1·2위 + 3위 상위 8팀 = 32강
+  const qualified = [];
+  const thirds = [];
+  qualified.push(myRows[0].n, myRows[1].n);
+  thirds.push(myRows[2]);
+  cup.otherGroups.forEach(g => {
+    const rows = simGroup(g);
+    qualified.push(rows[0].n, rows[1].n);
+    thirds.push(rows[2]);
+  });
+  thirds.sort((x,y) => y.pts - x.pts || (y.gf-y.ga) - (x.gf-x.ga) || y.gf - x.gf);
+  const bestThirds = thirds.slice(0, 8).map(r => r.n);
+  qualified.push(...bestThirds);
+  const advanced = qualified.includes(USER());
+  if(!advanced){
+    clearSave();
+    setOverlay('조별리그 탈락...', '조 ' + (myRank+1) + '위로 마감했습니다. (3위 와일드카드도 실패)',
+      '📊 최종 조 순위\n' + tableText(), [
+      { label:'다시 도전', cb:startCup },
+      { label:'메뉴로', cb:showMenu }
+    ]);
+    return;
+  }
+  // 32강 대진 추첨
+  const shuffled = qualified.slice();
+  for(let i=shuffled.length-1;i>0;i--){
+    const k = Math.floor(Math.random()*(i+1));
+    [shuffled[i], shuffled[k]] = [shuffled[k], shuffled[i]];
+  }
+  cup.survivors = shuffled;
+  cup.stage = 'ko';
+  saveCup();
+  const via = myRank < 2 ? '조 ' + (myRank+1) + '위' : '3위 와일드카드';
+  setOverlay('🎉 32강 진출! (' + via + ')', '', '📊 최종 조 순위\n' + tableText(), [
+    { label:'32강 대진 확인', gold:true, cb:showKoNext }
+  ]);
+}
+function showKoNext(){
+  const n = cup.survivors.length;
+  const uIdx = cup.survivors.indexOf(USER());
+  const partner = uIdx % 2 ? uIdx-1 : uIdx+1;
+  const oppName = cup.survivors[partner];
+  // 다른 대진 몇 개 보여주기
+  const others = [];
+  for(let i=0;i<n && others.length<6;i+=2){
+    if(i === Math.min(uIdx, partner)) continue;
+    others.push(cup.survivors[i] + ' vs ' + cup.survivors[i+1]);
+  }
+  setOverlay(koLabel(n), '상대: ' + oppName + '\n(무승부 시 연장전 → 승부차기)',
+    '다른 대진\n' + others.join('\n') + (n > 14 ? '\n...' : ''), [
+    { label:koLabel(n) + ' 시작', gold:true, cb:() => startMatch('cup', oppName, NATION_MAP[oppName] || 0xd32f2f, KO_DIFF[n] || 1) },
+    { label:'메뉴로', cb:showMenu }
+  ]);
+}
+function startCup(){
+  const pool = NATIONS.filter(nt => nt.name !== settings.teamName);
+  for(let i=pool.length-1;i>0;i--){
+    const k = Math.floor(Math.random()*(i+1));
+    [pool[i], pool[k]] = [pool[k], pool[i]];
+  }
+  cup.groupOpps = pool.slice(0, 3);
+  cup.otherGroups = [];
+  for(let g=0; g<11; g++) cup.otherGroups.push(pool.slice(3+g*4, 7+g*4).map(nt => nt.name));
+  cup.stage = 'group';
+  cup.md = 0;
+  cup.survivors = [];
+  cup.log = [];
+  cup.table = {};
+  cup.table[USER()] = { pts:0, gf:0, ga:0 };
+  cup.groupOpps.forEach(o => cup.table[o.name] = { pts:0, gf:0, ga:0 });
+  saveCup();
+  const o = cup.groupOpps[0];
+  setOverlay('🏆 2026 월드컵 (48개국)',
+    '조별리그 3경기 → 32강 → 16강 → 8강 → 준결승 → 결승\n조 2위 안 또는 3위 와일드카드(상위 8팀)로 토너먼트 진출\n\n같은 조: ' +
+    cup.groupOpps.map(x => x.name).join(', ') + '\n1차전 상대: ' + o.name,
+    '', [{ label:'1차전 시작', gold:true, cb:() => startMatch('cup', o.name, NATION_MAP[o.name], GROUP_DIFF[0]) }]);
+}
+
+// ================= 저장/불러오기 =================
+function saveCup(){
+  try {
+    localStorage.setItem('soccer3d_save', JSON.stringify({
+      settings:{ teamName:settings.teamName, diffIdx:settings.diffIdx },
+      cup:{ stage:cup.stage, md:cup.md, table:cup.table, log:cup.log,
+            groupOpps:cup.groupOpps.map(o => o.name),
+            otherGroups:cup.otherGroups, survivors:cup.survivors }
+    }));
+  } catch(e){}
+}
+function clearSave(){ try { localStorage.removeItem('soccer3d_save'); } catch(e){} }
+function loadSave(){
+  try {
+    const raw = localStorage.getItem('soccer3d_save');
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e){ return null; }
+}
+function resumeCup(save){
+  settings.teamName = save.settings.teamName;
+  settings.teamColor = NATION_MAP[save.settings.teamName] || 0x1e6fd9;
+  settings.diffIdx = save.settings.diffIdx;
+  cup.stage = save.cup.stage;
+  cup.md = save.cup.md;
+  cup.table = save.cup.table;
+  cup.log = save.cup.log;
+  cup.groupOpps = save.cup.groupOpps.map(nm => ({ name:nm, color:NATION_MAP[nm] || 0xd32f2f }));
+  cup.otherGroups = save.cup.otherGroups;
+  cup.survivors = save.cup.survivors;
+  if(cup.stage === 'group'){
+    if(cup.md === 0){
+      const o = cup.groupOpps[0];
+      setOverlay('🏆 월드컵 이어하기', '1차전 상대: ' + o.name, '📊 조 순위\n' + tableText(),
+        [{ label:'1차전 시작', gold:true, cb:() => startMatch('cup', o.name, NATION_MAP[o.name], GROUP_DIFF[0]) }]);
+    } else showGroupNext();
+  } else showKoNext();
+}
+
+// ================= 메뉴 =================
+function showMenu(){
+  const save = loadSave();
+  const buttons = [
+    { label:'친선경기', cb:() => { initAudio(); applyMenuSel(); startMatch('friendly', 'CPU', 0xd32f2f, 0.85); } },
+    { label:'2인 대전', cb:() => { initAudio(); applyMenuSel(); settings.twoP = true; startMatch('friendly', 'PLAYER 2', 0xd32f2f, 1); } },
+    { label:'🏆 2026 월드컵', gold:true, cb:() => { initAudio(); applyMenuSel(); startCup(); } }
+  ];
+  if(save) buttons.push({ label:'💾 월드컵 이어하기', cb:() => { initAudio(); settings.twoP = false; resumeCup(save); } });
+  setOverlay('⚽ 3D 축구 11 대 11',
+    '전·후반 90초 + 추가시간 · 스로인/코너킥/골킥/오프사이드/파울/카드/PK/어드밴티지/핸드볼/수비벽/VAR/교체/진영교체\n토너먼트 무승부 시 연장전 → 승부차기\nP1: WASD+Space/E/R/T/C/V/F/Q/G · P2(2인): 방향키+Enter/./,//M',
+    '', buttons,
+    ex => {
+      const d1 = document.createElement('div');
+      d1.innerHTML = '<label>내 팀</label>';
+      const sel1 = document.createElement('select');
+      sel1.id = 'teamSel';
+      NATIONS.forEach(nt => {
+        const op = document.createElement('option');
+        op.value = nt.name; op.textContent = nt.name;
+        if(nt.name === settings.teamName) op.selected = true;
+        sel1.appendChild(op);
+      });
+      d1.appendChild(sel1);
+      const d2 = document.createElement('div');
+      d2.innerHTML = '<label>난이도 (6단계)</label>';
+      const sel2 = document.createElement('select');
+      sel2.id = 'diffSel';
+      DIFF_NAMES.forEach((nm, i) => {
+        const op = document.createElement('option');
+        op.value = i; op.textContent = nm;
+        if(i === settings.diffIdx) op.selected = true;
+        sel2.appendChild(op);
+      });
+      d2.appendChild(sel2);
+      ex.appendChild(d1); ex.appendChild(d2);
+    });
+}
+function applyMenuSel(){
+  settings.twoP = false;
+  const t = document.getElementById('teamSel');
+  const d = document.getElementById('diffSel');
+  if(t){ settings.teamName = t.value; settings.teamColor = NATION_MAP[t.value]; }
+  if(d) settings.diffIdx = parseInt(d.value);
+}
+showMenu();
+
+// ================= 미니맵 =================
+function drawMinimap(){
+  const W = mini.width, H = mini.height;
+  mctx.clearRect(0, 0, W, H);
+  const sx = x => (x + HW) / FIELD_W * (W - 16) + 8;
+  const sz = z => (z + HL) / FIELD_L * (H - 16) + 8;
+  mctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  mctx.strokeRect(8, 8, W-16, H-16);
+  mctx.beginPath(); mctx.moveTo(8, H/2); mctx.lineTo(W-8, H/2); mctx.stroke();
+  allPlayers.forEach(p => {
+    if(p.off) return;
+    mctx.fillStyle = p.team === 'blue'
+      ? (p === state.ctrlB ? '#ffe94a' : '#42a5f5')
+      : (p === state.ctrlR ? '#ffab91' : '#ef5350');
+    mctx.beginPath();
+    mctx.arc(sx(p.pos.x), sz(p.pos.z), p.role === 'GK' ? 3.4 : 2.6, 0, Math.PI*2);
+    mctx.fill();
+  });
+  mctx.fillStyle = '#fff';
+  mctx.beginPath();
+  mctx.arc(sx(state.ball.pos.x), sz(state.ball.pos.z), 2.4, 0, Math.PI*2);
+  mctx.fill();
+}
+
+// ================= 메인 루프 =================
+const clock = new THREE.Clock();
+let bobT = 0;
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  updateEffects(dt);
+
+  if(state.running){
+    if(state.mode === 'replay'){
+      const R = state.replay;
+      R.idx += dt * 60 * 0.55;   // 슬로모션
+      const fi = Math.floor(R.idx);
+      if(fi >= R.frames.length){
+        state.replay = null;
+        state.mode = 'freeze';
+        state.freezeT = 0.6;
+      } else {
+        const f = R.frames[fi];
+        ballMesh.position.set(f[0], f[1], f[2]);
+        allPlayers.forEach((p, i) => {
+          if(!p.off) p.mesh.position.set(f[3+i*2], 0, f[4+i*2]);
+        });
+        // 골대 뒤 리플레이 카메라
+        const camPos = new THREE.Vector3(f[0]*0.4 + 12, 6, R.goalZ * 0.72);
+        camera.position.lerp(camPos, 0.08);
+        camera.lookAt(f[0], f[1], f[2]);
+        renderer.render(scene, camera);
+        drawMinimap();
+        return;
+      }
+    }
+    if(state.mode === 'freeze'){
+      state.freezeT -= dt;
+      if(state.freezeT <= 0 && state.afterFreeze){
+        const f = state.afterFreeze; state.afterFreeze = null; f();
+      } else if(state.freezeT <= 0){
+        state.mode = 'play';
+      }
+    } else if(state.mode === 'restart'){
+      state.restartT -= dt;
+      if(state.restartT <= 0) resolveRestart();
+    } else if(state.mode === 'penalty'){
+      updatePenalty(dt);
+    } else if(state.mode === 'play'){
+      if(!state.shootout){
+        state.time -= dt;
+        // 추가시간
+        if(state.time <= 0 && state.stop === null){
+          state.stop = Math.min(8, 2 + state.events * 1.2);
+          showBanner('추가시간 +' + Math.ceil(state.stop) + '초', '#ffd76a');
+        }
+        timerEl.textContent = state.time > 0
+          ? Math.ceil(state.time)
+          : state.periods[state.per].len + '+' + Math.ceil(-state.time);
+        if(state.stop !== null && state.time <= -state.stop){
+          endPeriodOrMatch();
+        }
+      }
+      if(state.mode === 'play' && state.running){
+        state.ctrlB = updateCtrl(blue, 'ctrlB', state.ctrlB, P1);
+        if(settings.twoP) state.ctrlR = updateCtrl(red, 'ctrlR', state.ctrlR, P2);
+        handleHumanInput(blue, P1, dt);
+        if(settings.twoP) handleHumanInput(red, P2, dt);
+        updateTeam(blue, dt);
+        updateTeam(red, dt);
+        updateSlides(dt);
+        if(state.mode === 'play'){
+          separatePlayers();
+          for(const p of allPlayers){ collidePlayerBall(p); if(state.mode !== 'play') break; }
+          if(state.mode === 'play') updateCarry(dt);
+          moveBall(dt);
+          if(state.mode === 'play') recordFrame();
+          if(state.lastTouchTeam === 'blue') state.stats.possB += dt;
+          else if(state.lastTouchTeam === 'red') state.stats.possR += dt;
+        }
+      }
+    }
+  }
+
+  // 메시 동기화 + 달리기 애니메이션
+  bobT += dt*10;
+  allPlayers.forEach((p, i) => {
+    if(p.off) return;
+    const running = p.vel.length() > 1 && p.slide <= 0;
+    p.mesh.position.set(p.pos.x, running ? Math.abs(Math.sin(bobT + i))*0.12 : 0, p.pos.z);
+    p.mesh.rotation.y = Math.atan2(p.face.x, p.face.z);
+    p.mesh.rotation.x = p.slide > 0 ? -1.1 : 0;
+    const swing = running ? Math.sin(bobT*1.6 + i) * Math.min(1, p.vel.length()/10) * 0.65 : 0;
+    p.legL.rotation.x = swing;
+    p.legR.rotation.x = -swing;
+    p.armL.rotation.x = -swing * 0.8;
+    p.armR.rotation.x = swing * 0.8;
+  });
+  if(state.mode !== 'replay') ballMesh.position.copy(state.ball.pos);
+  if(state.ctrlB && !state.ctrlB.off){
+    ringB.position.set(state.ctrlB.pos.x, 0.05, state.ctrlB.pos.z);
+    ringB.visible = true;
+  } else ringB.visible = false;
+  if(settings.twoP && state.ctrlR && !state.ctrlR.off){
+    ringR.position.set(state.ctrlR.pos.x, 0.05, state.ctrlR.pos.z);
+    ringR.visible = true;
+  } else ringR.visible = false;
+
+  // 오프사이드 라인 (파란팀 공격 방향, 상대 진영에 있을 때만)
+  if(state.mode === 'play' && state.running){
+    const d = blue.dir;
+    const zs = red.players.filter(active).map(o => o.pos.z * d).sort((a,b) => b - a);
+    if(zs.length >= 2 && zs[1] > 0){
+      offsideLine.position.z = zs[1] * d;
+      offsideLine.visible = true;
+    } else offsideLine.visible = false;
+  } else offsideLine.visible = false;
+
+  // 게이지/스태미나 UI
+  gaugeEl.style.width = (Math.max(state.chargeB, state.chargeR)/0.9*100) + '%';
+  stamEl.style.width = (state.ctrlB ? state.ctrlB.st : 100) + '%';
+
+  // 카메라
+  if(state.mode !== 'replay'){
+    const b = state.ball.pos;
+    let camTarget, camPos;
+    if(state.mode === 'penalty' && state.pen){
+      const d = state.pen.d;
+      camTarget = new THREE.Vector3(0, 2, d*(HL-6));
+      camPos = new THREE.Vector3(0, 14, d*(HL-26));
+    } else {
+      camTarget = new THREE.Vector3(b.x*0.7, 0, b.z*0.75);
+      camPos = new THREE.Vector3(b.x*0.45, 38, b.z*0.5 + 46);
+    }
+    camera.position.lerp(camPos, 1 - Math.pow(0.01, dt));
+    camera.lookAt(camTarget);
+    renderer.render(scene, camera);
+  }
+  drawMinimap();
+}
+camera.position.set(0, 38, 46);
+camera.lookAt(0, 0, 0);
+animate();
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ================= 터치 조작 (모바일/태블릿) =================
+if('ontouchstart' in window){
+  document.body.classList.add('touch');
+  const joyBase = document.getElementById('joyBase');
+  const joyStick = document.getElementById('joyStick');
+  let joyId = null;
+  function setMoveKeys(dx, dy){
+    const dead = 12;
+    keys['KeyA'] = dx < -dead; keys['KeyD'] = dx > dead;
+    keys['KeyW'] = dy < -dead; keys['KeyS'] = dy > dead;
+  }
+  joyBase.addEventListener('touchstart', e => {
+    e.preventDefault();
+    joyId = e.changedTouches[0].identifier;
+  }, { passive:false });
+  joyBase.addEventListener('touchmove', e => {
+    e.preventDefault();
+    for(const t of e.changedTouches){
+      if(t.identifier !== joyId) continue;
+      const r = joyBase.getBoundingClientRect();
+      let dx = t.clientX - (r.left + r.width/2);
+      let dy = t.clientY - (r.top + r.height/2);
+      const len = Math.hypot(dx, dy), max = 46;
+      if(len > max){ dx = dx/len*max; dy = dy/len*max; }
+      joyStick.style.left = (38 + dx) + 'px';
+      joyStick.style.top = (38 + dy) + 'px';
+      setMoveKeys(dx, dy);
+    }
+  }, { passive:false });
+  const joyEnd = e => {
+    for(const t of e.changedTouches){
+      if(t.identifier !== joyId) continue;
+      joyId = null;
+      joyStick.style.left = '38px'; joyStick.style.top = '38px';
+      setMoveKeys(0, 0);
+    }
+  };
+  joyBase.addEventListener('touchend', joyEnd);
+  joyBase.addEventListener('touchcancel', joyEnd);
+
+  const bindBtn = (id, code) => {
+    const el = document.getElementById(id);
+    el.addEventListener('touchstart', e => { e.preventDefault(); keys[code] = true; }, { passive:false });
+    el.addEventListener('touchend', e => { e.preventDefault(); keys[code] = false; }, { passive:false });
+    el.addEventListener('touchcancel', () => keys[code] = false);
+  };
+  bindBtn('btnShoot', 'Space');     // 꾹 누르면 파워 차지
+  bindBtn('btnPass', 'KeyE');
+  bindBtn('btnLob', 'KeyR');
+  bindBtn('btnTackle', 'KeyF');
+  bindBtn('btnSprint', 'ShiftLeft');
+}
+</script>
+</body>
+</html>

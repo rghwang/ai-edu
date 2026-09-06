@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W18 · 정말 안 되는 걸까</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
+<div class="deck" id="deck">
+  <style>
+    .figbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(10px,1.4vw,18px);margin-top:18px;max-width:860px}
+    .figbox svg{display:block;width:100%;height:auto;max-height:52vh}
+    .figrow{display:grid;grid-template-columns:1fr 1.05fr;gap:16px;margin-top:18px;max-width:1000px;align-items:center}
+    .figrow .figbox{margin-top:0;max-width:none}
+    @media(max-width:780px){.figrow{grid-template-columns:1fr}}
+    @media(max-height:520px) and (orientation:landscape){.figbox svg{max-height:38vh}}
+  </style>
+
+  <section class="slide active">
+    <div class="eyebrow">W18 · 생각하는 힘</div>
+    <h1>정말<br><span class="hi">안 되는 걸까?</span></h1>
+    <div class="rule"></div>
+    <p class="lead">오늘은 아무것도 만들지 않는다.<br>대신 <b class="hi-t">300년 전 사람들이 못 풀던 문제</b> 하나를 우리 손으로 끝낸다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 규칙</div>
+    <h2>처음 <span class="hi-g">한 시간은</span><br>AI 없이</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">왜냐하면</div><h3>답이 아니라 힘을 얻으러 왔다</h3><p>AI에게 물으면 30초 만에 답이 나온다. 그럼 오늘 얻는 게 없다.</p></div>
+      <div class="card teal"><div class="k">마지막에는</div><h3>AI와 겨룬다</h3><p>우리가 먼저 풀고, 우리 설명이 더 나은지 판정한다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">1736년 · 쾨니히스베르크</div>
+    <h2>강이 도시를<br><span class="hi">네 조각</span>으로 갈랐다</h2>
+    <p class="lead">북쪽 강변, 남쪽 강변, 강 가운데 큰 섬, 그리고 동쪽 땅.<br>이 네 곳을 잇는 다리가 <b class="hi-t">일곱 개</b> 있었다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">문제</div>
+    <h2>일곱 다리를 모두<br><span class="hi-t">한 번씩만</span> 건널 수 있을까?</h2>
+    <div class="figbox">
+      <svg viewBox="0 0 640 420" role="img" aria-label="쾨니히스베르크의 네 땅과 일곱 다리">
+        <rect x="0" y="0" width="640" height="420" fill="#e8eff0"/>
+        <rect x="0" y="0" width="640" height="96" fill="#efe5d2"/>
+        <rect x="0" y="324" width="640" height="96" fill="#efe5d2"/>
+        <ellipse cx="205" cy="210" rx="118" ry="58" fill="#efe5d2"/>
+        <ellipse cx="470" cy="210" rx="92" ry="52" fill="#efe5d2"/>
+        <g stroke="#bd5a32" stroke-width="9" stroke-linecap="round">
+          <line x1="140" y1="96" x2="140" y2="162"/><line x1="270" y1="96" x2="270" y2="162"/>
+          <line x1="140" y1="258" x2="140" y2="324"/><line x1="270" y1="258" x2="270" y2="324"/>
+          <line x1="323" y1="210" x2="378" y2="210"/>
+          <line x1="470" y1="96" x2="470" y2="158"/><line x1="470" y1="262" x2="470" y2="324"/>
+        </g>
+        <g font-family="'IBM Plex Sans KR',sans-serif" font-size="17" font-weight="700" fill="#23201a">
+          <text x="24" y="52">북쪽 강변</text><text x="24" y="380">남쪽 강변</text>
+          <text x="205" y="216" text-anchor="middle">가운데 섬</text>
+          <text x="470" y="216" text-anchor="middle">동쪽 땅</text>
+        </g>
+        <g font-family="'Space Mono',monospace" font-size="13" font-weight="700" fill="#9c4622">
+          <text x="152" y="134">1</text><text x="282" y="134">2</text>
+          <text x="152" y="300">3</text><text x="282" y="300">4</text>
+          <text x="340" y="198">5</text>
+          <text x="482" y="132">6</text><text x="482" y="300">7</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">지켜야 할 것</div>
+    <h2>규칙은 <span class="hi-g">네 개</span>뿐</h2>
+    <ul class="plain">
+      <li data-n="01">일곱 다리를 <b>전부</b> 건넌다</li>
+      <li data-n="02">같은 다리를 <b>두 번</b> 건널 수 없다</li>
+      <li data-n="03">출발하는 곳은 <b>어디든</b> 좋다</li>
+      <li data-n="04">헤엄치거나 배를 타는 건 <b>없다</b></li>
+    </ul>
+    <div class="kicker">종이를 여러 장 줄 테니 <span class="hi">계속 다시</span> 그려도 된다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">20분</div>
+    <h2>해보자</h2>
+    <p class="lead">출발점을 바꿔가며 여러 번 시도한다.<br>안 되면 <b class="hi">몇 번 안 됐는지</b>를 세어둔다.</p>
+    <div class="banner">
+      <div class="big">잘 안 되는 게 <span class="hi-t">정상</span>이다</div>
+      <p style="color:var(--mute);margin-top:12px">300년 동안 도시 사람들 전부가 못 했다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">갈림길</div>
+    <h2>여기서<br>질문이 하나 생긴다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">가능성 A</div><h3>아직 못 찾은 것</h3><p>어딘가에 방법이 있는데 우리가 못 찾았다.</p></div>
+      <div class="card teal"><div class="k">가능성 B</div><h3>아예 없는 것</h3><p>아무리 해도 안 된다. 방법이 존재하지 않는다.</p></div>
+    </div>
+    <div class="kicker">둘은 완전히 다른 말이다. <span class="hi">어느 쪽인지 어떻게 알 수 있을까?</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">생각 바꾸기</div>
+    <h2>뭐가 <span class="hi">중요한</span> 걸까?</h2>
+    <ul class="plain">
+      <li data-n="Q">섬이 동그란 게 중요할까? 네모난 섬이면 답이 달라져?<span>아니다</span></li>
+      <li data-n="Q">다리가 길면 답이 달라져? 짧으면?<span>아니다</span></li>
+      <li data-n="Q">강폭이 넓으면? 섬이 더 위에 있으면?<span>아니다</span></li>
+      <li data-n="!">그럼 대체 뭐가 중요한 거지?<span>어디와 어디가, 다리 몇 개로 이어졌는지</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">버리기</div>
+    <h2>땅은 <span class="hi-g">점</span>으로,<br>다리는 <span class="hi-g">선</span>으로</h2>
+    <div class="figbox">
+      <svg viewBox="0 0 640 400" role="img" aria-label="점 네 개와 선 일곱 개로 바꾼 그림">
+        <rect x="0" y="0" width="640" height="400" fill="#fffaf0"/>
+        <g stroke="#3f6b63" stroke-width="3.5" fill="none" stroke-linecap="round">
+          <path d="M320,64 Q290,160 200,200"/><path d="M320,64 Q230,104 200,200"/>
+          <path d="M320,336 Q230,296 200,200"/><path d="M320,336 Q290,240 200,200"/>
+          <line x1="200" y1="200" x2="440" y2="200"/>
+          <line x1="320" y1="64" x2="440" y2="200"/>
+          <line x1="320" y1="336" x2="440" y2="200"/>
+        </g>
+        <g fill="#bd5a32" stroke="#9c4622" stroke-width="2.5">
+          <circle cx="320" cy="64" r="31"/><circle cx="200" cy="200" r="31"/>
+          <circle cx="440" cy="200" r="31"/><circle cx="320" cy="336" r="31"/>
+        </g>
+        <g font-family="'Hahmlet',serif" font-size="24" font-weight="800" fill="#fffaf0" text-anchor="middle">
+          <text x="320" y="73">북</text><text x="200" y="209">섬</text>
+          <text x="440" y="209">동</text><text x="320" y="345">남</text>
+        </g>
+      </svg>
+    </div>
+    <div class="kicker">지도가 사라지고 <span class="hi">연결만</span> 남았다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">세어보자</div>
+    <h2>점마다 선이<br><span class="hi">몇 개</span> 붙었나</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">북쪽 강변</div><h3>3개 · 홀수</h3></div>
+      <div class="card clay"><div class="k">남쪽 강변</div><h3>3개 · 홀수</h3></div>
+      <div class="card clay"><div class="k">가운데 섬</div><h3>5개 · 홀수</h3></div>
+      <div class="card clay"><div class="k">동쪽 땅</div><h3>3개 · 홀수</h3></div>
+    </div>
+    <div class="kicker">네 곳이 <span class="hi">전부 홀수</span>다. 이게 무슨 뜻일까?</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">핵심</div>
+    <h2>들어갔으면<br><span class="hi-t">나와야 한다</span></h2>
+    <ul class="plain">
+      <li data-n="01">어떤 점에 들어갔다. 거기가 도착지가 아니라면?<span>나와야 한다</span></li>
+      <li data-n="02">들어가고 나오면 선을 몇 개 쓴 건가?<span>2개</span></li>
+      <li data-n="03">그럼 지나가기만 하는 점에 붙은 선은 항상?<span>짝수</span></li>
+      <li data-n="04">선이 홀수 개 붙은 점은 어디에만 있을 수 있나?<span>출발점과 도착점</span></li>
+      <li data-n="05">출발점과 도착점은 최대 몇 개인가?<span>2개</span></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">발견</div>
+    <h2 style="max-width:24ch">홀수점은 <span class="hi-g">0개</span>이거나<br><span class="hi-g">정확히 2개</span>여야 한다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">홀수점 0개</div><h3>출발한 곳으로 돌아온다</h3></div>
+      <div class="card teal"><div class="k">홀수점 2개</div><h3>한쪽에서 출발해 다른 쪽에서 끝난다</h3></div>
+    </div>
+    <div class="banner">
+      <div class="big">쾨니히스베르크는 홀수점이 <span class="hi">네 개</span></div>
+      <p style="color:var(--mute);margin-top:12px">그러므로 — <b>불가능하다.</b></p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">방금 한 일</div>
+    <h2>“못 찾은 것”이 아니라<br><span class="hi">“없는 것”</span>임을 밝혔다</h2>
+    <p class="lead">아무리 오래 시도해도 못 찾는다는 걸,<br>시도해보지 않고도 <b class="hi-t">확실히</b> 알아냈다.</p>
+    <div class="banner">
+      <div class="big">이걸 <span class="hi-t">증명</span>이라고 한다</div>
+      <p style="color:var(--mute);margin-top:12px">“해봤는데 안 되던데요”와는 완전히 다른 말이다.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">검증</div>
+    <h2>우리 규칙이<br><span class="hi-t">진짜</span>인지 확인</h2>
+    <div class="figrow">
+      <div class="figbox">
+        <svg viewBox="0 0 400 330" role="img" aria-label="봉투 모양 도형">
+          <rect x="0" y="0" width="400" height="330" fill="#fffaf0"/>
+          <g stroke="#3f6b63" stroke-width="3.5" fill="none" stroke-linecap="round">
+            <path d="M120,260 L280,260 L280,120 L120,120 Z"/>
+            <line x1="120" y1="260" x2="280" y2="120"/><line x1="280" y1="260" x2="120" y2="120"/>
+            <line x1="120" y1="120" x2="200" y2="52"/><line x1="280" y1="120" x2="200" y2="52"/>
+          </g>
+          <g fill="#d8973a" stroke="#a9761a" stroke-width="2">
+            <circle cx="200" cy="52" r="11"/><circle cx="120" cy="120" r="11"/><circle cx="280" cy="120" r="11"/>
+          </g>
+          <g fill="#bd5a32" stroke="#9c4622" stroke-width="2">
+            <circle cx="120" cy="260" r="13"/><circle cx="280" cy="260" r="13"/>
+          </g>
+          <g font-family="'Space Mono',monospace" font-size="13" font-weight="700" fill="#9c4622" text-anchor="middle">
+            <text x="120" y="297">홀수</text><text x="280" y="297">홀수</text>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <div class="card teal"><div class="k">봉투 도형</div><h3>홀수점이 2개뿐</h3><p>규칙대로면 <b>가능</b>해야 한다. 정말 되는지 그려보자.</p></div>
+        <div class="card clay" style="margin-top:14px"><div class="k">규칙이 더 말해준다</div><h3>반드시 아래에서 출발</h3><p>위 꼭짓점에서 시작하면 <b>절대</b> 안 된다. 해보면 안다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">뒤집기</div>
+    <h2>다리를 <span class="hi">하나만</span> 더 놓아<br>가능하게 하려면?</h2>
+    <p class="lead">홀수점 두 개를 이으면 그 둘이 <b class="hi-t">짝수</b>가 된다.<br>그럼 홀수점이 2개만 남아 — 가능해진다.</p>
+    <div class="banner">
+      <div class="big">네 곳이 전부 홀수라서<br><span class="hi">어느 둘을 이어도 된다</span></div>
+      <p style="color:var(--mute);margin-top:12px">정답이 <b>여섯 가지</b>다. 몇 개나 찾을 수 있나?</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">더 어려운 것</div>
+    <h2>출발한 곳으로<br><span class="hi-g">돌아오려면?</span></h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">조건</div><h3>홀수점이 0개</h3><p>그러려면 다리를 <b>두 개</b> 더 놓아야 한다.</p></div>
+      <div class="card clay"><div class="k">반대로</div><h3>다리를 없애도 될까?</h3><p>홀수점 둘을 잇는 다리를 없애도 가능해진다. 발상을 뒤집어보자.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">마지막 5분</div>
+    <h2>이제 <span class="hi">AI</span>와 겨룬다</h2>
+    <div class="prompt"><span class="lbl">질문</span>  쾨니히스베르크 다리 문제를 초등학생에게 설명해줘.</div>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">확인할 것</div><h3>답은 맞나?</h3><p>대개 맞힌다. 그건 놀랍지 않다.</p></div>
+      <div class="card clay"><div class="k">진짜 볼 것</div><h3>“왜”를 잘 설명하나?</h3><p>우리 설명과 비교해서 더 나은 쪽을 <b>근거를 대고</b> 고른다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">다음 주부터</div>
+    <h2>매 수업 첫 <span class="hi-t">15분</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">0–5분</div><div class="t">혼자 푼다</div><div class="d">AI 없이. 그리고 세 줄을 쓴다.</div></div>
+      <div class="step"><div class="n">5–10분</div><div class="t">AI를 붙인다</div><div class="d">심판 · 출제 · 선생님 · 코치 · 논쟁 중 하나로.</div></div>
+      <div class="step"><div class="n">10–15분</div><div class="t">판정한다</div><div class="d">누가 나은지 근거를 대고 고른다. 무승부 없음.</div></div>
+    </div>
+    <div class="kicker">오늘 한 걸 <span class="hi">짧게, 매주</span> 반복하는 것뿐이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">매주 쓸 세 줄</div>
+    <h2>답보다 <span class="hi-g">이게</span> 더 중요하다</h2>
+    <ul class="plain">
+      <li data-n="01">나는 이렇게 생각했다<span>어떤 방법을 골랐는지</span></li>
+      <li data-n="02">왜냐하면 ○○이기 때문이다<span>여기가 가장 중요한 줄</span></li>
+      <li data-n="03">확인해보니 맞았다 / 이 부분이 틀렸다<span>솔직하게</span></li>
+    </ul>
+    <div class="kicker">1년치가 쌓이면 <span class="hi">그게 곧 내 기록</span>이 된다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">나가기 전에</div>
+    <h2>오늘 가장<br>놀란 순간은?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">발견</div><h3>언제 “아!” 했나</h3><p>점과 선으로 바꿨을 때? 홀수를 세었을 때?</p></div>
+      <div class="card clay"><div class="k">남은 질문</div><h3>아직 궁금한 것</h3><p>규칙이 안 통할 것 같은 그림이 떠오르나?</p></div>
+    </div>
+    <div class="kicker">집 미션 — <span class="hi-g">한붓그리기가 되는 그림</span>과 <span class="hi">안 되는 그림</span>을 하나씩 만들어 오기.</div>
+  </section>
+</div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+</script>
+</body>
+</html>
