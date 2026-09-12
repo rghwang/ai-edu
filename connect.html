@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 반 AI 컴퓨터 연결하기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6efe1; --paper-2:#efe5d2; --card:#fffaf0;
+    --ink:#23201a; --ink-soft:#5a5347; --line:#d8cbb1;
+    --clay:#bd5a32; --clay-deep:#9c4622; --amber:#d8973a;
+    --teal:#3f6b63; --teal-soft:#e4ece8; --gold:#a9761a;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;
+    -webkit-font-smoothing:antialiased;padding-bottom:90px;
+    background-image:radial-gradient(circle at 10% 5%, rgba(216,151,58,.10), transparent 36%),
+                     radial-gradient(circle at 92% 16%, rgba(63,107,99,.08), transparent 40%);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px}
+  .backlink{display:inline-block;margin-top:24px;font-size:.82rem;color:var(--clay-deep);text-decoration:none;font-weight:600}
+  .backlink:hover{text-decoration:underline}
+  header{padding:20px 0 26px;border-bottom:2px solid var(--ink)}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--clay-deep);font-weight:600;display:flex;align-items:center;gap:11px;margin-bottom:14px}
+  .kicker::before{content:"";width:30px;height:1.5px;background:var(--clay)}
+  h1{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.6rem,4.6vw,2.4rem);letter-spacing:-.01em;line-height:1.25}
+  .sub{color:var(--ink-soft);margin-top:10px;font-size:.96rem}
+
+  .ataglance{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
+  .ag{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px}
+  .ag .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600}
+  .ag .v{font-family:'Hahmlet',serif;font-weight:700;font-size:1.02rem;margin-top:5px;line-height:1.35}
+  .ag .d{font-size:.79rem;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+
+  section{margin-top:46px}
+  .sec-head{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:6px}
+  .sec-title{font-family:'Hahmlet',serif;font-weight:700;font-size:clamp(1.22rem,3vw,1.62rem);line-height:1.3}
+  .sec-lead{color:var(--ink-soft);margin-top:9px;font-size:.94rem;max-width:62ch}
+
+  .step{display:flex;gap:15px;margin-top:22px;align-items:flex-start}
+  .num{flex-shrink:0;width:31px;height:31px;border-radius:50%;background:var(--clay);color:#fff;
+       display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.82rem;font-weight:700;margin-top:2px}
+  .step .body{flex:1;min-width:0}
+  .step h3{font-family:'Hahmlet',serif;font-size:1.05rem;font-weight:700;line-height:1.4}
+  .step p{font-size:.9rem;color:var(--ink-soft);margin-top:5px}
+  .step .path{font-family:var(--mono);font-size:.82rem;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:8px;padding:7px 11px;margin-top:8px;display:inline-block;color:var(--ink)}
+
+  .prompt{position:relative;margin-top:14px;background:#fffdf7;border:2px solid var(--clay);border-radius:14px;overflow:hidden}
+  .prompt .head{display:flex;align-items:center;gap:9px;padding:9px 14px;background:#fbf0e6;border-bottom:1px solid var(--line)}
+  .prompt .head .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--clay-deep);font-weight:700}
+  .prompt .head .hint{font-size:.74rem;color:var(--ink-soft);margin-left:auto}
+  .prompt pre{margin:0;padding:16px 18px;font-family:var(--mono);font-size:.83rem;line-height:1.75;
+    white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+  .copy{position:absolute;top:7px;right:11px;border:1px solid var(--line);background:var(--card);
+    color:var(--clay-deep);font-family:'IBM Plex Sans KR',sans-serif;font-size:.74rem;font-weight:700;
+    padding:5px 12px;border-radius:8px;cursor:pointer}
+  .copy:hover{background:var(--clay);color:#fff;border-color:var(--clay)}
+  .copy:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .copy.done{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px 19px;margin-top:18px}
+  .box h4{font-family:'Hahmlet',serif;font-size:.98rem;font-weight:700}
+  .box p{font-size:.88rem;color:var(--ink-soft);margin-top:6px}
+  .box.teal{background:var(--teal-soft);border-color:#b9d0c9}
+  .box.gold{background:#fbf5e6;border-color:#e6cf9a}
+
+  .warn{background:#fbf0e6;border:1.5px dashed var(--clay);border-radius:14px;padding:18px 20px;margin-top:22px}
+  .warn h4{font-family:'Hahmlet',serif;font-size:1rem;font-weight:700;color:var(--clay-deep)}
+  .warn ul{list-style:none;margin-top:11px}
+  .warn li{position:relative;padding:7px 0 7px 25px;font-size:.89rem;color:var(--ink-soft);border-bottom:1px solid rgba(216,203,177,.7)}
+  .warn li:last-child{border-bottom:0}
+  .warn li::before{content:"✕";position:absolute;left:0;top:7px;font-family:var(--mono);font-size:.8rem;color:var(--clay);font-weight:700}
+  .warn li b{color:var(--ink)}
+
+  table{width:100%;border-collapse:collapse;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);font-size:.88rem;vertical-align:top}
+  th{background:var(--paper-2);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+  tr:last-child td{border-bottom:0}
+  td b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.86em;background:var(--paper-2);padding:2px 6px;border-radius:5px}
+  .fill{color:var(--clay-deep);font-weight:700;background:#fbf0e6;border-bottom:2px dotted var(--clay);padding:1px 5px}
+
+  /* 기기 고르기 탭 */
+  .picker{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:20px}
+  .pick{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px 10px;cursor:pointer;
+    font-family:'IBM Plex Sans KR',sans-serif;text-align:center;line-height:1.4;color:var(--ink)}
+  .pick .dev{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);font-weight:700}
+  .pick .app{font-family:'Hahmlet',serif;font-size:1.02rem;font-weight:700;margin-top:3px}
+  .pick:hover{border-color:var(--clay)}
+  .pick[aria-selected="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
+  .pick[aria-selected="true"] .dev{color:#f7dcc9}
+  .panel[hidden]{display:none}
+  .panel{margin-top:8px}
+
+  @media(max-width:700px){
+    .ataglance{grid-template-columns:1fr}
+    .picker{grid-template-columns:repeat(2,1fr)}
+    .prompt pre{font-size:.78rem}
+    .copy{position:static;display:block;width:100%;margin:0 0 0 auto}
+    .prompt .head{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="backlink" href="index.html">← 현황판으로</a>
+
+  <header>
+    <div class="kicker">우리 반 AI 컴퓨터 · 연결 가이드</div>
+    <h1>내 Claude · ChatGPT에서<br>우리 반 AI 컴퓨터 쓰기</h1>
+    <p class="sub">한 번만 연결해두면, 그다음부터는 대화창에서 그냥 말하면 된다.
+      “세로 영상 한 컷 만들어줘” 하면 우리 반 AI 컴퓨터가 만들어서 돌려준다.</p>
+
+    <div class="ataglance">
+      <div class="ag"><div class="l">준비물</div><div class="v">주소 1개 · 키 1개</div><div class="d">둘 다 선생님이 준다. 키는 나만 쓰는 것.</div></div>
+      <div class="ag"><div class="l">걸리는 시간</div><div class="v">약 5분</div><div class="d">한 번만 하면 끝. 기기를 바꿔도 다시 안 해도 된다.</div></div>
+      <div class="ag"><div class="l">되는 것</div><div class="v">영상 · 이미지 · 소리</div><div class="d">세로 드라마 한 컷, 게임 배경 그림, 효과음까지.</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">시작하기 전에</div>
+    <h2 class="sec-title">가장 많이 막히는 두 가지를 먼저 말해둔다</h2>
+
+    <div class="box teal">
+      <h4>① 연결은 반드시 “웹”에서 한다</h4>
+      <p>아이패드 <b>앱 안에서는 연결을 추가할 수 없다.</b> 앱에는 그 메뉴 자체가 없다.
+        사파리로 웹사이트에 들어가서 추가해야 하고, 웹에서 한 번 추가하면
+        <b>아이패드 앱·맥 앱에 자동으로 나타난다.</b> 그러니 아이패드를 쓰더라도 첫 설정은 사파리에서 한다.</p>
+    </div>
+
+    <div class="box gold">
+      <h4>② ChatGPT는 유료 플랜에서만 된다</h4>
+      <p>ChatGPT는 <b>Plus 이상</b>에서만 ‘개발자 모드’가 켜지고, 그래야 연결을 추가할 수 있다.
+        무료 계정이면 이 방법은 안 된다 — 선생님에게 말하면 Claude 쪽으로 바꿔준다.
+        Claude는 <b>무료 계정도 1개까지</b> 연결할 수 있다.</p>
+    </div>
+
+    <div class="box">
+      <h4>키는 어디에 넣나?</h4>
+      <p>설정 화면에는 키를 넣는 칸이 <b>없다.</b> 주소만 넣는다.
+        주소를 넣고 ‘연결’을 누르면 우리 서버의 <b>로그인 화면</b>이 뜨는데, 키는 거기에 붙여넣는다.
+        설정창 어딘가에 키를 넣는 칸이 보이더라도 넣지 않는다.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">1단계</div>
+    <h2 class="sec-title">내 기기를 고른다</h2>
+    <p class="sec-lead">쓰는 기기와 앱에 따라 화면이 다르다. 해당하는 것을 누르면 그 순서만 보인다.</p>
+
+    <div class="picker" role="tablist">
+      <button class="pick" role="tab" aria-selected="true"  data-panel="mac-claude"><span class="dev">맥</span><span class="app">Claude</span></button>
+      <button class="pick" role="tab" aria-selected="false" data-panel="ipad-claude"><span class="dev">아이패드</span><span class="app">Claude</span></button>
+      <button class="pick" role="tab" aria-selected="false" data-panel="mac-gpt"><span class="dev">맥</span><span class="app">ChatGPT</span></button>
+      <button class="pick" role="tab" aria-selected="false" data-panel="ipad-gpt"><span class="dev">아이패드</span><span class="app">ChatGPT</span></button>
+    </div>
+
+    <!-- 맥 · Claude -->
+    <div class="panel" id="mac-claude" role="tabpanel">
+      <div class="step"><div class="num">1</div><div class="body">
+        <h3>브라우저로 claude.ai 에 들어간다</h3>
+        <p>맥에 Claude 앱이 깔려 있어도, 처음 연결은 <b>브라우저에서</b> 하는 게 확실하다.</p>
+      </div></div>
+      <div class="step"><div class="num">2</div><div class="body">
+        <h3>설정 → 커넥터로 간다</h3>
+        <div class="path">내 이름(왼쪽 아래) → 설정 → 커넥터</div>
+      </div></div>
+      <div class="step"><div class="num">3</div><div class="body">
+        <h3>‘커스텀 커넥터 추가’를 누른다</h3>
+        <p>목록 맨 아래쪽에 있다. 이름은 <code>우리 반 AI 컴퓨터</code>로 하면 알아보기 쉽다.</p>
+      </div></div>
+      <div class="step"><div class="num">4</div><div class="body">
+        <h3>주소를 붙여넣는다</h3>
+        <div class="path"><span class="fill">선생님이 준 주소</span></div>
+        <p>OAuth 클라이언트 ID·비밀번호 칸은 <b>비워둔다.</b></p>
+      </div></div>
+      <div class="step"><div class="num">5</div><div class="body">
+        <h3>‘연결’을 누르고, 뜨는 화면에 키를 넣는다</h3>
+        <p>우리 서버 로그인 화면이 열린다. 여기에 내 키를 붙여넣고 허용을 누른다.</p>
+      </div></div>
+      <div class="step"><div class="num">6</div><div class="body">
+        <h3>맥 Claude 앱을 껐다 켠다</h3>
+        <p>앱에도 똑같이 나타난다. 대화창 아래 도구 목록에 보이면 성공.</p>
+      </div></div>
+    </div>
+
+    <!-- 아이패드 · Claude -->
+    <div class="panel" id="ipad-claude" role="tabpanel" hidden>
+      <div class="step"><div class="num">1</div><div class="body">
+        <h3>Claude 앱이 아니라 사파리를 연다</h3>
+        <p>앱에는 연결을 추가하는 메뉴가 없다. <b>사파리로 claude.ai</b> 에 들어가 로그인한다.</p>
+      </div></div>
+      <div class="step"><div class="num">2</div><div class="body">
+        <h3>설정 → 커넥터로 간다</h3>
+        <div class="path">내 이름 → 설정 → 커넥터</div>
+        <p>화면이 좁으면 메뉴가 왼쪽 위 줄 세 개(≡) 안에 숨어 있다.</p>
+      </div></div>
+      <div class="step"><div class="num">3</div><div class="body">
+        <h3>‘커스텀 커넥터 추가’ → 주소 붙여넣기</h3>
+        <div class="path"><span class="fill">선생님이 준 주소</span></div>
+      </div></div>
+      <div class="step"><div class="num">4</div><div class="body">
+        <h3>‘연결’ → 뜨는 화면에 키를 넣는다</h3>
+        <p>키는 미리 메모 앱에 붙여넣어 두면 복사가 쉽다.</p>
+      </div></div>
+      <div class="step"><div class="num">5</div><div class="body">
+        <h3>Claude 앱을 완전히 껐다 켠다</h3>
+        <p>홈 화면에서 위로 쓸어올려 앱을 끝내고 다시 연다. 그러면 앱에서도 쓸 수 있다.</p>
+      </div></div>
+    </div>
+
+    <!-- 맥 · ChatGPT -->
+    <div class="panel" id="mac-gpt" role="tabpanel" hidden>
+      <div class="step"><div class="num">1</div><div class="body">
+        <h3>브라우저로 chatgpt.com 에 들어간다</h3>
+        <p>유료 플랜(Plus 이상)인지 먼저 확인한다. 무료면 이 방법은 안 된다.</p>
+      </div></div>
+      <div class="step"><div class="num">2</div><div class="body">
+        <h3>개발자 모드를 켠다</h3>
+        <div class="path">설정 → 앱 및 커넥터 → 고급 설정 → 개발자 모드 켜기</div>
+        <p>이 항목이 아예 안 보이면 무료 플랜이거나 학생용 계정이다. 선생님에게 말한다.</p>
+      </div></div>
+      <div class="step"><div class="num">3</div><div class="body">
+        <h3>‘커넥터 추가’를 누르고 주소를 붙여넣는다</h3>
+        <div class="path"><span class="fill">선생님이 준 주소</span></div>
+        <p>이름은 <code>우리 반 AI 컴퓨터</code>로 한다.</p>
+      </div></div>
+      <div class="step"><div class="num">4</div><div class="body">
+        <h3>‘연결’ → 뜨는 화면에 키를 넣는다</h3>
+      </div></div>
+      <div class="step"><div class="num">5</div><div class="body">
+        <h3>새 대화를 시작한다</h3>
+        <p>이미 열려 있던 대화에는 안 나타난다. <b>새 대화</b>를 열고, 입력창 옆 도구 목록에 있는지 본다.</p>
+      </div></div>
+    </div>
+
+    <!-- 아이패드 · ChatGPT -->
+    <div class="panel" id="ipad-gpt" role="tabpanel" hidden>
+      <div class="step"><div class="num">1</div><div class="body">
+        <h3>ChatGPT 앱이 아니라 사파리를 연다</h3>
+        <p>앱에서는 추가할 수 없다. <b>사파리로 chatgpt.com</b> 에 들어가 로그인한다.</p>
+      </div></div>
+      <div class="step"><div class="num">2</div><div class="body">
+        <h3>개발자 모드를 켠다</h3>
+        <div class="path">설정 → 앱 및 커넥터 → 고급 설정 → 개발자 모드 켜기</div>
+        <p>안 보이면 무료 플랜이다. 선생님에게 말하면 Claude로 바꿔준다.</p>
+      </div></div>
+      <div class="step"><div class="num">3</div><div class="body">
+        <h3>‘커넥터 추가’ → 주소 붙여넣기</h3>
+        <div class="path"><span class="fill">선생님이 준 주소</span></div>
+      </div></div>
+      <div class="step"><div class="num">4</div><div class="body">
+        <h3>‘연결’ → 뜨는 화면에 키를 넣는다</h3>
+        <p>키는 미리 메모 앱에 붙여넣어 두면 복사가 쉽다.</p>
+      </div></div>
+      <div class="step"><div class="num">5</div><div class="body">
+        <h3>ChatGPT 앱을 완전히 껐다 켜고, 새 대화를 연다</h3>
+        <p>앱을 끝냈다가 다시 열어야 나타난다. 그리고 반드시 <b>새 대화</b>에서 확인한다.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">2단계</div>
+    <h2 class="sec-title">막히면 AI에게 물어본다</h2>
+    <p class="sec-lead">설정 버튼은 AI가 대신 눌러줄 수 없다. 대신 <b>지금 내 화면에서 뭘 눌러야 하는지</b>는
+      AI가 안내해줄 수 있다. 아래를 그대로 붙여넣고, 기기 이름만 바꿔 쓴다.</p>
+
+    <div class="prompt">
+      <div class="head"><span class="tag">복사해서 붙여넣기</span><span class="hint">기기 이름만 내 것으로 고치기</span></div>
+      <button class="copy" type="button">복사</button>
+      <pre>나는 <b>아이패드에서 Claude</b>를 쓰고 있어. (← 여기만 내 기기로 고치기)
+
+우리 반 AI 컴퓨터(MCP 커넥터)를 내 계정에 연결하려고 해.
+선생님이 준 주소가 하나 있고, 키가 하나 있어.
+
+한 번에 한 단계씩만 알려줘. 내가 "다음"이라고 하면 그때 다음 단계를 알려줘.
+내가 화면이 다르다고 하면, 그 화면에서 뭘 눌러야 하는지 다시 알려줘.
+
+지켜야 할 것:
+- 키는 설정 화면이 아니라, 연결을 누른 다음 뜨는 로그인 화면에 넣는다.
+- 나는 키를 이 대화에 붙여넣지 않을 거야. 너도 키를 알려달라고 하지 마.
+- 아이패드면 앱이 아니라 사파리에서 해야 한다는 걸 기억해.
+
+연결이 끝나면, 잘 됐는지 확인하는 방법을 알려줘.
+그다음 첫 테스트로 512x768 · 6초 · 10스텝짜리 세로 영상을 한 컷 만들어줘.</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">3단계</div>
+    <h2 class="sec-title">잘 됐는지 확인한다</h2>
+
+    <div class="step"><div class="num">1</div><div class="body">
+      <h3>새 대화를 열고 물어본다</h3>
+      <p>“우리 반 AI 컴퓨터로 뭘 할 수 있는지 알려줘” — 도구 목록이 나오면 연결된 것이다.</p>
+    </div></div>
+    <div class="step"><div class="num">2</div><div class="body">
+      <h3>테스트로 한 컷 만들어본다</h3>
+      <p>“세로 영상 한 컷 만들어줘. 512x768, 6초, 10스텝.”</p>
+    </div></div>
+    <div class="step"><div class="num">3</div><div class="body">
+      <h3>3분쯤 기다린다</h3>
+      <p>한 컷에 <b>약 2분 45초</b> 걸린다. 고장난 게 아니다.
+        게다가 우리 반 AI 컴퓨터는 <b>영상을 한 번에 하나씩만</b> 만든다.
+        친구들이 먼저 걸어놨으면 내 것은 그 뒤에 만들어진다.</p>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="sec-head">안전</div>
+    <h2 class="sec-title">키는 내 것이다</h2>
+    <div class="warn">
+      <h4>이건 하지 않는다</h4>
+      <ul>
+        <li><b>키를 대화창에 붙여넣지 않는다.</b> 로그인 화면에만 넣는다.</li>
+        <li><b>키를 친구에게 주지 않는다.</b> 누가 몇 개를 만들었는지 그대로 남는다.</li>
+        <li><b>키가 보이게 화면을 찍지 않는다.</b> 단톡방에 올리는 건 더더욱.</li>
+        <li><b>주소를 반 밖에 알리지 않는다.</b> 우리 집에 있는 진짜 컴퓨터다.</li>
+      </ul>
+      <p style="font-size:.88rem;color:var(--ink-soft);margin-top:12px">
+        키가 새어나간 것 같으면 바로 선생님에게 말한다. 혼나지 않는다 — 새 키로 바꿔주면 끝이다.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">안 될 때</div>
+    <h2 class="sec-title">이런 경우가 대부분이다</h2>
+    <table>
+      <tr><th style="width:44%">이런 일이 생기면</th><th>이렇게 한다</th></tr>
+      <tr><td><b>앱에 연결 메뉴가 없다</b></td><td>정상이다. 앱에서는 추가할 수 없다. 사파리에서 웹으로 들어가 추가한다.</td></tr>
+      <tr><td><b>‘개발자 모드’가 안 보인다 (ChatGPT)</b></td><td>무료 플랜이다. 선생님에게 말하면 Claude 쪽으로 바꿔준다.</td></tr>
+      <tr><td><b>연결은 됐는데 도구가 안 보인다</b></td><td>앱을 완전히 껐다 켜고, <b>새 대화</b>를 연다. 열려 있던 대화에는 안 나타난다.</td></tr>
+      <tr><td><b>로그인 화면에서 키가 틀렸다고 한다</b></td><td>앞뒤에 빈칸이나 줄바꿈이 딸려왔을 수 있다. 다시 복사해서 넣는다.</td></tr>
+      <tr><td><b>영상이 안 나오고 계속 기다린다</b></td><td>한 컷에 약 2분 45초. 앞에 친구 것이 밀려 있으면 더 걸린다. 몇 번째인지 물어본다.</td></tr>
+      <tr><td><b>“연결할 수 없습니다”가 뜬다</b></td><td>우리 반 AI 컴퓨터가 꺼져 있을 수 있다. 선생님에게 말한다.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-head">참고</div>
+    <h2 class="sec-title">컴퓨터에서 터미널을 쓴다면</h2>
+    <p class="sec-lead">맥에서 Codex나 Claude Code를 쓰고 있다면, 커넥터 대신
+      <code>dgx-media</code> 명령을 바로 쓰는 길도 있다. 설치 문구는 선생님에게 받는다.
+      둘 중 하나만 하면 되고, 둘 다 해도 상관없다.</p>
+  </section>
+
+</div>
+
+<script>
+  document.querySelectorAll('.pick').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.pick').forEach(function(b){ b.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.hidden = true; });
+      btn.setAttribute('aria-selected','true');
+      var el = document.getElementById(btn.dataset.panel);
+      if (el) el.hidden = false;
+    });
+  });
+
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.parentElement.querySelector('pre').innerText;
+      var done = function(){
+        btn.textContent = '복사됨!';
+        btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = '복사'; btn.classList.remove('done'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch(e){ btn.textContent = '길게 눌러 복사'; }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+</script>
+</body>
+</html>

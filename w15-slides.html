@@ -199,27 +199,53 @@
       <li data-n="04"><b>완성본 전체 대사를 다시 확인</b></li>
       <li data-n="05"><b>휴대폰에서 세로 영상으로 재생 확인</b></li>
     </ul>
-    <div class="kicker">정지 화면 늘리기·가짜 카메라 이동·다른 목소리 덮기는 사용하지 않는다.</div>
+    <div class="kicker">편집은 <span class="hi">아이패드 편집 앱(캡컷)</span>에서 — 세로 9:16이 기본인 곳에서 한다.<br>정지 화면 늘리기·가짜 카메라 이동·다른 목소리 덮기는 사용하지 않는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">촬영 거는 법</div>
+    <h2>컴퓨터에게 <span class="hi">한국어로</span> 시킨다</h2>
+    <p class="lead">Codex나 Claude Code에게 말하면 <b class="hi-t">dgx-media</b> 명령을 대신 쳐 준다.<br>우리는 <b class="hi-t">무엇을 찍을지</b>만 정확히 말한다.</p>
+    <div class="prompt"><span class="lbl">이렇게 시킨다</span>
+dgx-media 로 세로 영상 한 컷 만들어줘.
+크기 <span class="val">512x768</span>, 길이 <span class="val">6초</span>, 스텝 <span class="val">10</span>,
+저장은 <span class="val">generated-media/take-A1.mp4</span>
+
+프롬프트는 이걸 그대로 써: <span class="val">(인물 고정 → 장소 고정 → 화면 → 연기 → 대사 → 소리)</span></div>
+    <div class="kicker">키는 각자 것을 쓴다 — <span class="hi">누가 몇 컷을 뽑았는지</span> 그대로 남는다.</div>
   </section>
 
   <section class="slide">
     <div class="eyebrow">촬영은 줄을 선다</div>
-    <h2>한 번에 <span class="hi">한 컷</span>씩,<br>컷당 약 <span class="hi">2분</span></h2>
-    <p class="lead">AI 컴퓨터는 영상을 <b class="hi-t">동시에 여러 개 못 만든다.</b><br>네 명이 한꺼번에 걸어도 순서대로 하나씩 나온다.</p>
+    <h2>여덟 컷을 <span class="hi">한꺼번에</span> 건다</h2>
+    <p class="lead">AI 컴퓨터는 영상을 <b class="hi-t">동시에 여러 개 못 만든다.</b><br>대신 줄을 세워두면 <b class="hi-t">쉬지 않고</b> 만든다.</p>
     <div class="grid g2">
-      <div class="card teal"><div class="k">그래서 좋은 점</div><h3>2분마다 하나씩 나온다</h3><p>기다렸다 몰아서 보는 것보다 낫다. 나오는 대로 바로 검수한다.</p></div>
-      <div class="card clay"><div class="k">그래서 중요한 것</div><h3>뽑기 전에 잘 쓰기</h3><p>2분을 기다려야 하니, 대충 걸고 다시 뽑는 게 손해다.</p></div>
+      <div class="card teal"><div class="k">한 줄에 후보 둘</div><h3>4줄 × 2 = 8컷</h3><p>대사가 확정되면 여덟 컷을 먼저 다 걸어둔다. 골라 쓸 후보를 미리 쌓는 것이다.</p></div>
+      <div class="card clay"><div class="k">컷당 약 2분 45초</div><h3>첫 컷 3분 · 여덟째 컷 22분</h3><p>그동안 컴퓨터는 한 번도 쉬지 않는다.</p></div>
     </div>
+    <div class="kicker">한 컷 걸고 기다렸다 다음 컷을 걸면 — <span class="hi">우리가 검수하는 동안 컴퓨터가 논다.</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">기다리는 2분</div>
-    <h2>아무도 <span class="hi-t">멍때리지</span> 않는다</h2>
+    <div class="eyebrow teal">컷이 도착하는 동안</div>
+    <h2>기다리는 게 아니라 <span class="hi-t">처리한다</span></h2>
     <div class="grid g2">
-      <div class="card"><div class="k">내 컷이 나오는 중</div><h3>실패 대비 2차 프롬프트</h3><p>떨어질 수도 있다. 다음 시도를 미리 써둔다.</p></div>
-      <div class="card"><div class="k">나머지 세 명</div><h3>직전 컷 채점 · 내 줄 다듬기</h3><p>합격문으로 앞 컷을 판정하고, 자기 줄 프롬프트를 손본다.</p></div>
+      <div class="card teal"><div class="k">01</div><h3>자막 원고를 미리 쓴다</h3><p>대사 네 줄은 이미 정해졌다. 지금 써두면 편집 15분이 산다.</p></div>
+      <div class="card clay"><div class="k">02</div><h3>‘쉬운 말’ B안을 써둔다</h3><p>두 번 떨어지면 쓸 버전. 뜻은 그대로, 말만 쉽게.</p></div>
+      <div class="card gold"><div class="k">03</div><h3>채점을 나눠 맡는다</h3><p>소리 합격문 둘, 화면 합격문 둘. 같은 걸 넷이 보면 중복이다.</p></div>
+      <div class="card"><div class="k">04</div><h3>통과 이유를 한 줄 적는다</h3><p>컷마다 적어두면 마지막 시사회가 저절로 준비된다.</p></div>
     </div>
-    <div class="kicker">촬영을 걸어둔 사람도 <span class="hi">자유롭다</span> — 만드는 건 컴퓨터가 한다.</div>
+    <div class="kicker">2분 45초마다 컷이 하나씩 도착한다 — <span class="hi">멍때릴 틈이 없다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 자리</div>
+    <h2>촬영석 둘, <span class="hi-g">모니터</span> 둘</h2>
+    <div class="grid g2">
+      <div class="card gold"><div class="k">컴퓨터 2대 · 촬영석</div><h3>자기 줄은 자기가 친다</h3><p>내 줄을 걸 차례엔 그 줄의 주인이 직접 키보드를 잡는다. 남이 대신 걸어주지 않는다.</p></div>
+      <div class="card teal"><div class="k">아이패드 2대 · 모니터</div><h3>세로로, 소리 켜고 본다</h3><p>나온 컷을 공유 폴더로 받아 바로 재생한다. 진짜 보게 될 화면에서 봐야 검수가 된다.</p></div>
+    </div>
+    <div class="kicker">컴퓨터 화면은 가로에 작다 — <span class="hi">세로 드라마는 세로로 봐야 안다.</span></div>
   </section>
 
   <section class="slide">
@@ -239,9 +265,9 @@
       <div class="slot"><div class="time">0:00–0:15</div><h3>이야기 카드</h3><p>상황·반전·훅을 정한다.</p></div>
       <div class="slot"><div class="time">0:15–0:30</div><h3>바이블</h3><p>인물·장소·금지를 고정한다.</p></div>
       <div class="slot"><div class="time">0:30–0:45</div><h3>대사 4줄</h3><p>각자 한 줄씩. 한 줄에 한 생각만.</p></div>
-      <div class="slot"><div class="time">0:45–1:25</div><h3>H3 촬영</h3><p>한 번에 한 컷씩 줄 서서. 컷당 약 2분.</p></div>
+      <div class="slot"><div class="time">0:45–1:25</div><h3>H3 촬영</h3><p>여덟 컷을 한꺼번에 걸어둔다. 컷당 약 2분 45초.</p></div>
       <div class="slot"><div class="time">1:25–1:40</div><h3>검수·재촬영</h3><p>실패한 줄만 다시 만든다.</p></div>
-      <div class="slot"><div class="time">1:40–1:55</div><h3>편집·자막</h3><p>통과본을 세로 영상으로 연결한다.</p></div>
+      <div class="slot"><div class="time">1:40–1:55</div><h3>편집·자막</h3><p>아이패드에서 통과본을 세로로 연결한다.</p></div>
       <div class="slot"><div class="time">1:55–2:00</div><h3>시사회</h3><p>좋았던 한 컷과 고칠 한 컷.</p></div>
     </div>
   </section>
