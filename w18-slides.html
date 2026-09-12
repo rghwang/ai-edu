@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W18 · 정말 안 되는 걸까</title>
+<title>W18 · AI의 크기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -27,272 +27,237 @@
 <a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
   <style>
-    .figbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(10px,1.4vw,18px);margin-top:18px;max-width:860px}
-    .figbox svg{display:block;width:100%;height:auto;max-height:52vh}
-    .figrow{display:grid;grid-template-columns:1fr 1.05fr;gap:16px;margin-top:18px;max-width:1000px;align-items:center}
-    .figrow .figbox{margin-top:0;max-width:none}
-    @media(max-width:780px){.figrow{grid-template-columns:1fr}}
-    @media(max-height:520px) and (orientation:landscape){.figbox svg{max-height:38vh}}
+    .tbl{width:100%;max-width:920px;border-collapse:collapse;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .tbl th,.tbl td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--line);font-size:clamp(12px,1.35vw,17px)}
+    .tbl th{background:var(--paper-2);font-family:var(--mono);font-size:clamp(10px,1vw,12px);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700}
+    .tbl tr:last-child td{border-bottom:0}
+    .tbl td b{color:var(--clay-deep)}
+    .tbl td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.hi td{background:#fbf0e6}
+    .scale{display:flex;align-items:flex-end;gap:clamp(6px,1.2vw,16px);margin-top:28px;max-width:900px}
+    .scale .b{flex:1;background:var(--card);border:1px solid var(--line);border-bottom:4px solid var(--teal);border-radius:10px 10px 0 0;padding:12px 10px;text-align:center}
+    .scale .b:nth-child(2){border-bottom-color:var(--amber)}
+    .scale .b:nth-child(3){border-bottom-color:var(--clay)}
+    .scale .b .t{font-family:var(--mono);font-size:clamp(10px,1vw,12px);color:var(--mute);letter-spacing:.08em}
+    .scale .b .v{font-family:var(--disp);font-weight:800;font-size:clamp(17px,2.4vw,30px);margin-top:6px;line-height:1.1}
+    .scale .b .d{font-size:clamp(10px,1.05vw,13px);color:var(--mute);margin-top:6px;line-height:1.45}
+    @media(max-height:520px) and (orientation:landscape){.tbl th,.tbl td{padding:6px 10px}}
   </style>
 
   <section class="slide active">
-    <div class="eyebrow">W18 · 생각하는 힘</div>
-    <h1>정말<br><span class="hi">안 되는 걸까?</span></h1>
+    <div class="eyebrow">W18 · AI 이해하기</div>
+    <h1>AI의 <span class="hi">크기</span></h1>
     <div class="rule"></div>
-    <p class="lead">오늘은 아무것도 만들지 않는다.<br>대신 <b class="hi-t">300년 전 사람들이 못 풀던 문제</b> 하나를 우리 손으로 끝낸다.</p>
+    <p class="lead">“큰 모델”은 대체 <b class="hi-t">뭐가 큰</b> 걸까?<br>파라미터 · 메모리 · 학습 데이터 · GPU — 안을 열어본다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">오늘의 규칙</div>
-    <h2>처음 <span class="hi-g">한 시간은</span><br>AI 없이</h2>
+    <div class="eyebrow gold">오늘의 질문</div>
+    <h2>왜 어떤 AI는<br>내 노트북에서 <span class="hi-g">못 돌까?</span></h2>
+    <div class="grid g3">
+      <div class="card"><div class="k">궁금한 것 1</div><h3>크기의 정체</h3><p>“7B”, “70B” 같은 숫자는 무엇을 세는 걸까.</p></div>
+      <div class="card"><div class="k">궁금한 것 2</div><h3>왜 GPU인가</h3><p>왜 비싼 그래픽카드가 필요할까.</p></div>
+      <div class="card"><div class="k">궁금한 것 3</div><h3>내 것으로</h3><p>인터넷 없이 내 컴퓨터에서 돌릴 수 있을까.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">01 · 파라미터</div>
+    <h2>AI 안에는<br><span class="hi-t">손잡이</span>가 들어 있다</h2>
+    <p class="lead">AI는 배우면서 수많은 숫자를 조금씩 돌려 맞춘다.<br>그 <b class="hi">숫자 하나하나가 파라미터</b>다.</p>
     <div class="grid g2">
-      <div class="card clay"><div class="k">왜냐하면</div><h3>답이 아니라 힘을 얻으러 왔다</h3><p>AI에게 물으면 30초 만에 답이 나온다. 그럼 오늘 얻는 게 없다.</p></div>
-      <div class="card teal"><div class="k">마지막에는</div><h3>AI와 겨룬다</h3><p>우리가 먼저 풀고, 우리 설명이 더 나은지 판정한다.</p></div>
+      <div class="card teal"><div class="k">학습이란</div><h3>손잡이를 맞추는 일</h3><p>글을 읽으며 “다음 글자”를 맞히도록 손잡이를 조금씩 돌린다.</p></div>
+      <div class="card clay"><div class="k">모델이란</div><h3>다 맞춰진 손잡이 묶음</h3><p>학습이 끝나면 남는 건 그 숫자들뿐이다. 그게 파일로 저장된다.</p></div>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">1736년 · 쾨니히스베르크</div>
-    <h2>강이 도시를<br><span class="hi">네 조각</span>으로 갈랐다</h2>
-    <p class="lead">북쪽 강변, 남쪽 강변, 강 가운데 큰 섬, 그리고 동쪽 땅.<br>이 네 곳을 잇는 다리가 <b class="hi-t">일곱 개</b> 있었다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">문제</div>
-    <h2>일곱 다리를 모두<br><span class="hi-t">한 번씩만</span> 건널 수 있을까?</h2>
-    <div class="figbox">
-      <svg viewBox="0 0 640 420" role="img" aria-label="쾨니히스베르크의 네 땅과 일곱 다리">
-        <rect x="0" y="0" width="640" height="420" fill="#e8eff0"/>
-        <rect x="0" y="0" width="640" height="96" fill="#efe5d2"/>
-        <rect x="0" y="324" width="640" height="96" fill="#efe5d2"/>
-        <ellipse cx="205" cy="210" rx="118" ry="58" fill="#efe5d2"/>
-        <ellipse cx="470" cy="210" rx="92" ry="52" fill="#efe5d2"/>
-        <g stroke="#bd5a32" stroke-width="9" stroke-linecap="round">
-          <line x1="140" y1="96" x2="140" y2="162"/><line x1="270" y1="96" x2="270" y2="162"/>
-          <line x1="140" y1="258" x2="140" y2="324"/><line x1="270" y1="258" x2="270" y2="324"/>
-          <line x1="323" y1="210" x2="378" y2="210"/>
-          <line x1="470" y1="96" x2="470" y2="158"/><line x1="470" y1="262" x2="470" y2="324"/>
-        </g>
-        <g font-family="'IBM Plex Sans KR',sans-serif" font-size="17" font-weight="700" fill="#23201a">
-          <text x="24" y="52">북쪽 강변</text><text x="24" y="380">남쪽 강변</text>
-          <text x="205" y="216" text-anchor="middle">가운데 섬</text>
-          <text x="470" y="216" text-anchor="middle">동쪽 땅</text>
-        </g>
-        <g font-family="'Space Mono',monospace" font-size="13" font-weight="700" fill="#9c4622">
-          <text x="152" y="134">1</text><text x="282" y="134">2</text>
-          <text x="152" y="300">3</text><text x="282" y="300">4</text>
-          <text x="340" y="198">5</text>
-          <text x="482" y="132">6</text><text x="482" y="300">7</text>
-        </g>
-      </svg>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">지켜야 할 것</div>
-    <h2>규칙은 <span class="hi-g">네 개</span>뿐</h2>
-    <ul class="plain">
-      <li data-n="01">일곱 다리를 <b>전부</b> 건넌다</li>
-      <li data-n="02">같은 다리를 <b>두 번</b> 건널 수 없다</li>
-      <li data-n="03">출발하는 곳은 <b>어디든</b> 좋다</li>
-      <li data-n="04">헤엄치거나 배를 타는 건 <b>없다</b></li>
-    </ul>
-    <div class="kicker">종이를 여러 장 줄 테니 <span class="hi">계속 다시</span> 그려도 된다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">20분</div>
-    <h2>해보자</h2>
-    <p class="lead">출발점을 바꿔가며 여러 번 시도한다.<br>안 되면 <b class="hi">몇 번 안 됐는지</b>를 세어둔다.</p>
-    <div class="banner">
-      <div class="big">잘 안 되는 게 <span class="hi-t">정상</span>이다</div>
-      <p style="color:var(--mute);margin-top:12px">300년 동안 도시 사람들 전부가 못 했다.</p>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">갈림길</div>
-    <h2>여기서<br>질문이 하나 생긴다</h2>
-    <div class="grid g2">
-      <div class="card clay"><div class="k">가능성 A</div><h3>아직 못 찾은 것</h3><p>어딘가에 방법이 있는데 우리가 못 찾았다.</p></div>
-      <div class="card teal"><div class="k">가능성 B</div><h3>아예 없는 것</h3><p>아무리 해도 안 된다. 방법이 존재하지 않는다.</p></div>
-    </div>
-    <div class="kicker">둘은 완전히 다른 말이다. <span class="hi">어느 쪽인지 어떻게 알 수 있을까?</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">생각 바꾸기</div>
-    <h2>뭐가 <span class="hi">중요한</span> 걸까?</h2>
-    <ul class="plain">
-      <li data-n="Q">섬이 동그란 게 중요할까? 네모난 섬이면 답이 달라져?<span>아니다</span></li>
-      <li data-n="Q">다리가 길면 답이 달라져? 짧으면?<span>아니다</span></li>
-      <li data-n="Q">강폭이 넓으면? 섬이 더 위에 있으면?<span>아니다</span></li>
-      <li data-n="!">그럼 대체 뭐가 중요한 거지?<span>어디와 어디가, 다리 몇 개로 이어졌는지</span></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">버리기</div>
-    <h2>땅은 <span class="hi-g">점</span>으로,<br>다리는 <span class="hi-g">선</span>으로</h2>
-    <div class="figbox">
-      <svg viewBox="0 0 640 400" role="img" aria-label="점 네 개와 선 일곱 개로 바꾼 그림">
-        <rect x="0" y="0" width="640" height="400" fill="#fffaf0"/>
-        <g stroke="#3f6b63" stroke-width="3.5" fill="none" stroke-linecap="round">
-          <path d="M320,64 Q290,160 200,200"/><path d="M320,64 Q230,104 200,200"/>
-          <path d="M320,336 Q230,296 200,200"/><path d="M320,336 Q290,240 200,200"/>
-          <line x1="200" y1="200" x2="440" y2="200"/>
-          <line x1="320" y1="64" x2="440" y2="200"/>
-          <line x1="320" y1="336" x2="440" y2="200"/>
-        </g>
-        <g fill="#bd5a32" stroke="#9c4622" stroke-width="2.5">
-          <circle cx="320" cy="64" r="31"/><circle cx="200" cy="200" r="31"/>
-          <circle cx="440" cy="200" r="31"/><circle cx="320" cy="336" r="31"/>
-        </g>
-        <g font-family="'Hahmlet',serif" font-size="24" font-weight="800" fill="#fffaf0" text-anchor="middle">
-          <text x="320" y="73">북</text><text x="200" y="209">섬</text>
-          <text x="440" y="209">동</text><text x="320" y="345">남</text>
-        </g>
-      </svg>
-    </div>
-    <div class="kicker">지도가 사라지고 <span class="hi">연결만</span> 남았다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">세어보자</div>
-    <h2>점마다 선이<br><span class="hi">몇 개</span> 붙었나</h2>
-    <div class="grid g2">
-      <div class="card clay"><div class="k">북쪽 강변</div><h3>3개 · 홀수</h3></div>
-      <div class="card clay"><div class="k">남쪽 강변</div><h3>3개 · 홀수</h3></div>
-      <div class="card clay"><div class="k">가운데 섬</div><h3>5개 · 홀수</h3></div>
-      <div class="card clay"><div class="k">동쪽 땅</div><h3>3개 · 홀수</h3></div>
-    </div>
-    <div class="kicker">네 곳이 <span class="hi">전부 홀수</span>다. 이게 무슨 뜻일까?</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">핵심</div>
-    <h2>들어갔으면<br><span class="hi-t">나와야 한다</span></h2>
-    <ul class="plain">
-      <li data-n="01">어떤 점에 들어갔다. 거기가 도착지가 아니라면?<span>나와야 한다</span></li>
-      <li data-n="02">들어가고 나오면 선을 몇 개 쓴 건가?<span>2개</span></li>
-      <li data-n="03">그럼 지나가기만 하는 점에 붙은 선은 항상?<span>짝수</span></li>
-      <li data-n="04">선이 홀수 개 붙은 점은 어디에만 있을 수 있나?<span>출발점과 도착점</span></li>
-      <li data-n="05">출발점과 도착점은 최대 몇 개인가?<span>2개</span></li>
-    </ul>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">발견</div>
-    <h2 style="max-width:24ch">홀수점은 <span class="hi-g">0개</span>이거나<br><span class="hi-g">정확히 2개</span>여야 한다</h2>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">홀수점 0개</div><h3>출발한 곳으로 돌아온다</h3></div>
-      <div class="card teal"><div class="k">홀수점 2개</div><h3>한쪽에서 출발해 다른 쪽에서 끝난다</h3></div>
+    <div class="eyebrow">02 · 얼마나 많냐면</div>
+    <h2><span class="hi">10억 개</span>가 기본 단위</h2>
+    <div class="scale">
+      <div class="b"><div class="t">작은 모델</div><div class="v">1B</div><div class="d">10억 개<br>휴대폰에서도 돈다</div></div>
+      <div class="b"><div class="t">중간 모델</div><div class="v">7~8B</div><div class="d">70~80억 개<br>좋은 노트북이면 가능</div></div>
+      <div class="b"><div class="t">큰 모델</div><div class="v">수백 B</div><div class="d">수천억 개<br>컴퓨터 창고가 필요</div></div>
     </div>
     <div class="banner">
-      <div class="big">쾨니히스베르크는 홀수점이 <span class="hi">네 개</span></div>
-      <p style="color:var(--mute);margin-top:12px">그러므로 — <b>불가능하다.</b></p>
+      <div class="big">10억을 <span class="hi-t">1초에 하나씩</span> 세면?</div>
+      <p style="color:var(--mute);margin-top:12px">쉬지 않고 세어도 <b>약 32년</b>이 걸린다. 그게 <b>가장 작은</b> 모델의 손잡이 개수다.</p>
     </div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">방금 한 일</div>
-    <h2>“못 찾은 것”이 아니라<br><span class="hi">“없는 것”</span>임을 밝혔다</h2>
-    <p class="lead">아무리 오래 시도해도 못 찾는다는 걸,<br>시도해보지 않고도 <b class="hi-t">확실히</b> 알아냈다.</p>
-    <div class="banner">
-      <div class="big">이걸 <span class="hi-t">증명</span>이라고 한다</div>
-      <p style="color:var(--mute);margin-top:12px">“해봤는데 안 되던데요”와는 완전히 다른 말이다.</p>
-    </div>
+    <div class="eyebrow gold">03 · 메모리</div>
+    <h2>손잡이는<br><span class="hi-g">자리를 차지한다</span></h2>
+    <p class="lead">숫자 하나를 저장하는 데 보통 <b class="hi">2바이트</b>가 든다.<br>그래서 필요한 메모리는 그냥 곱셈이다.</p>
+    <div class="prompt">파라미터 수  ×  2바이트  =  필요한 메모리
+
+  70억 개  ×  2바이트  =  <span class="val">약 14 GB</span></div>
+    <div class="kicker">이게 <span class="hi">모델을 켜기만 하는 데</span> 드는 양이다. 실제로 쓰려면 조금 더 든다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">검증</div>
-    <h2>우리 규칙이<br><span class="hi-t">진짜</span>인지 확인</h2>
-    <div class="figrow">
-      <div class="figbox">
-        <svg viewBox="0 0 400 330" role="img" aria-label="봉투 모양 도형">
-          <rect x="0" y="0" width="400" height="330" fill="#fffaf0"/>
-          <g stroke="#3f6b63" stroke-width="3.5" fill="none" stroke-linecap="round">
-            <path d="M120,260 L280,260 L280,120 L120,120 Z"/>
-            <line x1="120" y1="260" x2="280" y2="120"/><line x1="280" y1="260" x2="120" y2="120"/>
-            <line x1="120" y1="120" x2="200" y2="52"/><line x1="280" y1="120" x2="200" y2="52"/>
-          </g>
-          <g fill="#d8973a" stroke="#a9761a" stroke-width="2">
-            <circle cx="200" cy="52" r="11"/><circle cx="120" cy="120" r="11"/><circle cx="280" cy="120" r="11"/>
-          </g>
-          <g fill="#bd5a32" stroke="#9c4622" stroke-width="2">
-            <circle cx="120" cy="260" r="13"/><circle cx="280" cy="260" r="13"/>
-          </g>
-          <g font-family="'Space Mono',monospace" font-size="13" font-weight="700" fill="#9c4622" text-anchor="middle">
-            <text x="120" y="297">홀수</text><text x="280" y="297">홀수</text>
-          </g>
-        </svg>
-      </div>
-      <div>
-        <div class="card teal"><div class="k">봉투 도형</div><h3>홀수점이 2개뿐</h3><p>규칙대로면 <b>가능</b>해야 한다. 정말 되는지 그려보자.</p></div>
-        <div class="card clay" style="margin-top:14px"><div class="k">규칙이 더 말해준다</div><h3>반드시 아래에서 출발</h3><p>위 꼭짓점에서 시작하면 <b>절대</b> 안 된다. 해보면 안다.</p></div>
-      </div>
-    </div>
+    <div class="eyebrow">03 · 메모리</div>
+    <h2>크기별로 보면</h2>
+    <table class="tbl">
+      <thead><tr><th>모델</th><th>파라미터</th><th>필요 메모리</th><th>어디서 도나</th></tr></thead>
+      <tbody>
+        <tr><td>아주 작은</td><td class="n">1B</td><td class="n">약 2 GB</td><td>휴대폰·태블릿</td></tr>
+        <tr class="hi"><td>중간</td><td class="n">7B</td><td class="n">약 14 GB</td><td><b>좋은 그래픽카드</b></td></tr>
+        <tr><td>큰</td><td class="n">70B</td><td class="n">약 140 GB</td><td>여러 장 묶어야</td></tr>
+        <tr><td>아주 큰</td><td class="n">400B+</td><td class="n">약 800 GB+</td><td>컴퓨터 창고</td></tr>
+      </tbody>
+    </table>
+    <div class="kicker">게임용 그래픽카드가 보통 <span class="hi">8~24GB</span>다. 어디서 막히는지 보이지?</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">뒤집기</div>
-    <h2>다리를 <span class="hi">하나만</span> 더 놓아<br>가능하게 하려면?</h2>
-    <p class="lead">홀수점 두 개를 이으면 그 둘이 <b class="hi-t">짝수</b>가 된다.<br>그럼 홀수점이 2개만 남아 — 가능해진다.</p>
-    <div class="banner">
-      <div class="big">네 곳이 전부 홀수라서<br><span class="hi">어느 둘을 이어도 된다</span></div>
-      <p style="color:var(--mute);margin-top:12px">정답이 <b>여섯 가지</b>다. 몇 개나 찾을 수 있나?</p>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">더 어려운 것</div>
-    <h2>출발한 곳으로<br><span class="hi-g">돌아오려면?</span></h2>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">조건</div><h3>홀수점이 0개</h3><p>그러려면 다리를 <b>두 개</b> 더 놓아야 한다.</p></div>
-      <div class="card clay"><div class="k">반대로</div><h3>다리를 없애도 될까?</h3><p>홀수점 둘을 잇는 다리를 없애도 가능해진다. 발상을 뒤집어보자.</p></div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">마지막 5분</div>
-    <h2>이제 <span class="hi">AI</span>와 겨룬다</h2>
-    <div class="prompt"><span class="lbl">질문</span>  쾨니히스베르크 다리 문제를 초등학생에게 설명해줘.</div>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">확인할 것</div><h3>답은 맞나?</h3><p>대개 맞힌다. 그건 놀랍지 않다.</p></div>
-      <div class="card clay"><div class="k">진짜 볼 것</div><h3>“왜”를 잘 설명하나?</h3><p>우리 설명과 비교해서 더 나은 쪽을 <b>근거를 대고</b> 고른다.</p></div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">다음 주부터</div>
-    <h2>매 수업 첫 <span class="hi-t">15분</span></h2>
+    <div class="eyebrow gold">지금 해보기 · 5분</div>
+    <h2>내 기기는<br><span class="hi-g">몇 B</span>까지 될까?</h2>
     <div class="flow">
-      <div class="step"><div class="n">0–5분</div><div class="t">혼자 푼다</div><div class="d">AI 없이. 그리고 세 줄을 쓴다.</div></div>
-      <div class="step"><div class="n">5–10분</div><div class="t">AI를 붙인다</div><div class="d">심판 · 출제 · 선생님 · 코치 · 논쟁 중 하나로.</div></div>
-      <div class="step"><div class="n">10–15분</div><div class="t">판정한다</div><div class="d">누가 나은지 근거를 대고 고른다. 무승부 없음.</div></div>
+      <div class="step"><div class="n">01</div><div class="t">메모리 확인</div><div class="d">맥은 ‘이 Mac에 관하여’, 윈도는 작업 관리자 → 성능.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">절반만 쓴다 치고</div><div class="d">화면·앱도 메모리를 쓰니 넉넉히 반만 계산한다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">나눠 본다</div><div class="d">아래 두 줄로 계산.</div></div>
     </div>
-    <div class="kicker">오늘 한 걸 <span class="hi">짧게, 매주</span> 반복하는 것뿐이다.</div>
+    <div class="prompt">그냥 담으면    쓸 수 있는 GB  <span class="lbl">÷ 2</span>  =  몇 B
+줄여 담으면    쓸 수 있는 GB  <span class="lbl">× 2</span>  =  몇 B
+
+<span class="val">예)</span> 16GB 중 8GB 를 쓴다면  →  그냥 4B / 줄여 담으면 16B</div>
+    <div class="kicker">각자 숫자를 말해보자. <span class="hi">누구 기계가 제일 큰 모델을 열 수 있나?</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">매주 쓸 세 줄</div>
-    <h2>답보다 <span class="hi-g">이게</span> 더 중요하다</h2>
+    <div class="eyebrow teal">04 · 줄여 담기</div>
+    <h2>숫자를 <span class="hi-t">거칠게</span> 저장하면<br>작아진다</h2>
+    <p class="lead">2바이트 대신 <b class="hi">0.5바이트</b>로 저장하는 방법이 있다.<br>사진 화질을 낮추면 용량이 줄어드는 것과 같다.</p>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">그냥 저장</div><h3>7B → 약 14 GB</h3><p>정확하지만 무겁다.</p></div>
+      <div class="card teal"><div class="k">줄여 담기(양자화)</div><h3>7B → 약 4 GB</h3><p>조금 흐려지지만 노트북에서 돈다.</p></div>
+    </div>
+    <div class="kicker">그래서 “못 돌리던 모델”이 <span class="hi">갑자기 돌아가기도</span> 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">05 · GPU</div>
+    <h2>왜 하필<br><span class="hi-g">그래픽카드</span>일까?</h2>
+    <div class="grid g2">
+      <div class="card"><div class="k">CPU</div><h3>똑똑한 사람 몇 명</h3><p>어려운 일을 순서대로 잘 처리한다. 사람 수가 적다.</p></div>
+      <div class="card teal"><div class="k">GPU</div><h3>단순 계산 잘하는 사람 수천 명</h3><p>쉬운 곱셈을 <b>한꺼번에</b> 수천 개 한다.</p></div>
+    </div>
+    <p class="lead" style="margin-top:22px">AI가 하는 일은 <b class="hi">거대한 곱셈과 덧셈의 반복</b>이다.<br>어려운 게 아니라 <b class="hi">많은</b> 것이다. 그래서 GPU가 이긴다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">06 · 진짜 병목</div>
+    <h2>빠르기보다<br><span class="hi">들어가느냐</span></h2>
+    <div class="banner">
+      <div class="big">모델이 메모리에 <span class="hi-t">안 들어가면</span><br>느린 게 아니라 <span class="hi">아예 안 켜진다</span></div>
+      <p style="color:var(--mute);margin-top:14px">그래서 AI를 돌릴 때 제일 먼저 보는 건 속도가 아니라 <b>메모리 용량</b>이다.</p>
+    </div>
+    <div class="kicker">책을 빨리 읽는 것과 <span class="hi">책상에 책이 다 올라가는 것</span>은 다른 문제다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">07 · 우리 것</div>
+    <h2>우리 반 <span class="hi-t">DGX Spark</span></h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">통합 메모리</div><h3>128 GB</h3><p>CPU와 GPU가 같은 메모리를 나눠 쓴다.</p></div>
+      <div class="card gold"><div class="k">그래서</div><h3>큰 모델도 로컬에서</h3><p>게임용 그래픽카드로는 못 여는 크기를 열 수 있다.</p></div>
+      <div class="card clay"><div class="k">한계</div><h3>동시에 여러 개는 어렵다</h3><p>메모리를 나눠 쓰니 작업을 줄 세워야 한다.</p></div>
+    </div>
+    <div class="kicker">W14에서 영상 만들 때 <span class="hi">한 번에 하나씩</span> 나왔던 이유가 이거다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">08 · 학습 데이터</div>
+    <h2>손잡이만 많으면<br><span class="hi-g">똑똑해질까?</span></h2>
+    <p class="lead">아니다. 손잡이를 맞추려면 <b class="hi">읽을 글</b>이 있어야 한다.<br>그 글의 양을 세는 단위가 — 기억나지? <b class="hi-t">토큰</b>이다.</p>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">손잡이만 늘리면</div><h3>비어 있는 큰 그릇</h3><p>담을 게 없으면 클수록 낭비다.</p></div>
+      <div class="card teal"><div class="k">데이터도 늘리면</div><h3>제대로 채워진다</h3><p>큰 모델은 <b>수조 개</b> 토큰을 읽으며 배운다.</p></div>
+    </div>
+    <div class="kicker">대략 <span class="hi">손잡이 하나당 글자 수십 개</span>는 읽어야 제값을 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">09 · 만들 때 / 쓸 때</div>
+    <h2>학습과 사용은<br>완전히 <span class="hi">다른 일</span></h2>
+    <table class="tbl">
+      <thead><tr><th></th><th>학습 (만들 때)</th><th>추론 (쓸 때)</th></tr></thead>
+      <tbody>
+        <tr><td><b>하는 일</b></td><td>손잡이를 맞춘다</td><td>맞춰진 손잡이로 답한다</td></tr>
+        <tr><td><b>걸리는 시간</b></td><td>몇 주 ~ 몇 달</td><td>몇 초</td></tr>
+        <tr class="hi"><td><b>필요한 메모리</b></td><td><b>훨씬 많이</b> (여러 배)</td><td>모델이 들어갈 만큼</td></tr>
+        <tr><td><b>누가 하나</b></td><td>회사·연구소</td><td>우리</td></tr>
+      </tbody>
+    </table>
+    <div class="kicker">우리가 로컬에서 하는 건 거의 다 <span class="hi">쓰는 쪽</span>이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">10 · 로컬 모델</div>
+    <h2>내 컴퓨터 안에서<br>도는 <span class="hi-t">AI</span></h2>
+    <p class="lead">모델 파일을 내려받아 <b class="hi">내 기계에서만</b> 돌린다.<br>인터넷도, 남의 서버도 필요 없다.</p>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">좋은 점</div><h3>내 것만 본다</h3><p>내 글이 밖으로 나가지 않는다.</p></div>
+      <div class="card teal"><div class="k">좋은 점</div><h3>끊기지 않는다</h3><p>인터넷이 없어도, 요금 걱정 없이.</p></div>
+      <div class="card clay"><div class="k">아쉬운 점</div><h3>크기에 갇힌다</h3><p>내 메모리에 들어가는 만큼만 쓸 수 있다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">11 · 골라 쓰기</div>
+    <h2>무엇이 더 좋은 게 아니라<br><span class="hi-g">무엇에 맞느냐</span></h2>
+    <table class="tbl">
+      <thead><tr><th></th><th>로컬 모델</th><th>큰 클라우드 모델</th></tr></thead>
+      <tbody>
+        <tr><td><b>어려운 문제</b></td><td>약함</td><td><b>강함</b></td></tr>
+        <tr><td><b>속도</b></td><td><b>빠름</b></td><td>기다려야</td></tr>
+        <tr><td><b>비밀 지키기</b></td><td><b>안전</b></td><td>남의 서버로 간다</td></tr>
+        <tr><td><b>비용</b></td><td>전기값</td><td>쓸수록 돈</td></tr>
+        <tr class="hi"><td><b>어울리는 일</b></td><td>정리·분류·요약</td><td>여러 단계 추론</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">오늘 해볼 것</div>
+    <h2>직접 만든 작은 모델 vs<br><span class="hi">큰 모델</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">채점표 먼저</div><div class="d">무엇을 잘한 걸로 칠지 우리가 정한다.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">가리고 묻기</div><div class="d">어느 쪽인지 모른 채 ‘가’와 ‘나’로만 본다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">쉬운 것부터</div><div class="d">한 단계씩 어렵게 올린다.</div></div>
+      <div class="step"><div class="n">04</div><div class="t">갈림 지점</div><div class="d">어디서부터 무너지는지 찾는다.</div></div>
+    </div>
+    <div class="kicker">찾을 문장 — “<span class="hi-t">○○부터</span> 작은 모델이 무너졌다”</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">채점표</div>
+    <h2>무엇을 <span class="hi-t">볼</span> 것인가</h2>
     <ul class="plain">
-      <li data-n="01">나는 이렇게 생각했다<span>어떤 방법을 골랐는지</span></li>
-      <li data-n="02">왜냐하면 ○○이기 때문이다<span>여기가 가장 중요한 줄</span></li>
-      <li data-n="03">확인해보니 맞았다 / 이 부분이 틀렸다<span>솔직하게</span></li>
+      <li data-n="01">맞았나?<span>사실이 틀리지 않았는가</span></li>
+      <li data-n="02">끝까지 했나?<span>중간에 멈추거나 딴 얘기로 새지 않았는가</span></li>
+      <li data-n="03">지어냈나?<span>모르는 걸 아는 척 만들어내지 않았는가</span></li>
+      <li data-n="04">한국어가 자연스럽나?<span>번역기 같은 말투가 아닌가</span></li>
+      <li data-n="05">시킨 걸 했나?<span>물어본 것에 답했는가</span></li>
     </ul>
-    <div class="kicker">1년치가 쌓이면 <span class="hi">그게 곧 내 기록</span>이 된다.</div>
+    <div class="kicker">W14에서 발자국을 <span class="hi">합격·불합격으로 갈랐던</span> 것과 같은 동작이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <h2 style="max-width:24ch">크기는 <span class="hi-g">메모리</span>가 정하고,<br>실력은 <span class="hi-g">데이터</span>가 정한다</h2>
+    <p class="lead">파라미터가 많으면 메모리가 많이 필요하고,<br>그만큼 <b class="hi">읽힌 글</b>이 있어야 제값을 한다.<br>둘 다 있어야 “큰 모델”이 된다.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow">나가기 전에</div>
-    <h2>오늘 가장<br>놀란 순간은?</h2>
+    <h2>어디서 갈렸나?</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">발견</div><h3>언제 “아!” 했나</h3><p>점과 선으로 바꿨을 때? 홀수를 세었을 때?</p></div>
-      <div class="card clay"><div class="k">남은 질문</div><h3>아직 궁금한 것</h3><p>규칙이 안 통할 것 같은 그림이 떠오르나?</p></div>
+      <div class="card teal"><div class="k">우리가 찾은 경계</div><h3>몇 단계부터?</h3><p>어떤 종류의 질문에서 차이가 벌어졌는지 한 문장으로.</p></div>
+      <div class="card clay"><div class="k">놀란 점</div><h3>예상과 달랐던 것</h3><p>작은 모델이 의외로 잘한 일이 있었나?</p></div>
     </div>
-    <div class="kicker">혼자 더 파볼 것 — 주변에서 <span class="hi-g">한붓그리기 되는 모양</span> 찾아보기. 봉투, 도형, 동네 지도 아무거나.</div>
+    <div class="kicker">혼자 더 파볼 것 — <span class="hi-g">로컬 모델 직접 돌려보기</span> · 양자화가 왜 되는지 · 내 게임기엔 메모리가 얼마나 있나. 끌리는 것만.</div>
   </section>
 </div>
 <script>
