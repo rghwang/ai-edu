@@ -42,28 +42,36 @@
 | `w6.html`~`w10.html` (+ `-slides.html`) | 각 주차 상세 수업안 + 학생 슬라이드. |
 | `w8-anim.html`(+slides) | W8 2부(애니). W8은 1부 웹툰(`w8.html`)+2부 애니. |
 | `w1-slides.html`~`w5-slides.html` | 완료 초기 수업(W1~W5) 학생 슬라이드(수업안 없음). |
-| `w11~w15-slides.html` | W11~W15 학생 슬라이드(수업안 없음). W13은 출품 실전 회고, W14는 H3 드라마, W15는 기존 AI 에이전트 수업. |
+| `w11~w19-slides.html` | W11~W19 학생 슬라이드(수업안 없음). W14 멀티플레이, W15 자기소개서, W16 H3 드라마, W17 에이전트, W18 AI의 크기, W19 한붓그리기. |
+| `join.html` | W14 멀티플레이 게임 **아이용 참여 가이드**(Codex·Claude Code 복붙 프롬프트). |
+| `connect.html` | 아이용 **MCP 커넥터 연결 안내**(맥·아이패드 × Claude·ChatGPT 4탭). 커넥터 주소는 공개 노출을 피해 페이지에 적지 않는다. |
+| `dgx-mcp/` | DGX 미디어 스택 **운영 문서·MCP 서버·`class.sh`**. 수업 전후 기동/정지 절차는 여기. |
+| `dgx-media/` | DGX 미디어 **서버 소스**(`media_bridge.py`, systemd 유닛)와 CLI 안내 문서. |
 | `examples/lego-heritage-dogam.pdf` | W7 도감 예시(교사가 보여줌). |
 | `README.md` | (구버전 설명이 남아 있음 — 이 HANDOFF가 최신) |
 
 > **파일명 = 표시 주차번호 규칙.** 예: `w6.html`은 화면에 "W6"으로 뜬다. (초기에 w1/w2였던 걸 git mv로 맞춤.) 새 주차 자료는 `wN.html` + `wN-slides.html` 패턴.
 
+
 ---
 
-## 3. 커리큘럼 현황 (2026-08 기준)
-전체 **W1~W15**, 매주 완료되면 대시보드에서 past로 이동.
+## 3. 커리큘럼 현황 (2026-09 기준)
+전체 **W1~W19**, 매주 완료되면 대시보드에서 past로 이동.
 
-**완료(W1~W12) — index.html의 `past` 배열, '지금까지 해온 것':**
+**완료(W1~W14) — index.html의 `past` 배열, '지금까지 해온 것':**
 - W1 AI개념+게임(병합) / W2 음악 / W3 일상앱(투두) / W4 방탈출 / W5 파일·폴더
 - W6 이미지·영상 맛보기+고르기 / W7 관심사 도감 슬라이드 / W8 미래의 나 웹툰→애니(1·2부) / W9 원래 AI로 안 하던 걸 AI로(써먹기) / W10 혼자 굴리는 힘+AI에게 잘 시키기 / W11 토큰·사용량
-- W12 내 컴퓨터 밖으로(서버·업로드·배포 + AI 커넥터로 '우리반 아케이드'에 게임 올리기)
+- W12 내 컴퓨터 밖으로(서버·업로드·배포 + 아케이드 커넥터) / W13 게임을 출품작으로(Codex 실전)
+- W14 같은 세계에서 만나기(GitHub·Vercel·Supabase 멀티플레이, `join.html` 참여 가이드)
 
-**예정(W13~W15) — `phase1` 배열, '앞으로의 커리큘럼':**
-- W13 게임을 출품작으로: Claude Code·아케이드 결과물을 Codex에서 프로젝트화 → Vercel·아케이드 배포 → 이미지 생성·적용 → 외부 DGX Spark에서 음악 15곡 생성·적용 → 검수·재배포 → GitHub 협업. 실제 Codex 작업 `제출 버전 통합`과 `/Users/rgh/dev/openai-game-builers/death-knight` 결과를 바탕으로 만든 회고 수업.
-- W14 세로 드라마 만들기: MiniMax H3 + DGX Spark로 팀당 30~45초 한국어 9:16 드라마. 이야기 → 인물/장소 바이블 → 한 줄·한 화자 후보 생성 → 네이티브 대사/연속성 검사 → 통과본 편집·자막.
-- W15 AI 에이전트(기존 W13 이동): 챗봇 vs 에이전트, 목표·규칙·완료기준, 안전, 자유 과제.
+**예정(W15~W19) — `phase1` 배열, '앞으로의 커리큘럼':**
+- **W15 자기소개서를 내 손으로** — 영재교육원 자기소개서 세 문항(소프트웨어·책 소감·저자에게 할 질문)을 각 200자로 **본인이** 쓴다. 양식에 "다른 사람이 대신 작성하는 경우 합격이 취소될 수 있다"고 명시돼 있어, AI는 **인터뷰어·거울·심사위원** 역할만 하고 글은 쓰지 않는다. 접수·전형료·교사추천서 체크리스트까지. (서울교대 인공지능영재교육원 접수 2026-09-14~16에 맞춰 급히 끼워 넣은 수업)
+- W16 세로 드라마 만들기 — MiniMax H3 + DGX Spark. 한 팀·한 작품·4줄. **컷당 약 2분 45초(실측)**, 여덟 컷을 한꺼번에 큐에 걸어 GPU를 놀리지 않는다. 촬영석(컴퓨터 2대)/모니터(아이패드 2대) 역할 분리.
+- W17 AI 에이전트 — 챗봇 vs 에이전트, 목표·규칙·완료기준, 안전, 자유 과제.
+- W18 AI의 크기 — 파라미터·메모리·GPU·학습데이터·로컬 모델. 블라인드 비교.
+- W19 정말 안 되는 걸까(한붓그리기) — 쾨니히스베르크 다리. 다음 주부터 매 수업 첫 15분 사고력 루틴 시작.
 
-**W10 이후는 '메이커 루프'** — 번호 수업보다 스스로 만들고 내놓기를 가벼운 리듬으로. 대시보드에 별도 섹션 있음.
+> **주차 번호는 바뀐다.** 급한 수업이 끼어들면 이후 주차를 한 칸씩 민다(파일명 `git mv` + 파일 안 `W<n>` 표기 + `index.html` 배열을 함께 고칠 것). 2026-09에 W15 자기소개서가 끼면서 드라마 이하가 한 칸씩 밀렸다.
 
 ---
 
@@ -93,10 +101,11 @@
 ## 6. 도구 분담 (고정 원칙)
 - **수업용 텍스트·리서치·코딩 프로토타입 = Claude** (W1~W5 Claude Code, W9 써먹기, W10 잘 시키기, W12 커넥터/배포). 공용 **Claude 계정**(18세 미만은 본인 계정 불가 → 교사/공용 계정 공유), 아이패드는 **claude.ai/code(웹) 브라우저**.
 - **출품판 통합·자산 적용·테스트·배포 = Codex** (W13 실제 사례). 아케이드 결과물을 독립 프로젝트로 가져와 ImageGen 그래픽, 외부 DGX 음악, 모바일/게임 검수, Vercel·GitHub까지 한 작업 흐름으로 다룸.
-- **일반 이미지·영상 창작 = Gemini / Google Flow(Veo)** (W6·W7·W8, `gemini.html`). **한국어 대사 드라마 = MiniMax H3 / DGX Spark** (W14). H3는 한 화면 한 화자·한 줄씩 생성하고, 네이티브 대사와 인물 연속성을 통과한 움직이는 테이크만 편집한다.
+- **일반 이미지·영상 창작 = Gemini / Google Flow(Veo)** (W6·W7·W8, `gemini.html`). **한국어 대사 드라마 = MiniMax H3 / DGX Spark** (W16). H3는 한 화면 한 화자·한 줄씩 생성하고, 네이티브 대사와 인물 연속성을 통과한 움직이는 테이크만 편집한다.
 - 도감·슬라이드 결과물 = 구글 슬라이드. 학생 작업물 저장 = **교육용 계정 구글 드라이브 공유 폴더**.
 - 계정: 이미지·영상용 **Google AI Pro**(교육용 gmail, 성인 계정) / 배포·코딩용 **Claude Pro**(개인·교육용, 회사 계정 아님). Family Link 대신 **공용 계정 로그인** 방식.
 - 배포 스택: 클래스 공용 **GitHub + Vercel**(자동배포) — 설정 절차는 `deploy.html` 참고.
+- **DGX 생성물(이미지·소리·영상) 접근**: 맥 터미널은 `dgx-media` CLI, 아이패드·채팅 앱은 **MCP 커넥터**(`connect.html`). 서비스는 평소 내려두고 수업 때만 올린다 — `dgx-mcp/README.md`.
 
 ---
 
@@ -130,7 +139,7 @@ grep -oE \"wk:'W[0-9]+'\" index.html | sed \"s/[^0-9]//g\" | sort -n | tr '\\n' 
 ## 10. 관련 프로젝트
 - **우리반 아케이드** (`class-arcade.vercel.app`) — 아이들 게임 공유 갤러리. W12에서 AI **커넥터(MCP)** 로 게임을 업로드한 대상. 커넥터 주소: `class-arcade.vercel.app/api/mcp`, 직접 업로드: `class-arcade.vercel.app/upload`. (별도 저장소/프로젝트)
 - **죽어야 이기는 용사 출품판** (`/Users/rgh/dev/openai-game-builers/death-knight`, `death-knight-web.vercel.app`) — W13 실제 사례. Codex 작업 제목은 `제출 버전 통합`.
-- **DGX Spark** — W13 사운드 생성 모델과 W14 MiniMax H3 드라마 렌더링에 사용하는 외부 AI 컴퓨터. 이미지용 FLUX.2 Klein 4B도 추가되어 `tools/dgx-media.py` 하나로 이미지·Stable Audio 음악·H3 영상을 생성한다. 통합 서비스는 12GiB 안전 여유와 실측 44GiB 작업 예약 한도 안에서 모델 간 최대 4작업을 병렬 처리하며, H3 1개·이미지 1개 제한은 유지한다. 상태·대기열은 `dgx-media status`로 확인한다. Claude Code/Codex 전달 문구는 `dgx-media/CLAUDE_CODE_CODEX_SETUP_PROMPT.md`, DGX 운영 파일은 `dgx-media/`에 있다. 외부 요청은 기존 키 인증 게이트웨이만 사용하고 키·로컬 설정 파일은 저장소에 넣지 않는다. H3 수업/제작 시 `/Users/rgh/.codex/skills/dgx-h3-web-drama/SKILL.md`의 바이블·네이티브 대사·합격 검사 규칙을 따를 것.
+- **DGX Spark** (`aitopatom-27f6`) — 이미지(FLUX.2 Klein)·소리(Stable Audio 3)·영상(MiniMax H3) 생성용 외부 AI 컴퓨터. **평소에는 서비스를 내려둔다** — 놀면 메모리 73G를 잡고 한 번 OOM으로 죽은 적이 있다. 수업 때만 `class.sh up` → `warm` → (끝나고) `down`. **운영 문서는 `dgx-mcp/README.md`** 를 볼 것. 두 가지 접근 경로가 있다: 터미널이 있는 맥은 `dgx-media` CLI(`tools/dgx-media.py`), 터미널이 없는 아이패드는 **MCP 커넥터**(`dgx-mcp/mcp_server.py`, 아이용 안내는 `connect.html`). 채팅 앱은 임의 HTTP 호출을 못 하므로 아이패드에서는 MCP가 유일한 길이다. 키·로컬 설정 파일은 저장소에 넣지 않는다. H3 제작 규칙은 `/Users/rgh/.codex/skills/dgx-h3-web-drama/SKILL.md` 참조.
 
 ---
 
