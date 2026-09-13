@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W20 · 1부 · 코드를 읽는 눈 (변수·문자열·연산)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="eyebrow">W20 · 1부 · 코드를 읽는 눈</div>
+    <h1>AI가 쓰고<br><span class="hi">내가 읽는다</span></h1>
+    <div class="rule"></div>
+    <p class="lead">변수 · 문자열 · 연산.<br>오늘은 <b class="hi-t">한 줄도 처음부터 쓰지 않는다.</b> 대신 남이 쓴 코드를 끝까지 읽는다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">인정하고 시작하자</div>
+    <h2>우리는 1년 동안<br><span class="hi">읽은 적이 없다</span></h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">해온 것</div><h3>만들기</h3><p>게임, 아케이드 업로드, 멀티플레이, 배포까지. 진짜로 돌아가는 걸 만들었다.</p></div>
+      <div class="card clay"><div class="k">안 해본 것</div><h3>읽기</h3><p>그 코드가 왜 그렇게 생겼는지는 넘어갔다. 안 되면 “고쳐줘”라고 했다.</p></div>
+    </div>
+    <div class="kicker">읽을 줄 모르면 <span class="hi">고칠 곳을 못 짚는다.</span> 그래서 매번 통째로 다시 만들게 된다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">오늘의 순서</div>
+    <h2>거꾸로<br><span class="hi-t">간다</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">문제를 고른다</div><div class="d">아주 작은 것. 점수판, 인사말.</div></div>
+      <div class="step"><div class="n">02</div><div class="t">AI가 코드를 쓴다</div><div class="d">읽을 수 있게 써달라고 시킨다.</div></div>
+      <div class="step"><div class="n">03</div><div class="t">내가 읽는다</div><div class="d">오늘의 본 게임. 4동작으로.</div></div>
+      <div class="step"><div class="n">04</div><div class="t">내가 설명한다</div><div class="d">AI가 내 설명을 채점한다.</div></div>
+    </div>
+    <div class="kicker">03이 가장 오래 걸린다. 02는 10초면 끝난다 — <span class="hi">거기가 수업이 아니다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 도구</div>
+    <h2>읽기 <span class="hi-g">4동작</span></h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">01</div><h3>한국어로 바꿔 말하기</h3><p>한 줄씩 소리 내어. “점수라는 이름표에 0을 붙인다.”</p></div>
+      <div class="card gold"><div class="k">02</div><h3>값을 표에 적기</h3><p>줄이 넘어갈 때마다 변수가 뭐가 되는지 손으로 적는다.</p></div>
+      <div class="card clay"><div class="k">03</div><h3>예측하고 실행</h3><p>결과를 먼저 종이에 적고, 그다음 돌린다. 틀리면 거기가 모르는 곳.</p></div>
+      <div class="card"><div class="k">04</div><h3>한 군데 고장 내기</h3><p>일부러 부순다. 무슨 에러가 나는지 본다. 가장 빨리 배우는 방법.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">AI에게 시키는 법</div>
+    <h2>“읽을 수 있는” 코드를<br><span class="hi">따로 요구</span>해야 한다</h2>
+    <div class="prompt"><span class="lbl">문제</span>  <span class="val">게임 점수판을 만들어줘. 점수가 올라가는 걸 화면에 보여줘.</span>
+
+<span class="lbl">조건</span>  나는 <span class="val">초등학생</span>이고 이 코드를 <span class="val">읽어서 이해</span>할 거야.
+       ① 한 줄에 한 가지만 해줘
+       ② 이름을 <span class="val">길고 뜻이 보이게</span> 지어줘 (s 말고 score)
+       ③ 짧게 줄이는 문법은 쓰지 마 (삼항연산자, 화살표 줄임)
+       ④ <span class="val">주석은 달지 마</span> — 주석 없이 읽을 수 있어야 해
+       ⑤ 다 쓴 뒤에 설명하지 마. 나는 <span class="val">코드만</span> 볼 거야.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">왜 주석을 막나</div>
+    <h2>주석이 있으면<br><span class="hi">코드를 안 읽는다</span></h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">주석이 있으면</div><h3>한글만 읽고 넘어간다</h3><p>“// 점수를 1 올린다” — 이걸 읽고 다 안 것 같지만, 코드는 한 글자도 안 봤다.</p></div>
+      <div class="card teal"><div class="k">주석이 없으면</div><h3>코드를 볼 수밖에 없다</h3><p>읽고 나서 내가 주석을 직접 단다. 그게 오늘의 숙제다.</p></div>
+    </div>
+    <div class="kicker">오늘은 <span class="hi-t">내가 주석을 다는 사람</span>이다. AI가 아니라.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">01 · 변수</div>
+    <h2>값에 <span class="hi-t">이름표</span>를<br>붙이는 일</h2>
+    <div class="prompt">let score = 0;
+let playerName = "민준";
+
+score = score + 10;
+score = score + 5;</div>
+    <div class="kicker">“상자에 넣는다”는 설명은 나중에 헷갈린다. <span class="hi">이름표를 값에 붙인다</span>고 읽자 — 이름표는 떼서 다른 값에 붙일 수 있다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">읽기 2동작 · 값 추적표</div>
+    <h2>줄이 넘어갈 때마다<br><span class="hi-g">손으로 적는다</span></h2>
+    <div class="prompt"><span class="lbl">줄</span>                        <span class="lbl">score</span>   <span class="lbl">playerName</span>
+let score = 0;              <span class="val">0</span>       —
+let playerName = "민준";     <span class="val">0</span>       <span class="val">"민준"</span>
+score = score + 10;         <span class="val">10</span>      <span class="val">"민준"</span>
+score = score + 5;          <span class="val">15</span>      <span class="val">"민준"</span></div>
+    <div class="kicker">이 표를 채울 수 있으면 <span class="hi-t">그 코드는 읽은 것</span>이다. 못 채우면 아직 못 읽은 것이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">가장 큰 오해</div>
+    <h2><span class="hi">=</span> 는<br>“같다”가 아니다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">수학에서</div><h3>score = score + 1</h3><p>“어떤 수가 자기보다 1 큰 수와 같다”? 그런 수는 없다. 말이 안 된다.</p></div>
+      <div class="card teal"><div class="k">코드에서</div><h3>오른쪽을 먼저 계산한다</h3><p>score + 1 을 먼저 구하고, 그 값에 score 이름표를 다시 붙인다. 순서가 있다.</p></div>
+    </div>
+    <div class="kicker">그래서 <span class="hi-t">오른쪽부터 읽는다.</span> 이 한 가지만 알아도 코드가 갑자기 읽힌다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">고장 내기 1</div>
+    <h2>일부러<br><span class="hi">부숴본다</span></h2>
+    <ul class="plain">
+      <li data-n="01"><b><code>let score = 0;</code> 줄을 지운다</b> — 무슨 에러가 나나? 그 에러 문장을 그대로 적어둔다</li>
+      <li data-n="02"><b><code>score</code> 를 전부 <code>s</code> 로 바꾼다</b> — 돌아가나? 돌아간다면, 이름은 누구를 위한 걸까</li>
+      <li data-n="03"><b>한 군데만 <code>s</code> 로 바꾼다</b> — 이번엔 어떻게 되나</li>
+      <li data-n="04"><b><code>score = score + 10;</code> 두 줄의 순서를 바꾼다</b> — 결과가 달라지나</li>
+    </ul>
+    <div class="kicker">에러 메시지는 <span class="hi-t">잔소리가 아니라 힌트</span>다. 오늘 본 에러를 세 개 모아 오자.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">02 · 문자열</div>
+    <h2>글자는 <span class="hi-t">따옴표</span>를<br>입고 다닌다</h2>
+    <div class="prompt">let playerName = "민준";
+let greeting = "안녕, " + playerName + "!";
+
+console.log(greeting);</div>
+    <div class="kicker">따옴표 안은 <span class="hi">글자 그대로</span>다. 따옴표 밖의 <code>playerName</code> 은 이름표라서 값으로 바뀐다.<br>같은 글자라도 <span class="hi-t">안에 있느냐 밖에 있느냐</span>로 뜻이 완전히 달라진다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">직접 해볼 실험</div>
+    <h2>이 둘은<br><span class="hi-g">왜 다를까</span></h2>
+    <div class="prompt"><span class="lbl">A</span>   console.log( 3 + 4 );        →  <span class="val">7</span>
+<span class="lbl">B</span>   console.log( "3" + 4 );      →  <span class="val">"34"</span>
+
+<span class="lbl">C</span>   console.log( "3" + "4" );    →  ?
+<span class="lbl">D</span>   console.log( "3" * 4 );      →  ?</div>
+    <div class="kicker">C와 D는 <span class="hi">먼저 예측</span>하고 실행한다. D가 놀랍다면, 그게 오늘 제일 중요한 발견이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">고장 내기 2</div>
+    <h2>따옴표를<br><span class="hi">하나만</span> 지운다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">해볼 것</div><h3>"안녕, " 의 뒤쪽 따옴표 삭제</h3><p>에러가 어디를 가리키나? 진짜 잘못된 줄과 같은 줄인가?</p></div>
+      <div class="card teal"><div class="k">알게 되는 것</div><h3>에러 위치는 자주 어긋난다</h3><p>컴퓨터는 “여기서 이상해졌다”고 말할 뿐, 원인이 거기 있다는 뜻은 아니다.</p></div>
+    </div>
+    <div class="kicker">이게 앞으로 <span class="hi-t">디버깅</span>의 전부다 — 에러가 가리킨 곳부터 <span class="hi">위로 거슬러</span> 올라간다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">03 · 연산</div>
+    <h2>문제 · <span class="hi-t">데미지 계산기</span></h2>
+    <div class="prompt">let attack = 12;
+let defense = 5;
+let critical = 2;
+
+let damage = (attack - defense) * critical;</div>
+    <div class="kicker">괄호가 없으면 어떻게 되나? <span class="hi">괄호를 지우고</span> 다시 계산해 본다.<br>값 추적표를 한 번 더 그린다 — 이번엔 <span class="hi-t">damage 한 칸</span>을 채우기 위해 머릿속으로 세 단계를 거쳐야 한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">잘 쓰이는 것</div>
+    <h2>나머지 <span class="hi-g">%</span> 는<br>생각보다 자주 나온다</h2>
+    <div class="prompt">10 % 3   →  <span class="val">1</span>      (10을 3으로 나눈 나머지)
+ 7 % 2   →  <span class="val">1</span>      홀수
+ 8 % 2   →  <span class="val">0</span>      짝수</div>
+    <div class="kicker">“짝수인가?”를 코드로 묻는 방법이다. 2부 <span class="hi-t">조건문</span>에서 바로 다시 만난다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">읽기 4동작 · 마지막</div>
+    <h2>이번엔 내가<br><span class="hi">설명하고</span> AI가 채점한다</h2>
+    <div class="prompt">아래는 내가 읽은 코드와, 내가 한 설명이야.
+
+<span class="lbl">코드</span>  (코드 붙여넣기)
+<span class="lbl">내 설명</span>  (내가 한 줄씩 한국어로 쓴 것)
+
+<span class="val">내 설명에서 틀린 곳만</span> 짚어줘.
+맞는 설명을 대신 써주지는 마. <span class="val">어디가 틀렸는지만</span> 말해줘.
+내가 빠뜨린 줄이 있으면 그 줄 번호만 알려줘.</div>
+    <div class="kicker">AI에게 <span class="hi">설명을 시키면</span> 내가 이해한 게 아니다. 순서를 뒤집어야 내 것이 된다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 증거</div>
+    <h2>내 게임 코드에서<br><span class="hi-g">변수 다섯 개</span> 찾기</h2>
+    <p class="lead">작년에 만든 내 게임을 연다.<br>오늘 배운 것이 <b class="hi-t">진짜로 거기 들어 있다</b>는 걸 눈으로 확인한다.</p>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">찾을 것 1</div><h3>변수 5개</h3><p>이름만 보고 무엇을 담는지 말해본다</p></div>
+      <div class="card gold"><div class="k">찾을 것 2</div><h3>문자열 3개</h3><p>화면에 보이는 글자는 코드 어디에 있나</p></div>
+      <div class="card clay"><div class="k">찾을 것 3</div><h3>계산 1줄</h3><p>점수나 속도가 바뀌는 줄을 짚는다</p></div>
+    </div>
+    <div class="kicker">못 찾겠으면 AI에게 물어도 된다 — 단, <span class="hi">“어디 있어?”까지만</span>. “무슨 뜻이야?”는 내가 먼저 답한다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">2시간 진행표</div>
+    <h2>쓰는 데 10분,<br><span class="hi">읽는 데 나머지</span></h2>
+    <div class="timeline">
+      <div class="slot"><div class="time">0:00–0:15</div><h3>왜 읽나</h3><p>읽기 4동작을 익힌다.</p></div>
+      <div class="slot"><div class="time">0:15–0:25</div><h3>AI에게 점수판 시키기</h3><p>읽을 수 있는 코드로 달라고 요구한다.</p></div>
+      <div class="slot"><div class="time">0:25–0:55</div><h3>변수 읽기</h3><p>값 추적표 · = 의 뜻 · 고장 내기 1.</p></div>
+      <div class="slot"><div class="time">0:55–1:20</div><h3>문자열 읽기</h3><p>따옴표 실험 · 고장 내기 2 · 에러 거슬러 올라가기.</p></div>
+      <div class="slot"><div class="time">1:20–1:40</div><h3>연산 읽기</h3><p>데미지 계산기 · 괄호 지워보기 · 나머지 %.</p></div>
+      <div class="slot"><div class="time">1:40–1:55</div><h3>내가 설명하고 채점받기</h3><p>AI는 틀린 곳만 짚는다.</p></div>
+      <div class="slot"><div class="time">1:55–2:00</div><h3>내 게임에서 찾기</h3><p>변수 5개 · 문자열 3개 · 계산 1줄.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <div class="banner"><p class="big">코드를 못 읽으면<br>AI에게 <span class="hi">“그냥 다시 만들어줘”</span>밖에 말할 수 없다.</p></div>
+    <p class="lead" style="margin-top:24px">읽을 줄 알면 <b class="hi-t">“47번째 줄만 이렇게 바꿔줘”</b>라고 말할 수 있다.<br>그게 시키는 사람과 끌려가는 사람의 차이다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>오늘 본 에러를<br>하나 말해보자</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">에러 하나</div><h3>뭐라고 쓰여 있었나</h3><p>그리고 진짜 원인은 어디였나. 같은 줄이었나?</p></div>
+      <div class="card clay"><div class="k">놀란 것 하나</div><h3>예측이 틀린 곳</h3><p>“3” * 4 였나, 괄호였나. 틀린 자리가 배운 자리다.</p></div>
+    </div>
+    <div class="kicker">혼자 더 파볼 것 — 내 게임 코드에서 <span class="hi-g">가장 긴 줄</span>을 찾아 한국어로 옮겨보기. 안 되면 2부까지 들고 오기.</div>
+  </section>
+</div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+</script>
+</body>
+</html>

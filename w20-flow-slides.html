@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W20 · 2부 · 코드가 흐르는 길 (조건문·반복문·함수)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="eyebrow">W20 · 2부 · 코드를 읽는 눈</div>
+    <h1>코드가<br><span class="hi">흐르는 길</span></h1>
+    <div class="rule"></div>
+    <p class="lead">조건문 · 반복문 · 함수.<br>1부는 <b class="hi-t">값</b>이었다. 2부는 그 값이 <b class="hi-t">어디로 가는지</b>다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">1부에서 가져올 것</div>
+    <h2>읽기 <span class="hi-g">4동작</span>은<br>그대로 쓴다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">01 · 02</div><h3>한국어로 · 표에 적기</h3><p>2부에서는 표가 <b>여러 줄</b>이 된다. 반복문이 돌 때마다 한 줄씩.</p></div>
+      <div class="card clay"><div class="k">03 · 04</div><h3>예측하고 · 고장 내기</h3><p>이번엔 “몇 번 도나”를 먼저 적는다. 그리고 한 글자를 바꿔 무한루프를 만들어 본다.</p></div>
+    </div>
+    <div class="kicker">1부의 핵심 한 줄 — <span class="hi">= 를 만나면 오른쪽부터 읽는다.</span> 2부에서도 계속 쓴다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">04 · 조건문</div>
+    <h2>길이 <span class="hi-t">갈라지는</span> 곳</h2>
+    <div class="prompt">let hp = 30;
+
+if (hp &gt; 50) {
+  console.log("아직 쌩쌩하다");
+} else if (hp &gt; 0) {
+  console.log("위험하다");
+} else {
+  console.log("쓰러졌다");
+}</div>
+    <div class="kicker">읽는 순서는 <span class="hi">위에서 아래로, 맞는 걸 만나면 멈춘다.</span> 밑에 더 맞는 게 있어도 안 본다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">제일 헷갈리는 것</div>
+    <h2><span class="hi">=</span> 하나와 <span class="hi">==</span> 둘은<br>완전히 다르다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">= 하나</div><h3>이름표를 붙인다</h3><p>hp = 0 → hp를 0으로 <b>만든다</b>. 조건문 안에 쓰면 체력을 0으로 만들어 버린다.</p></div>
+      <div class="card teal"><div class="k">=== 셋</div><h3>같은지 물어본다</h3><p>hp === 0 → hp가 0이냐고 <b>묻는다</b>. 답은 true 아니면 false.</p></div>
+    </div>
+    <div class="kicker">JS에서는 <span class="hi-t">===</span> 를 쓴다. 1부에서 본 <code>"3" + 4</code> 처럼, <code>==</code> 는 글자와 숫자를 멋대로 맞춰줘서 헷갈린다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">예측하고 실행</div>
+    <h2>이 코드는<br>뭐라고 <span class="hi-g">출력할까</span></h2>
+    <div class="prompt">let score = 85;
+
+if (score &gt; 90) {
+  console.log("A");
+} else if (score &gt; 80) {
+  console.log("B");
+} else if (score &gt; 70) {
+  console.log("C");
+}</div>
+    <div class="kicker">종이에 먼저 적는다. 그다음 — <span class="hi">순서를 거꾸로 뒤집으면</span> 어떻게 되나? C가 먼저 오면?</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">고장 내기 3</div>
+    <h2>조건을 <span class="hi">부숴본다</span></h2>
+    <ul class="plain">
+      <li data-n="01"><b><code>else</code> 를 통째로 지운다</b> — 아무것도 출력되지 않는 hp 값이 생기나?</li>
+      <li data-n="02"><b><code>&gt;</code> 를 <code>&gt;=</code> 로 바꾼다</b> — hp가 정확히 50일 때 답이 달라지나?</li>
+      <li data-n="03"><b>조건 순서를 뒤집는다</b> — 위아래를 바꾸면 왜 다 “위험하다”가 되나?</li>
+      <li data-n="04"><b><code>if (hp = 0)</code> 로 바꾼다</b> — 체력이 어떻게 되나? 이게 그 유명한 실수다</li>
+    </ul>
+    <div class="kicker">04번은 에러도 안 난다. <span class="hi">조용히 틀리는 코드</span>가 제일 무섭다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">05 · 반복문</div>
+    <h2>같은 길을<br><span class="hi-t">여러 번</span> 지나간다</h2>
+    <div class="prompt">for (let i = 1; i &lt;= 5; i = i + 1) {
+  console.log(i + "번째 몬스터 등장");
+}</div>
+    <div class="kicker">괄호 안에 <span class="hi">세 가지</span>가 들어 있다 — 어디서 시작(<code>i = 1</code>), 언제까지(<code>i &lt;= 5</code>), 한 바퀴 돌 때마다 뭘 할지(<code>i = i + 1</code>).<br>이 셋을 따로 떼어 읽는 게 전부다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">값 추적표 · 반복문판</div>
+    <h2>한 바퀴에<br><span class="hi-g">한 줄씩</span> 적는다</h2>
+    <div class="prompt"><span class="lbl">바퀴</span>   <span class="lbl">i</span>    <span class="lbl">i &lt;= 5 ?</span>   <span class="lbl">출력</span>
+ 1     <span class="val">1</span>    참        1번째 몬스터 등장
+ 2     <span class="val">2</span>    참        2번째 몬스터 등장
+ 3     <span class="val">3</span>    참        3번째 몬스터 등장
+ 4     <span class="val">4</span>    참        4번째 몬스터 등장
+ 5     <span class="val">5</span>    참        5번째 몬스터 등장
+ 6     <span class="val">6</span>    <span class="val">거짓</span>      (멈춤)</div>
+    <div class="kicker">마지막 줄이 중요하다. <span class="hi">6번째 바퀴는 돌지 않지만 i는 6이 된다.</span> 이걸 놓쳐서 하나가 모자라거나 남는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">고장 내기 4</div>
+    <h2>무한루프를<br><span class="hi">일부러</span> 만들어 본다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">해볼 것</div><h3><code>i = i + 1</code> 을 지운다</h3><p>i가 영원히 1이면 <code>i &lt;= 5</code> 는 계속 참이다. 브라우저가 멈춘다.</p></div>
+      <div class="card teal"><div class="k">알게 되는 것</div><h3>멈추는 이유가 있어야 한다</h3><p>반복문은 “언제 끝나는지”가 몸통보다 중요하다. 먼저 그걸 확인한다.</p></div>
+    </div>
+    <div class="kicker">겁내지 말고 해본다 — 탭을 닫으면 된다. <span class="hi-t">한 번 겪으면 평생 안 잊는다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">1부와 만나는 곳</div>
+    <h2>나머지 <span class="hi-g">%</span> 가<br>여기서 쓰인다</h2>
+    <div class="prompt">for (let i = 1; i &lt;= 10; i = i + 1) {
+  if (i % 2 === 0) {
+    console.log(i + " 짝수");
+  } else {
+    console.log(i + " 홀수");
+  }
+}</div>
+    <div class="kicker">반복문 <span class="hi">안에</span> 조건문이 들어갔다. 표를 그리면 <span class="hi-t">열이 하나 늘어날 뿐</span>이다 — <code>i % 2</code> 칸.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">06 · 함수</div>
+    <h2>같은 일에<br><span class="hi-t">이름을 붙인다</span></h2>
+    <div class="prompt">function damage(attack, defense) {
+  let result = (attack - defense) * 2;
+  return result;
+}
+
+console.log( damage(12, 5) );
+console.log( damage(30, 10) );</div>
+    <div class="kicker">1부의 데미지 계산을 <span class="hi">이름 하나로</span> 묶었다. 이제 숫자만 바꿔 여러 번 부른다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">함수 읽는 순서</div>
+    <h2>정의는 <span class="hi-g">건너뛰고</span><br>부르는 곳부터 읽는다</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">부르는 줄을 먼저 본다</div><div class="d">damage(12, 5) — 12와 5를 들고 들어간다</div></div>
+      <div class="step"><div class="n">02</div><div class="t">이름표가 붙는다</div><div class="d">attack에 12, defense에 5</div></div>
+      <div class="step"><div class="n">03</div><div class="t">몸통을 계산한다</div><div class="d">(12 - 5) * 2 = 14</div></div>
+      <div class="step"><div class="n">04</div><div class="t">return 자리로 돌아온다</div><div class="d">부른 자리가 14로 바뀐다</div></div>
+    </div>
+    <div class="kicker">함수는 <span class="hi">들어가고 나오는 것</span>이다. 들어가는 건 괄호 안, 나오는 건 return.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">고장 내기 5</div>
+    <h2><span class="hi">return</span> 을<br>지워본다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">해볼 것</div><h3><code>return result;</code> 삭제</h3><p>출력이 <code>undefined</code> 로 바뀐다. 계산은 했는데 아무것도 안 돌려준 것이다.</p></div>
+      <div class="card teal"><div class="k">또 해볼 것</div><h3>인자 순서 바꾸기</h3><p><code>damage(5, 12)</code> — 에러는 없는데 답이 이상하다. 순서에 뜻이 있다.</p></div>
+    </div>
+    <div class="kicker"><code>undefined</code> 는 “없다”가 아니라 <span class="hi-t">“돌려준 게 없다”</span>는 뜻이다. 앞으로 자주 만난다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">내가 설명하고 채점받기</div>
+    <h2>2부에서는<br><span class="hi">“몇 번 도는지”</span>를 묻는다</h2>
+    <div class="prompt">아래 코드와 내 설명이야.
+
+<span class="lbl">코드</span>  (코드 붙여넣기)
+<span class="lbl">내 설명</span>  반복문이 <span class="val">몇 번</span> 도는지, 매 바퀴 <span class="val">i가 얼마</span>인지,
+        <span class="val">언제 멈추는지</span>를 내가 쓴 것
+
+<span class="val">틀린 곳만</span> 짚어줘. 고친 코드나 맞는 설명을 써주지는 마.
+내가 <span class="val">한 바퀴를 잘못 세었다면</span> 몇 번째 바퀴가 틀렸는지만 알려줘.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 증거</div>
+    <h2>내 게임에서<br><span class="hi-g">셋을 찾는다</span></h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">찾을 것 1</div><h3>조건문 1개</h3><p>무엇을 기준으로 갈라지나. 충돌? 점수? 시간?</p></div>
+      <div class="card gold"><div class="k">찾을 것 2</div><h3>반복문 1개</h3><p>몇 번 도나. 끝나긴 하나.</p></div>
+      <div class="card clay"><div class="k">찾을 것 3</div><h3>함수 1개</h3><p>무엇이 들어가고 무엇이 나오나.</p></div>
+    </div>
+    <div class="kicker">찾았으면 <span class="hi">한 군데만 바꿔</span> 게임을 조금 다르게 만들어 본다. 통째로 다시 만들지 않고.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">2시간 진행표</div>
+    <h2>고장 내는 데<br><span class="hi">시간을 쓴다</span></h2>
+    <div class="timeline">
+      <div class="slot"><div class="time">0:00–0:10</div><h3>1부 복습</h3><p>= 는 오른쪽부터. 값 추적표.</p></div>
+      <div class="slot"><div class="time">0:10–0:40</div><h3>조건문</h3><p>hp 예제 · === 와 = · 고장 내기 3.</p></div>
+      <div class="slot"><div class="time">0:40–1:15</div><h3>반복문</h3><p>추적표 여러 줄 · 무한루프 직접 만들기.</p></div>
+      <div class="slot"><div class="time">1:15–1:40</div><h3>함수</h3><p>부르는 곳부터 읽기 · return 지워보기.</p></div>
+      <div class="slot"><div class="time">1:40–1:50</div><h3>내가 설명하고 채점받기</h3><p>“몇 번 도는지”를 맞혔나.</p></div>
+      <div class="slot"><div class="time">1:50–2:00</div><h3>내 게임 고치기</h3><p>한 군데만 바꿔 다르게 만든다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <div class="banner"><p class="big">여섯 개를 다 배웠다.<br>이제 <span class="hi">모르는 코드를 만나도</span><br>읽을 도구가 생겼다.</p></div>
+    <p class="lead" style="margin-top:24px">변수·문자열·연산은 <b class="hi-t">무엇이 있는지</b>,<br>조건문·반복문·함수는 <b class="hi-t">그게 어디로 가는지</b>다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>가장 오래 걸린<br>한 줄은 무엇이었나?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">막혔던 곳</div><h3>왜 막혔나</h3><p>문법을 몰라서였나, 순서를 잘못 읽어서였나.</p></div>
+      <div class="card clay"><div class="k">고장 낸 것 중</div><h3>가장 놀란 것</h3><p>무한루프? undefined? 조용히 틀린 <code>if (hp = 0)</code>?</p></div>
+    </div>
+    <div class="kicker">혼자 더 파볼 것 — 내 게임에서 <span class="hi-g">제일 긴 함수</span>를 찾아, 하는 일을 한 문장으로 말해보기.</div>
+  </section>
+</div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+</script>
+</body>
+</html>
