@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W21 · 영어로 말하기 (Gemini 음성 대화)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
+  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
+  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
+  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
+  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
+  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="eyebrow">W21 · 영어로 말하기</div>
+    <h1>내가 만든 걸<br><span class="hi">영어로 소개하기</span></h1>
+    <div class="rule"></div>
+    <p class="lead">Gemini와 <b class="hi-t">목소리로</b> 영어 대화를 하고,<br>내 발표문을 <b class="hi-t">내가 말할 수 있는 영어</b>로 만든다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">오늘의 결과물</div>
+    <h2>영어 발표 <span class="hi-g">한 편</span> ·<br>소리 내어 <span class="hi-g">끝까지</span></h2>
+    <div class="grid g3">
+      <div class="card teal"><div class="k">주제</div><h3>내가 만든 게임</h3><p>아케이드에 올린 내 작품 하나</p></div>
+      <div class="card gold"><div class="k">길이</div><h3>30초 ~ 1분</h3><p>문장 대여섯 개면 충분하다</p></div>
+      <div class="card clay"><div class="k">기준</div><h3>막히지 않고 말하기</h3><p>어려운 단어 없이. 끊기지 않게.</p></div>
+    </div>
+    <div class="kicker">잘 쓴 영어가 목표가 아니다. <span class="hi">내 입에서 나오는 영어</span>가 목표다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">먼저 알 것</div>
+    <h2>AI 번역은<br><span class="hi">너무 어렵게</span> 해준다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">그냥 번역하면</div><h3>멋있는데 못 읽는다</h3><p>“This project demonstrates collaborative multiplayer functionality.” — 뜻은 맞지만 내 입에서 안 나온다.</p></div>
+      <div class="card teal"><div class="k">낮춰 달라고 하면</div><h3>읽히는데 뜻은 같다</h3><p>“In my game, you can play with your friends at the same time.”</p></div>
+    </div>
+    <div class="kicker">번역을 시키는 게 오늘 배울 기술이 아니다. <span class="hi-t">내 수준으로 낮추게 시키는 것</span>이 오늘 배울 기술이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">01 · 먼저 말부터</div>
+    <h2>준비 없이<br><span class="hi-t">그냥 말해본다</span></h2>
+    <p class="lead">발표문을 쓰기 <b class="hi-t">전에</b> 먼저 입을 연다.<br>무엇이 안 나오는지 알아야, 쓸 게 정해진다.</p>
+    <div class="prompt">Let's talk in English. I am a Korean elementary school student.
+
+<span class="lbl">Please</span>
+· Use words a <span class="val">10-year-old</span> knows
+· <span class="val">One question at a time</span>, and keep it short
+· Speak <span class="val">slowly</span>
+· If I go quiet, <span class="val">wait</span>. Don't answer for me
+· Don't correct me while we talk — <span class="val">save it for the end</span>
+
+Ask me about my favorite game first.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">생존 문장 네 개</div>
+    <h2>막혔을 때<br><span class="hi-g">이 말만</span> 하면 된다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">못 알아들었을 때</div><h3>“Sorry, can you say that again?”</h3><p>더 천천히 원하면 “…more slowly?”</p></div>
+      <div class="card gold"><div class="k">단어를 모를 때</div><h3>“How do you say ○○ in English?”</h3><p>한국어 단어를 그대로 넣어도 된다</p></div>
+      <div class="card clay"><div class="k">생각할 시간이 필요할 때</div><h3>“Give me a second.”</h3><p>침묵보다 이 말이 낫다</p></div>
+      <div class="card"><div class="k">말문이 막혔을 때</div><h3>“I don't know how to say it.”</h3><p>이것도 영어다. 대화가 안 끊긴다</p></div>
+    </div>
+    <div class="kicker">이 네 개를 <span class="hi">먼저 외운다.</span> 이게 있으면 대화가 죽지 않는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">02 · 안 통한 순간 모으기</div>
+    <h2>못한 말을<br><span class="hi">적어둔다</span></h2>
+    <ul class="plain">
+      <li data-n="01"><b>하고 싶었는데 못 한 말</b> — 한국어로 적어둔다. 이게 오늘 배울 문장이다</li>
+      <li data-n="02"><b>못 알아들은 단어</b> — 소리 나는 대로라도 적는다</li>
+      <li data-n="03"><b>내가 말했는데 못 알아들은 것</b> — 발음일까, 단어일까</li>
+      <li data-n="04"><b>세 번 이상 나온 표현</b> — 자주 쓰이는 말이다. 챙겨간다</li>
+    </ul>
+    <div class="kicker">대화가 끝나면 Gemini에게 묻는다 — <span class="hi-t">“내가 자주 틀린 것 세 개만 알려줘. 문법 이름 말고 예문으로.”</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">03 · 발표문 쓰기</div>
+    <h2>먼저 <span class="hi-t">한국어로</span><br>여섯 문장</h2>
+    <div class="prompt"><span class="lbl">1</span>  무엇을 만들었나          내 게임 이름과 한 줄 소개
+<span class="lbl">2</span>  왜 만들었나             시작한 이유
+<span class="lbl">3</span>  어떻게 하는 게임인가      규칙 하나만
+<span class="lbl">4</span>  가장 어려웠던 것         막혔던 한 가지
+<span class="lbl">5</span>  어떻게 해결했나          그때 한 일
+<span class="lbl">6</span>  다음에 만들 것           하고 싶은 것</div>
+    <div class="kicker">한 칸에 <span class="hi">한 문장씩</span>. 한국어에서 길면 영어에서는 더 길어진다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">04 · 번역 시키기</div>
+    <h2>처음부터 <span class="hi-g">낮춰서</span><br>달라고 한다</h2>
+    <div class="prompt">아래 한국어 발표문을 영어로 바꿔줘.
+
+<span class="lbl">조건</span>
+· <span class="val">초등학교 4학년이 말할 수 있는 영어</span>로
+· 한 문장은 <span class="val">10단어 안쪽</span>으로 짧게
+· 어려운 단어 대신 <span class="val">쉬운 단어 여러 개</span>를 써도 좋아
+· 멋있게 하지 마. <span class="val">말하기 쉽게</span> 해줘
+· 한국어 원문과 영어를 <span class="val">한 줄씩 나란히</span> 보여줘
+
+<span class="lbl">발표문</span>  (여섯 문장 붙여넣기)</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">05 · 소리 내어 읽기</div>
+    <h2>읽다가 <span class="hi">걸리는 단어</span>에<br>동그라미를 친다</h2>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">걸리면</div><h3>그 단어는 버린다</h3><p>“이 단어를 더 쉬운 말로 바꿔줘.” 뜻이 조금 줄어도 괜찮다.</p></div>
+      <div class="card teal"><div class="k">두 번 걸리면</div><h3>문장을 통째로 자른다</h3><p>“이 문장을 두 개로 나눠줘.” 짧을수록 말하기 쉽다.</p></div>
+    </div>
+    <div class="kicker">이 과정을 <span class="hi-t">두세 번 반복</span>한다. 끝나면 처음 번역본보다 훨씬 쉬워져 있다 — 그게 맞는 방향이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">발음 물어보기</div>
+    <h2>Gemini에게<br><span class="hi-g">읽어달라고</span> 한다</h2>
+    <div class="prompt">Please read this sentence out loud, slowly.
+Then listen to me read it, and tell me <span class="val">which word</span> I said differently.
+
+Don't fix my grammar. <span class="val">Only the sound.</span></div>
+    <div class="kicker">듣고 → 따라 하고 → 어디가 달랐는지 듣는다. <span class="hi">세 번이면 붙는다.</span><br>발음 기호를 외우는 것보다 <span class="hi-t">소리를 흉내 내는 게</span> 빠르다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">06 · 진짜 발표</div>
+    <h2>보지 않고<br><span class="hi-t">말한다</span></h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">종이를 보고 읽기</div><div class="d">두 번. 막히는 곳 표시</div></div>
+      <div class="step"><div class="n">02</div><div class="t">키워드만 보고 말하기</div><div class="d">여섯 칸 제목만 남긴다</div></div>
+      <div class="step"><div class="n">03</div><div class="t">아무것도 안 보고</div><div class="d">틀려도 끝까지 간다</div></div>
+      <div class="step"><div class="n">04</div><div class="t">질문 받기</div><div class="d">Gemini가 두세 개 물어본다</div></div>
+    </div>
+    <div class="kicker">03에서 <span class="hi">문장이 달라져도 된다.</span> 외운 걸 틀리지 않는 게 아니라, 뜻을 전하는 게 목표다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">질문받기</div>
+    <h2>발표보다<br><span class="hi-g">질문이 진짜</span>다</h2>
+    <div class="prompt">I will give a short presentation about my game in English.
+Please listen, then ask me <span class="val">two or three easy questions</span> about it.
+
+· Use simple words
+· Ask about <span class="val">what I said</span>, not something new
+· After the questions, tell me <span class="val">one thing I did well</span>
+  and <span class="val">one thing to practice</span></div>
+    <div class="kicker">외운 발표는 누구나 한다. <span class="hi">예상 못 한 질문에 한 문장이라도 답하면</span> 그게 대화다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">하지 말 것</div>
+    <h2>이렇게 하면<br><span class="hi">안 는다</span></h2>
+    <ul class="plain">
+      <li data-n="✕"><b>번역본을 그대로 외우기</b> — 한 단어 틀리면 전부 무너진다</li>
+      <li data-n="✕"><b>모르는 단어를 그냥 쓰기</b> — 발표 중에 그 단어에서 멈춘다</li>
+      <li data-n="✕"><b>틀릴까 봐 입을 안 열기</b> — AI는 비웃지 않는다. 여기서 틀려두는 게 이득이다</li>
+      <li data-n="✕"><b>대화 중간에 계속 고쳐달라고 하기</b> — 말이 끊긴다. 교정은 끝나고 몰아서</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">2시간 진행표</div>
+    <h2>말하는 시간이<br><span class="hi">절반 이상</span></h2>
+    <div class="timeline">
+      <div class="slot"><div class="time">0:00–0:10</div><h3>생존 문장 네 개</h3><p>막혔을 때 쓸 말부터 외운다.</p></div>
+      <div class="slot"><div class="time">0:10–0:30</div><h3>준비 없이 대화</h3><p>Gemini와 그냥 말해본다. 못한 말을 적는다.</p></div>
+      <div class="slot"><div class="time">0:30–0:45</div><h3>한국어 발표문</h3><p>여섯 칸을 채운다. 한 칸에 한 문장.</p></div>
+      <div class="slot"><div class="time">0:45–1:05</div><h3>번역 · 낮추기</h3><p>소리 내어 읽고, 걸리는 단어를 바꾼다. 두세 번.</p></div>
+      <div class="slot"><div class="time">1:05–1:25</div><h3>발음 따라 하기</h3><p>읽어달라고 하고, 다른 곳만 짚어달라고 한다.</p></div>
+      <div class="slot"><div class="time">1:25–1:50</div><h3>발표 · 질문받기</h3><p>안 보고 말하고, 두세 개 질문에 답한다.</p></div>
+      <div class="slot"><div class="time">1:50–2:00</div><h3>서로 듣기</h3><p>한 명씩 앞에서. 나머지는 듣는다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">한 줄로 정리</div>
+    <div class="banner"><p class="big">영어를 <span class="hi">잘하게</span> 되는 수업이 아니라,<br>영어로 <span class="hi">입을 여는</span> 수업이다.</p></div>
+    <p class="lead" style="margin-top:24px">AI 앞에서는 <b class="hi-t">몇 번을 틀려도 괜찮다.</b><br>사람 앞에서 한 번 말하려고, 여기서 스무 번 틀려둔다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>오늘 처음<br>입 밖에 낸 문장은?</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">건진 문장</div><h3>계속 쓸 것 같은 말</h3><p>생존 문장 말고, 내 이야기에 쓴 문장 하나.</p></div>
+      <div class="card clay"><div class="k">아직 못 한 말</div><h3>다음에 할 말</h3><p>한국어로 적어두면 다음 시간 재료가 된다.</p></div>
+    </div>
+    <div class="kicker">혼자 더 파볼 것 — <span class="hi-g">Gemini와 5분만</span> 영어로 아무 얘기나 해보기. 주제는 뭐든 좋다. 끌릴 때만.</div>
+  </section>
+</div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+</script>
+</body>
+</html>
