@@ -3,358 +3,411 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W16 · AI의 크기</title>
+<title>W16 · AI 고르기 (크기·생각 시간)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--paper:#f6efe1;--card:#fffaf0;--line:#d8cbb1;--ink:#23201a;--mute:#5a5347;--clay:#bd5a32;--clay-deep:#9c4622;--teal:#3f6b63;--amber:#d8973a;--gold:#a9761a;--mono:'Space Mono',ui-monospace,monospace;--sans:'IBM Plex Sans KR',-apple-system,system-ui,sans-serif;--disp:'Hahmlet',serif}
-  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
-  .deck{position:fixed;inset:0}.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:clamp(32px,6vw,110px);background-color:var(--paper);background-image:radial-gradient(1100px 600px at 78% -12%,rgba(63,107,99,.10),transparent 60%),radial-gradient(900px 520px at 8% 108%,rgba(216,151,58,.12),transparent 62%)}.slide.active{display:flex;animation:in .38s ease both}@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-  .bar{position:fixed;left:0;top:0;height:4px;background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal));width:0;z-index:40;transition:width .3s ease}.count{position:fixed;right:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:13px;color:var(--mute);z-index:40;letter-spacing:.06em}.hint{position:fixed;left:clamp(18px,3vw,38px);bottom:clamp(16px,3vw,30px);font-family:var(--mono);font-size:12px;color:#a89c83;z-index:40}.home{position:fixed;right:clamp(18px,3vw,38px);top:clamp(14px,2.4vw,22px);font-size:13px;color:var(--clay-deep);text-decoration:none;font-weight:600;z-index:40;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
-  .eyebrow{font-size:clamp(11px,1.15vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep);font-weight:700;margin-bottom:22px}.eyebrow.teal{color:var(--teal)}.eyebrow.gold{color:var(--gold)}h1{font-family:var(--disp);font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.08;letter-spacing:-.02em}h2{font-family:var(--disp);font-size:clamp(28px,4.6vw,56px);font-weight:800;line-height:1.18;letter-spacing:-.015em;margin-bottom:18px}h3{font-family:var(--disp);font-size:clamp(18px,2vw,26px);font-weight:700;line-height:1.35}.lead{font-size:clamp(16px,1.8vw,24px);color:var(--mute);line-height:1.65;max-width:50ch;font-weight:500}.big{font-family:var(--disp);font-size:clamp(24px,3.5vw,44px);font-weight:800;line-height:1.4}.hi{color:var(--clay-deep)}.hi-t{color:var(--teal)}.hi-g{color:var(--gold)}.mono{font-family:var(--mono)}.rule{height:1.5px;background:var(--line);margin:30px 0;max-width:640px}
-  .grid{display:grid;gap:clamp(12px,1.6vw,20px);margin-top:28px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px)}.card .k{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mute);margin-bottom:11px;text-transform:uppercase}.card p{font-size:clamp(13px,1.35vw,17px);color:var(--mute);line-height:1.6;margin-top:9px}.card.clay{border-color:#d8a88f;background:#fbf0e6}.card.teal{border-color:#b9d0c9;background:#f0f5f2}.card.gold{border-color:#e6cf9a;background:#fbf5e6}
-  .flow{display:flex;gap:clamp(7px,1vw,14px);margin-top:32px;flex-wrap:wrap}.step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:12px;padding:clamp(13px,1.5vw,21px)}.step:nth-child(3n){border-top-color:var(--amber)}.step:nth-child(3n+1){border-top-color:var(--clay)}.step .n{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.12em}.step .t{font-family:var(--disp);font-size:clamp(15px,1.6vw,21px);font-weight:800;margin-top:8px}.step .d{font-size:clamp(11px,1.1vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
-  ul.plain{list-style:none;margin-top:20px;max-width:980px}ul.plain li{font-size:clamp(14px,1.55vw,21px);line-height:1.5;padding:10px 0 10px 42px;position:relative;border-bottom:1px solid var(--line)}ul.plain li:last-child{border-bottom:0}ul.plain li::before{content:attr(data-n);position:absolute;left:0;top:13px;font-family:var(--mono);font-size:12px;color:var(--teal)}ul.plain li span{color:var(--mute);font-size:.78em;display:block;margin-top:4px}
-  .prompt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:clamp(17px,2vw,28px);font-family:var(--mono);font-size:clamp(12px,1.35vw,18px);line-height:1.7;max-width:990px;margin-top:22px;white-space:pre-wrap}.prompt .val{color:var(--teal)}.prompt .lbl{color:var(--clay-deep);font-weight:700}.banner{border:1.5px dashed var(--clay);background:#fbf3e6;border-radius:16px;padding:clamp(22px,2.6vw,38px);margin-top:26px;max-width:980px}.kicker{font-family:var(--mono);font-size:clamp(11px,1.15vw,15px);color:var(--mute);margin-top:22px;line-height:1.7}
-  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px}.slot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}.slot .time{font-family:var(--mono);font-size:11px;color:var(--clay-deep);margin-bottom:9px}.slot h3{font-size:clamp(15px,1.5vw,20px)}.slot p{font-size:clamp(11px,1.05vw,14px);color:var(--mute);line-height:1.5;margin-top:7px}
-  @media(max-width:780px){.g3,.g2,.timeline{grid-template-columns:1fr}.flow{flex-direction:column}.slide{overflow-y:auto;padding-bottom:70px}}
-  @media(max-height:520px) and (orientation:landscape){.slide{padding:22px 60px 38px}.eyebrow{margin-bottom:10px}h1{font-size:40px}h2{font-size:30px;margin-bottom:8px}h3{font-size:17px}.lead{font-size:15px;line-height:1.45}.rule{margin:14px 0}.grid,.flow,.timeline{margin-top:12px}.card,.step,.slot{padding:10px}.card p,.step .d,.slot p{margin-top:5px}.banner{margin-top:12px;padding:15px}.prompt{margin-top:10px;padding:12px;font-size:12px;line-height:1.5}ul.plain{margin-top:8px}ul.plain li{padding-top:6px;padding-bottom:6px;line-height:1.35}ul.plain li::before{top:8px}.kicker{margin-top:9px}}
-  @media(prefers-reduced-motion:reduce){.slide.active{animation:none}.bar{transition:none}}
+  :root{
+    --paper:#f6efe1; --card:#fffaf0; --line:#d8cbb1;
+    --ink:#23201a; --mute:#5a5347;
+    --clay:#bd5a32; --clay-deep:#9c4622; --teal:#3f6b63; --amber:#d8973a; --gold:#a9761a;
+    --mono:'Space Mono', ui-monospace, monospace;
+    --sans:'IBM Plex Sans KR', -apple-system, system-ui, sans-serif;
+    --disp:'Hahmlet', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background-color:var(--paper); color:var(--ink); font-family:var(--sans); overflow:hidden; -webkit-font-smoothing:antialiased;}
+  .deck{position:fixed; inset:0;}
+  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+    padding:clamp(32px,6vw,110px); background-color:var(--paper);
+    background-image:radial-gradient(1100px 600px at 78% -12%, rgba(63,107,99,.10), transparent 60%),
+                     radial-gradient(900px 520px at 8% 108%, rgba(216,151,58,.12), transparent 62%);}
+  .slide.active{display:flex; animation:in .38s ease both;}
+  @keyframes in{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+
+  .bar{position:fixed; left:0; top:0; height:4px; background:linear-gradient(90deg,var(--clay),var(--amber),var(--teal)); width:0; z-index:40; transition:width .3s ease;}
+  .count{position:fixed; right:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:13px; color:var(--mute); z-index:40; letter-spacing:.06em;}
+  .hint{position:fixed; left:clamp(18px,3vw,38px); bottom:clamp(16px,3vw,30px); font-family:var(--mono); font-size:12px; color:#a89c83; z-index:40;}
+  .home{position:fixed; right:clamp(18px,3vw,38px); top:clamp(14px,2.4vw,22px); font-family:var(--sans); font-size:13px; color:var(--clay-deep); text-decoration:none; font-weight:600; z-index:40; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 12px;}
+
+  .eyebrow{font-family:var(--sans); font-size:clamp(11px,1.15vw,14px); letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep); font-weight:700; margin-bottom:22px;}
+  .eyebrow.coral{color:var(--clay-deep);} .eyebrow.yellow{color:var(--gold);}
+  h1{font-family:var(--disp); font-size:clamp(38px,7vw,84px); font-weight:800; line-height:1.08; letter-spacing:-.02em;}
+  h2{font-family:var(--disp); font-size:clamp(28px,4.6vw,56px); font-weight:800; line-height:1.18; letter-spacing:-.015em; margin-bottom:18px;}
+  h3{font-family:var(--disp); font-size:clamp(19px,2.1vw,26px); font-weight:700; line-height:1.3;}
+  .lead{font-size:clamp(17px,1.85vw,24px); color:var(--mute); line-height:1.65; max-width:46ch; font-weight:500;}
+  .big{font-family:var(--disp); font-size:clamp(24px,3.6vw,44px); font-weight:800; line-height:1.35; letter-spacing:-.01em;}
+  .mono{font-family:var(--mono);}
+  .hi{color:var(--clay-deep);} .hi-c{color:var(--teal);} .hi-y{color:var(--gold);}
+  .rule{height:1.5px; background-color:var(--line); margin:30px 0; max-width:620px;}
+
+  .grid{display:grid; gap:clamp(12px,1.6vw,20px); margin-top:32px;}
+  .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  .card{background-color:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2vw,28px);}
+  .card .k{font-family:var(--mono); font-size:12px; letter-spacing:.12em; color:var(--mute); margin-bottom:12px; text-transform:uppercase;}
+  .card p{font-size:clamp(14px,1.4vw,17px); color:var(--mute); line-height:1.6; margin-top:10px;}
+  .card.on{border-color:var(--clay); background-color:#fbf0e6;} .card.on .k{color:var(--clay-deep);}
+  .card.dim{opacity:.5;}
+  .c-cy{border-color:#b9d0c9;} .c-cy .k{color:var(--teal);}
+  .c-yl{border-color:#e6cf9a;} .c-yl .k{color:var(--gold);}
+  .tag-ai{border-color:#b9d0c9; background:var(--teal-soft,#e4ece8);} .tag-ai .k{color:var(--teal);}
+  .tag-me{border-color:#e0b89c; background:#fbf0e6;} .tag-me .k{color:var(--clay-deep);}
+  .tag-both{border-color:#e6cf9a; background:#fbf6e8;} .tag-both .k{color:var(--gold);}
+
+  ul.plain{list-style:none; margin-top:24px; max-width:940px;}
+  ul.plain li{font-size:clamp(16px,1.75vw,23px); line-height:1.5; padding:12px 0 12px 40px; position:relative; border-bottom:1px solid var(--line);}
+  ul.plain li:last-child{border-bottom:none;}
+  ul.plain li::before{content:attr(data-n); position:absolute; left:0; top:15px; font-family:var(--mono); font-size:13px; color:var(--teal);}
+  ul.plain li span{color:var(--mute); font-size:.78em; display:block; margin-top:5px;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:26px;}
+  .chip{font-family:var(--mono); font-size:clamp(14px,1.7vw,22px); padding:8px 13px; border-radius:8px; background-color:var(--card); border:1px solid var(--line); color:var(--ink);}
+  .chip.a{border-color:#b9d0c9; color:var(--teal);}
+  .chip.b{border-color:#e6cf9a; color:var(--gold);}
+  .chip.c{border-color:#e0b89c; color:var(--clay-deep);}
+  .chiplabel{font-family:var(--mono); font-size:12px; color:var(--mute); letter-spacing:.1em; margin-top:14px;}
+
+  .turns{display:flex; align-items:flex-end; gap:clamp(10px,1.6vw,22px); margin-top:34px; height:clamp(150px,26vh,240px);}
+  .turn{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px;}
+  .turn .fill{width:100%; border-radius:8px 8px 0 0; background-color:var(--card); border:1px solid var(--line); border-bottom:none;}
+  .turn:nth-child(1) .fill{height:16%; background-color:#efe5d2;}
+  .turn:nth-child(2) .fill{height:34%; background-color:#e8d9bf;}
+  .turn:nth-child(3) .fill{height:58%; background-color:#ecd7a8; border-color:#e6cf9a;}
+  .turn:nth-child(4) .fill{height:88%; background-color:#eec9b6; border-color:var(--clay);}
+  .turn .cap{font-family:var(--mono); font-size:clamp(11px,1.1vw,14px); color:var(--mute);}
+
+  .banner{border:1.5px dashed var(--clay); background-color:#fbf3e6; border-radius:16px; padding:clamp(22px,2.6vw,38px); margin-top:28px; max-width:960px;}
+  .kicker{font-family:var(--mono); font-size:clamp(12px,1.2vw,15px); color:var(--mute); margin-top:24px; letter-spacing:.02em; line-height:1.7;}
+
+  .gates{display:grid; gap:clamp(12px,1.6vw,18px); margin-top:30px; grid-template-columns:repeat(3,1fr);}
+  .gate{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(16px,2vw,24px); display:flex; flex-direction:column; gap:10px;}
+  .gate .q{font-family:var(--mono); font-size:clamp(20px,2.4vw,30px); color:var(--clay-deep); font-weight:700;}
+  .gate .t{font-family:var(--disp); font-weight:700; font-size:clamp(16px,1.9vw,22px); line-height:1.3;}
+  .gate .no{margin-top:auto; color:var(--clay-deep); font-weight:700; font-size:clamp(14px,1.6vw,18px); line-height:1.4;}
+
+  .ladder{display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:920px;}
+  .rung{display:flex; align-items:center; gap:clamp(12px,2vw,22px); background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:clamp(14px,1.8vw,22px) clamp(16px,2vw,26px);}
+  .rung .lv{font-family:var(--mono); font-size:clamp(15px,1.7vw,21px); color:var(--mute); flex:none;}
+  .rung .nm{font-family:var(--disp); font-weight:800; font-size:clamp(17px,2vw,26px); min-width:clamp(90px,12vw,150px);}
+  .rung .ds{color:var(--mute); font-size:clamp(13px,1.5vw,18px); line-height:1.4;}
+  .rung.r1{border-left-color:#b9d0c9;} .rung.r2{border-left-color:var(--teal);} .rung.r3{border-left-color:var(--amber);} .rung.r4{border-left-color:var(--clay);}
+  .axis{font-family:var(--mono); font-size:clamp(12px,1.3vw,15px); color:var(--mute); margin-top:16px;}
+
+  .prompt{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:clamp(18px,2.2vw,28px); margin-top:26px; font-family:var(--mono); font-size:clamp(13px,1.5vw,18px); line-height:1.9; white-space:pre-wrap; color:var(--ink); max-width:960px;}
+  .prompt .lbl{color:var(--clay-deep); font-weight:700;}
+  .prompt .val{color:var(--ink);}
+
+  .vs{display:grid; grid-template-columns:1fr auto 1fr; gap:clamp(14px,2vw,26px); align-items:center; margin-top:30px;}
+  .vs .mid{font-family:var(--disp); font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--mute); text-align:center;}
+
+  @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
+  @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
 </style>
 </head>
 <body>
 <a class="home" href="index.html">현황판 ↗</a><div class="bar" id="bar"></div><div class="count" id="count"></div><div class="hint">← → 또는 클릭</div>
 <div class="deck" id="deck">
-  <style>
-    .tbl{width:100%;max-width:920px;border-collapse:collapse;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-    .tbl th,.tbl td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--line);font-size:clamp(12px,1.35vw,17px)}
-    .tbl th{background:var(--paper-2);font-family:var(--mono);font-size:clamp(10px,1vw,12px);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700}
-    .tbl tr:last-child td{border-bottom:0}
-    .tbl td b{color:var(--clay-deep)}
-    .tbl td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
-    .tbl tr.hi td{background:#fbf0e6}
-    .scale{display:flex;align-items:flex-end;gap:clamp(6px,1.2vw,16px);margin-top:28px;max-width:900px}
-    .scale .b{flex:1;background:var(--card);border:1px solid var(--line);border-bottom:4px solid var(--teal);border-radius:10px 10px 0 0;padding:12px 10px;text-align:center}
-    .scale .b:nth-child(2){border-bottom-color:var(--amber)}
-    .scale .b:nth-child(3){border-bottom-color:var(--clay)}
-    .scale .b .t{font-family:var(--mono);font-size:clamp(10px,1vw,12px);color:var(--mute);letter-spacing:.08em}
-    .scale .b .v{font-family:var(--disp);font-weight:800;font-size:clamp(17px,2.4vw,30px);margin-top:6px;line-height:1.1}
-    .scale .b .d{font-size:clamp(10px,1.05vw,13px);color:var(--mute);margin-top:6px;line-height:1.45}
-    @media(max-height:520px) and (orientation:landscape){.tbl th,.tbl td{padding:6px 10px}}
-  </style>
 
   <section class="slide active">
-    <div class="eyebrow">W16 · AI 이해하기</div>
-    <h1>AI의 <span class="hi">크기</span></h1>
+    <div class="eyebrow">W16 · AI 고르기</div>
+    <h1>AI는 <span class="hi">하나가 아니다</span></h1>
     <div class="rule"></div>
-    <p class="lead">“큰 모델”은 대체 <b class="hi-t">뭐가 큰</b> 걸까?<br>파라미터 · 메모리 · 학습 데이터 · GPU — 안을 열어본다.</p>
+    <p class="lead">우리가 쓰는 Claude 안에는 <b class="hi-t">여러 개의 AI</b>가 들어 있다.<br>오늘은 그게 뭐가 다른지 알고, <b class="hi-t">골라 쓰는 법</b>을 배운다.</p>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">오늘의 질문</div>
-    <h2>왜 어떤 AI는<br>내 노트북에서 <span class="hi-g">못 돌까?</span></h2>
+    <h2>왜 이름이<br><span class="hi-g">여러 개</span>일까?</h2>
+    <div class="prompt">Claude 화면에서 보내기 버튼 옆을 누르면 —
+
+  <span class="val">Opus 5</span>
+  <span class="val">Sonnet 5</span>
+  <span class="val">Haiku 4.5</span>
+  …그리고 <span class="val">Effort</span>: low · medium · high · xhigh · max</div>
+    <div class="kicker">지금까지 우리는 <span class="hi">그냥 나오는 대로</span> 썼다. 오늘 이걸 끝낸다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">01 · AI 안에는</div>
+    <h2>거대한 <span class="hi-t">숫자 표</span>가<br>들어 있다</h2>
+    <p class="lead">AI는 글자를 보고 <b class="hi-t">다음에 올 글자</b>를 고른다.<br>무엇을 고를지는 안에 저장된 <b class="hi-t">숫자들</b>이 정한다.</p>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">배운다는 건</div><h3>숫자를 조금씩 고치는 일</h3><p>글을 잔뜩 읽히면서, 틀릴 때마다 숫자를 아주 조금 바꾼다. 수억 번 반복한다.</p></div>
+      <div class="card clay"><div class="k">다 배우고 나면</div><h3>숫자는 고정된다</h3><p>우리가 쓸 때는 그 숫자가 바뀌지 않는다. 읽기만 한다.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">02 · 크기</div>
+    <h2>그 숫자가 <span class="hi-g">몇 개</span>냐가<br>AI의 크기다</h2>
+    <div class="prompt"><span class="lbl">우리가 만든 모델</span>
+
+tiny    <span class="val">2,300만 개</span>      짧게 <span class="val">23M</span>
+small   <span class="val">1억 1,000만 개</span>  짧게 <span class="val">110M</span>
+large   <span class="val">3억 3,600만 개</span>  짧게 <span class="val">336M</span>
+
+<span class="lbl">M</span> = 백만    <span class="lbl">B</span> = 10억
+회사들이 만드는 큰 모델은 <span class="val">7B · 70B</span> 처럼 부른다 = 70억 · 700억 개</div>
+    <div class="kicker">숫자 하나하나가 대단한 게 아니다. <span class="hi">몇 개나 있느냐</span>가 다를 뿐이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">03 · 크면 뭐가 달라지나</div>
+    <h2>좋은 점과<br><span class="hi">치르는 값</span></h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">좋은 점</div><h3>더 어려운 걸 한다</h3><p>여러 단계를 거쳐 생각해야 하는 일, 길게 이어지는 이야기, 헷갈리는 질문에 강해진다.</p></div>
+      <div class="card clay"><div class="k">치르는 값</div><h3>자리 · 시간 · 돈</h3><p>숫자가 많으면 컴퓨터 안에 <b>자리를 많이 차지</b>하고, 한 글자 고르는 데 <b>계산이 더 많아</b> 느리고, 그만큼 <b>비싸다</b>.</p></div>
+    </div>
+    <div class="kicker">그래서 회사들은 <span class="hi-t">큰 것 하나</span>가 아니라 <span class="hi-t">크고 작은 여러 개</span>를 만들어 둔다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">04 · 크기만이 아니다</div>
+    <h2>무엇을 <span class="hi-t">얼마나</span><br>읽었느냐</h2>
+    <p class="lead">같은 크기라도 <b class="hi-t">읽은 글의 양과 질</b>이 다르면 실력이 달라진다.<br>이걸 <b class="hi-t">학습 토큰</b>이라고 부른다 — 읽힌 글자 수라고 생각하면 된다.</p>
+    <div class="kicker">그래서 모델을 볼 때 숫자를 <span class="hi">두 개</span> 본다 — <span class="hi-t">파라미터(크기)</span>와 <span class="hi-t">학습 토큰(읽은 양)</span>.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">직접 보기</div>
+    <h2>우리가 만든 모델을<br><span class="hi-g">나란히</span> 놓고</h2>
+    <div class="prompt"><span class="lbl">주소</span>  aitopatom-27f6.taildae05f.ts.net:10000
+
+<span class="lbl">모델</span>        <span class="lbl">파라미터</span>   <span class="lbl">학습 토큰</span>
+tiny            <span class="val">23M</span>       <span class="val">3억</span>
+small          <span class="val">110M</span>       <span class="val">3억</span>
+large          <span class="val">336M</span>      <span class="val">76억</span></div>
+    <div class="kicker">같은 문장을 넣으면 <span class="hi">네 칸이 동시에</span> 글을 쓴다. 먼저 <span class="hi-t">tiny와 small</span>만 비교해 보자.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">발견 1</div>
+    <h2>읽은 양이 같은데<br>크기만 <span class="hi">5배</span></h2>
+    <div class="prompt">tiny    23M  ·  3억 토큰   →  말이 자주 무너진다
+small  110M  ·  3억 토큰   →  훨씬 멀쩡하다</div>
+    <p class="lead">읽은 글은 <b class="hi-t">똑같다.</b> 다른 건 크기뿐이다.<br>그런데 결과가 눈에 띄게 다르다 — <b class="hi-t">크기가 하는 일</b>이 이것이다.</p>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">발견 2</div>
+    <h2>그럼 <span class="hi">large</span>는<br>얼마나 더 좋을까?</h2>
+    <div class="prompt">small  110M  ·   3억 토큰  ·  ppl <span class="val">24.2</span>
+large  336M  ·  76억 토큰  ·  ppl <span class="val">23.3</span>
+
+크기 <span class="val">3배</span> · 읽은 글 <span class="val">25배</span> … 그런데 거의 <span class="val">비슷하다</span></div>
+    <div class="kicker">large는 글을 <span class="hi">끝까지 다 읽지 못했다</span>(0.26에폭). 재료가 많아도 <span class="hi-t">공부를 덜 하면</span> 소용없다.<br>ppl은 낮을수록 잘 맞힌 것 — 숫자가 아니라 <span class="hi-t">나온 글을 읽고</span> 판단하자.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">05 · 어디서 도나</div>
+    <h2>왜 하필<br><span class="hi-t">그래픽카드</span>일까?</h2>
+    <p class="lead">게임 화면을 그리는 그 부품이다.<br>화면의 <b class="hi-t">수백만 개 점</b>을 동시에 칠하려고 만들어졌다.</p>
+    <div class="grid g2">
+      <div class="card"><div class="k">보통 컴퓨터 머리(CPU)</div><h3>어려운 걸 하나씩</h3><p>똑똑한 사람 몇 명이 차례대로 푼다.</p></div>
+      <div class="card teal"><div class="k">그래픽카드(GPU)</div><h3>쉬운 걸 수천 개 동시에</h3><p>단순 계산을 하는 일꾼 수천 명이 한꺼번에 움직인다.</p></div>
+    </div>
+    <div class="kicker">AI가 하는 계산이 딱 그런 모양이다 — <span class="hi">간단한 곱셈·덧셈이 어마어마하게 많다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">06 · 우리 것</div>
+    <h2>우리 반 <span class="hi-g">DGX Spark</span></h2>
+    <p class="lead">우리가 쓰는 AI 전용 컴퓨터다.<br>오늘 비교하는 모델도, 드라마 영상도, 그림과 소리도 <b class="hi-t">전부 여기서</b> 만들어진다.</p>
     <div class="grid g3">
-      <div class="card"><div class="k">궁금한 것 1</div><h3>크기의 정체</h3><p>“7B”, “70B” 같은 숫자는 무엇을 세는 걸까.</p></div>
-      <div class="card"><div class="k">궁금한 것 2</div><h3>왜 GPU인가</h3><p>왜 비싼 그래픽카드가 필요할까.</p></div>
-      <div class="card"><div class="k">궁금한 것 3</div><h3>내 것으로</h3><p>인터넷 없이 내 컴퓨터에서 돌릴 수 있을까.</p></div>
+      <div class="card teal"><div class="k">영상</div><h3>MiniMax H3</h3><p>한 컷 만드는 데 약 2분 45초</p></div>
+      <div class="card gold"><div class="k">그림</div><h3>FLUX</h3><p>한 장에 약 2분</p></div>
+      <div class="card clay"><div class="k">글</div><h3>우리가 만든 모델</h3><p>오늘 비교할 tiny · small · large</p></div>
     </div>
+    <div class="kicker">한 번에 <span class="hi">하나씩</span> 만든다. 여럿이 걸면 줄을 선다 — <span class="hi-t">컴퓨터가 하나뿐이기 때문</span>이다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">01 · 파라미터</div>
-    <h2>AI 안에는<br><span class="hi-t">손잡이</span>가 들어 있다</h2>
-    <p class="lead">AI는 배우면서 수많은 숫자를 조금씩 돌려 맞춘다.<br>그 <b class="hi">숫자 하나하나가 파라미터</b>다.</p>
+    <div class="eyebrow clay">07 · 그럼 Claude는?</div>
+    <h2>내 앞이 아니라<br><span class="hi">저 멀리</span>서 돈다</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">학습이란</div><h3>손잡이를 맞추는 일</h3><p>글을 읽으며 “다음 글자”를 맞히도록 손잡이를 조금씩 돌린다.</p></div>
-      <div class="card clay"><div class="k">모델이란</div><h3>다 맞춰진 손잡이 묶음</h3><p>학습이 끝나면 남는 건 그 숫자들뿐이다. 그게 파일로 저장된다.</p></div>
+      <div class="card teal"><div class="k">DGX Spark</div><h3>우리 집에 있다</h3><p>전기를 우리가 내고, 우리만 쓴다. 꺼지면 아무것도 안 된다. 크기도 우리가 안다.</p></div>
+      <div class="card clay"><div class="k">Claude · ChatGPT</div><h3>회사의 큰 컴퓨터에 있다</h3><p>내 아이패드는 <b>말을 전달할 뿐</b>이다. 인터넷이 끊기면 아무것도 못 한다.</p></div>
     </div>
+    <div class="kicker">그래서 아이패드처럼 작은 기기에서도 <span class="hi-t">아주 큰 AI</span>를 쓸 수 있다 — 내 기기가 일하는 게 아니니까.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">02 · 얼마나 많냐면</div>
-    <h2><span class="hi">10억 개</span>가 기본 단위</h2>
-    <div class="scale">
-      <div class="b"><div class="t">작은 모델</div><div class="v">1B</div><div class="d">10억 개<br>휴대폰에서도 돈다</div></div>
-      <div class="b"><div class="t">중간 모델</div><div class="v">7~8B</div><div class="d">70~80억 개<br>좋은 노트북이면 가능</div></div>
-      <div class="b"><div class="t">큰 모델</div><div class="v">수백 B</div><div class="d">수천억 개<br>컴퓨터 창고가 필요</div></div>
-    </div>
-    <div class="banner">
-      <div class="big">10억을 <span class="hi-t">1초에 하나씩</span> 세면?</div>
-      <p style="color:var(--mute);margin-top:12px">쉬지 않고 세어도 <b>약 32년</b>이 걸린다. 그게 <b>가장 작은</b> 모델의 손잡이 개수다.</p>
-    </div>
+    <div class="eyebrow gold">08 · 비밀</div>
+    <h2>회사 모델은<br>크기를 <span class="hi-g">알려주지 않는다</span></h2>
+    <p class="lead">우리 모델은 23M·336M을 안다.<br>그런데 Opus·Sonnet이 몇 개인지는 <b class="hi-t">아무도 공개하지 않는다.</b></p>
+    <div class="kicker">대신 힌트가 하나 있다 — <span class="hi">가격표.</span> 큰 모델일수록 계산이 많고, 그만큼 비싸게 받는다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">03 · 메모리</div>
-    <h2>손잡이는<br><span class="hi-g">자리를 차지한다</span></h2>
-    <p class="lead">숫자 하나를 저장하는 데 보통 <b class="hi">2바이트</b>가 든다.<br>그래서 필요한 메모리는 그냥 곱셈이다.</p>
-    <div class="prompt">파라미터 수  ×  2바이트  =  필요한 메모리
+    <div class="eyebrow teal">09 · 가격이 알려주는 것</div>
+    <h2>같은 회사 안에도<br><span class="hi-t">사다리</span>가 있다</h2>
+    <div class="prompt"><span class="lbl">Claude</span>  (글 100만 자 정도를 만들어낼 때의 값)
 
-  70억 개  ×  2바이트  =  <span class="val">약 14 GB</span></div>
-    <div class="kicker">이게 <span class="hi">모델을 켜기만 하는 데</span> 드는 양이다. 실제로 쓰려면 조금 더 든다.</div>
+Haiku 4.5    <span class="val">$5</span>     빠르고 싸다 · 간단한 일
+Sonnet 5     <span class="val">$10</span>    중간
+Opus 5       <span class="val">$25</span>    제일 똑똑하고 제일 비싸다
+
+<span class="lbl">ChatGPT</span>  가장 싼 것 <span class="val">$0.4</span>  ↔  위쪽 모델 <span class="val">$50</span>  =  <span class="val">100배 넘게</span> 차이</div>
+    <div class="kicker">우리는 돈을 직접 내진 않지만, <span class="hi">사용량</span>으로 똑같이 치른다 — 비싼 걸 쓰면 한도가 빨리 닳는다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">03 · 메모리</div>
-    <h2>크기별로 보면</h2>
-    <table class="tbl">
-      <thead><tr><th>모델</th><th>파라미터</th><th>필요 메모리</th><th>어디서 도나</th></tr></thead>
-      <tbody>
-        <tr><td>아주 작은</td><td class="n">1B</td><td class="n">약 2 GB</td><td>휴대폰·태블릿</td></tr>
-        <tr class="hi"><td>중간</td><td class="n">7B</td><td class="n">약 14 GB</td><td><b>좋은 그래픽카드</b></td></tr>
-        <tr><td>큰</td><td class="n">70B</td><td class="n">약 140 GB</td><td>여러 장 묶어야</td></tr>
-        <tr><td>아주 큰</td><td class="n">400B+</td><td class="n">약 800 GB+</td><td>컴퓨터 창고</td></tr>
-      </tbody>
-    </table>
-    <div class="kicker">게임용 그래픽카드가 보통 <span class="hi">8~24GB</span>다. 어디서 막히는지 보이지?</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">지금 해보기 · 5분</div>
-    <h2>내 기기는<br><span class="hi-g">몇 B</span>까지 될까?</h2>
-    <div class="flow">
-      <div class="step"><div class="n">01</div><div class="t">메모리 확인</div><div class="d">맥은 ‘이 Mac에 관하여’, 윈도는 작업 관리자 → 성능.</div></div>
-      <div class="step"><div class="n">02</div><div class="t">절반만 쓴다 치고</div><div class="d">화면·앱도 메모리를 쓰니 넉넉히 반만 계산한다.</div></div>
-      <div class="step"><div class="n">03</div><div class="t">나눠 본다</div><div class="d">아래 두 줄로 계산.</div></div>
-    </div>
-    <div class="prompt">그냥 담으면    쓸 수 있는 GB  <span class="lbl">÷ 2</span>  =  몇 B
-줄여 담으면    쓸 수 있는 GB  <span class="lbl">× 2</span>  =  몇 B
-
-<span class="val">예)</span> 16GB 중 8GB 를 쓴다면  →  그냥 4B / 줄여 담으면 16B</div>
-    <div class="kicker">각자 숫자를 말해보자. <span class="hi">누구 기계가 제일 큰 모델을 열 수 있나?</span></div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">04 · 줄여 담기</div>
-    <h2>숫자를 <span class="hi-t">거칠게</span> 저장하면<br>작아진다</h2>
-    <p class="lead">2바이트 대신 <b class="hi">0.5바이트</b>로 저장하는 방법이 있다.<br>사진 화질을 낮추면 용량이 줄어드는 것과 같다.</p>
+    <div class="eyebrow clay">10 · 또 하나 고를 것</div>
+    <h2>크기 말고<br><span class="hi">생각 시간</span></h2>
+    <p class="lead">같은 모델에게 <b class="hi-t">더 오래 생각하라</b>고 시킬 수 있다.<br>이걸 <b class="hi-t">Effort</b>라고 부른다.</p>
     <div class="grid g2">
-      <div class="card clay"><div class="k">그냥 저장</div><h3>7B → 약 14 GB</h3><p>정확하지만 무겁다.</p></div>
-      <div class="card teal"><div class="k">줄여 담기(양자화)</div><h3>7B → 약 4 GB</h3><p>조금 흐려지지만 노트북에서 돈다.</p></div>
+      <div class="card teal"><div class="k">low · medium</div><h3>바로 답한다</h3><p>쉬운 일. 빠르고 사용량도 적게 든다.</p></div>
+      <div class="card clay"><div class="k">high · xhigh · max</div><h3>한참 생각하고 답한다</h3><p>어려운 일. 느리고 사용량을 훨씬 많이 쓴다.</p></div>
     </div>
-    <div class="kicker">그래서 “못 돌리던 모델”이 <span class="hi">갑자기 돌아가기도</span> 한다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">05 · GPU</div>
-    <h2>왜 하필<br><span class="hi-g">그래픽카드</span>일까?</h2>
-    <div class="grid g2">
-      <div class="card"><div class="k">CPU</div><h3>똑똑한 사람 몇 명</h3><p>어려운 일을 순서대로 잘 처리한다. 사람 수가 적다.</p></div>
-      <div class="card teal"><div class="k">GPU</div><h3>단순 계산 잘하는 사람 수천 명</h3><p>쉬운 곱셈을 <b>한꺼번에</b> 수천 개 한다.</p></div>
-    </div>
-    <p class="lead" style="margin-top:22px">AI가 하는 일은 <b class="hi">거대한 곱셈과 덧셈의 반복</b>이다.<br>어려운 게 아니라 <b class="hi">많은</b> 것이다. 그래서 GPU가 이긴다.</p>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">06 · 진짜 병목</div>
-    <h2>빠르기보다<br><span class="hi">들어가느냐</span></h2>
-    <div class="banner">
-      <div class="big">모델이 메모리에 <span class="hi-t">안 들어가면</span><br>느린 게 아니라 <span class="hi">아예 안 켜진다</span></div>
-      <p style="color:var(--mute);margin-top:14px">그래서 AI를 돌릴 때 제일 먼저 보는 건 속도가 아니라 <b>메모리 용량</b>이다.</p>
-    </div>
-    <div class="kicker">책을 빨리 읽는 것과 <span class="hi">책상에 책이 다 올라가는 것</span>은 다른 문제다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">07 · 우리 것</div>
-    <h2>우리 반 <span class="hi-t">DGX Spark</span></h2>
-    <div class="grid g3">
-      <div class="card teal"><div class="k">통합 메모리</div><h3>128 GB</h3><p>CPU와 GPU가 같은 메모리를 나눠 쓴다.</p></div>
-      <div class="card gold"><div class="k">그래서</div><h3>큰 모델도 로컬에서</h3><p>게임용 그래픽카드로는 못 여는 크기를 열 수 있다.</p></div>
-      <div class="card clay"><div class="k">한계</div><h3>동시에 여러 개는 어렵다</h3><p>메모리를 나눠 쓰니 작업을 줄 세워야 한다.</p></div>
-    </div>
-    <div class="kicker">W14에서 영상 만들 때 <span class="hi">한 번에 하나씩</span> 나왔던 이유가 이거다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">08 · 학습 데이터</div>
-    <h2>손잡이만 많으면<br><span class="hi-g">똑똑해질까?</span></h2>
-    <p class="lead">아니다. 손잡이를 맞추려면 <b class="hi">읽을 글</b>이 있어야 한다.<br>그 글의 양을 세는 단위가 — 기억나지? <b class="hi-t">토큰</b>이다.</p>
-    <div class="grid g2">
-      <div class="card clay"><div class="k">손잡이만 늘리면</div><h3>비어 있는 큰 그릇</h3><p>담을 게 없으면 클수록 낭비다.</p></div>
-      <div class="card teal"><div class="k">데이터도 늘리면</div><h3>제대로 채워진다</h3><p>큰 모델은 <b>수조 개</b> 토큰을 읽으며 배운다.</p></div>
-    </div>
-    <div class="kicker">대략 <span class="hi">손잡이 하나당 글자 수십 개</span>는 읽어야 제값을 한다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">09 · 만들 때 / 쓸 때</div>
-    <h2>학습과 사용은<br>완전히 <span class="hi">다른 일</span></h2>
-    <table class="tbl">
-      <thead><tr><th></th><th>학습 (만들 때)</th><th>추론 (쓸 때)</th></tr></thead>
-      <tbody>
-        <tr><td><b>하는 일</b></td><td>손잡이를 맞춘다</td><td>맞춰진 손잡이로 답한다</td></tr>
-        <tr><td><b>걸리는 시간</b></td><td>몇 주 ~ 몇 달</td><td>몇 초</td></tr>
-        <tr class="hi"><td><b>필요한 메모리</b></td><td><b>훨씬 많이</b> (여러 배)</td><td>모델이 들어갈 만큼</td></tr>
-        <tr><td><b>누가 하나</b></td><td>회사·연구소</td><td>우리</td></tr>
-      </tbody>
-    </table>
-    <div class="kicker">우리가 로컬에서 하는 건 거의 다 <span class="hi">쓰는 쪽</span>이다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow teal">10 · 로컬 모델</div>
-    <h2>내 컴퓨터 안에서<br>도는 <span class="hi-t">AI</span></h2>
-    <p class="lead">모델 파일을 내려받아 <b class="hi">내 기계에서만</b> 돌린다.<br>인터넷도, 남의 서버도 필요 없다.</p>
-    <div class="grid g3">
-      <div class="card teal"><div class="k">좋은 점</div><h3>내 것만 본다</h3><p>내 글이 밖으로 나가지 않는다.</p></div>
-      <div class="card teal"><div class="k">좋은 점</div><h3>끊기지 않는다</h3><p>인터넷이 없어도, 요금 걱정 없이.</p></div>
-      <div class="card clay"><div class="k">아쉬운 점</div><h3>크기에 갇힌다</h3><p>내 메모리에 들어가는 만큼만 쓸 수 있다.</p></div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow gold">11 · 골라 쓰기</div>
-    <h2>무엇이 더 좋은 게 아니라<br><span class="hi-g">무엇에 맞느냐</span></h2>
-    <table class="tbl">
-      <thead><tr><th></th><th>로컬 모델</th><th>큰 클라우드 모델</th></tr></thead>
-      <tbody>
-        <tr><td><b>어려운 문제</b></td><td>약함</td><td><b>강함</b></td></tr>
-        <tr><td><b>속도</b></td><td><b>빠름</b></td><td>기다려야</td></tr>
-        <tr><td><b>비밀 지키기</b></td><td><b>안전</b></td><td>남의 서버로 간다</td></tr>
-        <tr><td><b>비용</b></td><td>전기값</td><td>쓸수록 돈</td></tr>
-        <tr class="hi"><td><b>어울리는 일</b></td><td>정리·분류·요약</td><td>여러 단계 추론</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow">오늘 해볼 것</div>
-    <h2>크기와 생각 시간을<br><span class="hi">내 손으로</span> 바꾼다</h2>
-    <p class="lead">지금까지는 AI 안을 들여다봤다.<br>이제 그 <b class="hi-t">손잡이를 직접 돌려</b> 무엇이 달라지는지 본다.</p>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">바꿀 것 1</div><h3>모델 — 크기</h3><p>Haiku 4.5 ↔ Opus 5. 손잡이 개수가 다른 AI로 갈아탄다.</p></div>
-      <div class="card gold"><div class="k">바꿀 것 2</div><h3>Effort — 생각 시간</h3><p>low ↔ max. 같은 AI에게 더 오래 생각하라고 시킨다.</p></div>
-    </div>
+    <div class="kicker">크기를 바꾸는 것과 <span class="hi">다른 축</span>이다 — 작은 모델에게 오래 생각시킬 수도, 큰 모델에게 빨리 답하라 할 수도 있다.</div>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">여는 법</div>
     <h2>보내기 버튼 <span class="hi-g">옆</span>에<br>다 들어 있다</h2>
     <div class="prompt"><span class="lbl">1</span>  보내기 버튼 옆의 <span class="val">모델 이름</span>을 누른다
-<span class="lbl">2</span>  <span class="val">모델</span> — Opus 5 · Sonnet 5 · Haiku 4.5 …
-       (안 보이면 “더 많은 모델”)
-<span class="lbl">3</span>  <span class="val">Effort</span> — low · medium · high(기본) · xhigh · max
+<span class="lbl">2</span>  <span class="val">모델</span> 고르기 (안 보이면 “더 많은 모델”)
+<span class="lbl">3</span>  <span class="val">Effort</span> 고르기 — low · medium · high · xhigh · max
 <span class="lbl">4</span>  <span class="val">Thinking</span> — Effort 위에 올리면 켜고 끄기
        (Opus 5는 끌 수 없다)</div>
-    <div class="kicker"><span class="hi">대화 중간에 바꿔도 된다.</span> 다음 대답부터 적용된다 — 그래서 같은 대화에서 바로 비교할 수 있다.</div>
+    <div class="kicker"><span class="hi">대화 도중에 바꿔도 된다.</span> 다음 대답부터 적용된다 — 그래서 같은 대화에서 바로 비교할 수 있다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">실험 규칙</div>
-    <h2>세 가지를 <span class="hi-t">지킨다</span></h2>
-    <div class="grid g3">
-      <div class="card teal"><div class="k">01</div><h3>가리고 본다</h3><p>어느 설정인지 모른 채 ‘가’와 ‘나’로만 읽는다. 기록하는 사람만 안다.</p></div>
-      <div class="card gold"><div class="k">02</div><h3>시간을 잰다</h3><p>보낸 순간부터 답이 끝날 때까지. 초 단위로 적는다.</p></div>
-      <div class="card clay"><div class="k">03</div><h3>채점표로 센다</h3><p>“느낌이 좋다” 말고, 맞았는지 틀렸는지로.</p></div>
+    <div class="eyebrow">이제 직접</div>
+    <h2>세 번 <span class="hi">바꿔보고</span><br>고르는 기준을 만든다</h2>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><div class="t">쉬운 일</div><div class="d">차이가 날까? 먼저 예상을 적는다</div></div>
+      <div class="step"><div class="n">02</div><div class="t">함정 문제</div><div class="d">생각 시간이 답을 바꾸나</div></div>
+      <div class="step"><div class="n">03</div><div class="t">게임 만들기</div><div class="d">몇 번 고쳐야 돌아가나</div></div>
     </div>
-    <div class="kicker">아이패드는 <span class="hi">기록·채점</span>, 컴퓨터는 <span class="hi">설정·질문</span>을 맡는다.</div>
+    <div class="kicker">매번 <span class="hi-t">예상을 먼저 적는다.</span> 결과를 보고 나면 “그럴 줄 알았다”가 되기 때문이다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow teal">채점표</div>
-    <h2>무엇을 <span class="hi-t">볼</span> 것인가</h2>
-    <ul class="plain">
-      <li data-n="01">맞았나?<span>사실이 틀리지 않았는가</span></li>
-      <li data-n="02">끝까지 했나?<span>중간에 멈추거나 딴 얘기로 새지 않았는가</span></li>
-      <li data-n="03">지어냈나?<span>모르는 걸 아는 척 만들어내지 않았는가</span></li>
-      <li data-n="04">한국어가 자연스럽나?<span>번역기 같은 말투가 아닌가</span></li>
-      <li data-n="05">시킨 걸 했나?<span>물어본 것에 답했는가</span></li>
-    </ul>
-    <div class="kicker">게임 실험은 항목이 하나 더 붙는다 — <span class="hi">몇 번 고쳐서 돌아갔나.</span><br>W14에서 발자국을 합격·불합격으로 갈랐던 것과 같은 동작이다.</div>
-  </section>
-
-  <section class="slide">
-    <div class="eyebrow clay">실험 1 · 먼저 이것부터</div>
+    <div class="eyebrow clay">실험 1</div>
     <h2>쉬운 일에도<br><span class="hi">차이가 날까?</span></h2>
     <div class="prompt"><span class="lbl">과제</span>  “고양이”로 4행시를 지어줘
        2 + 2 는?
-       오늘 기분을 이모지 3개로
 
-<span class="lbl">설정</span>  가 = <span class="val">Haiku 4.5 · low</span>      나 = <span class="val">Opus 5 · max</span>
-<span class="lbl">기록</span>  걸린 시간(초) · 채점표 점수</div>
-    <div class="kicker">먼저 <span class="hi-t">예상을 적는다</span> — 몇 초쯤 걸릴까, 누가 더 잘할까.<br>이 실험을 맨 앞에 두는 이유가 있다. 끝나고 알게 된다.</div>
+<span class="lbl">가</span>  Haiku 4.5 · low        <span class="lbl">나</span>  Opus 5 · max
+<span class="lbl">기록</span>  걸린 시간(초) · 더 나은 쪽이 있었나</div>
+    <div class="kicker">이걸 <span class="hi">맨 먼저</span> 하는 이유가 있다. 끝나고 이야기하자.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow clay">실험 2 · 함정</div>
+    <div class="eyebrow clay">실험 2</div>
     <h2>빨리 답하면<br><span class="hi">틀린다</span></h2>
     <div class="prompt"><span class="lbl">문제</span>  배트와 공을 합치면 <span class="val">1,100원</span>이다.
        배트가 공보다 <span class="val">1,000원</span> 더 비싸다.
        공은 얼마인가?
 
-<span class="lbl">설정</span>  같은 모델로 <span class="val">effort low</span> → 그다음 <span class="val">effort max</span>
+<span class="lbl">같은 모델로</span>  effort <span class="val">low</span>  →  effort <span class="val">max</span>
 <span class="lbl">기록</span>  답 · 시간 · 생각하는 게 보였나</div>
     <div class="kicker">먼저 <span class="hi-t">우리끼리 풀어본다.</span> 우리도 틀린다면, AI가 틀리는 이유도 같은 것이다.</div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow clay">실험 3 · 우리 종목</div>
+    <div class="eyebrow clay">실험 3</div>
     <h2>게임이 <span class="hi">한 방에</span><br>돌아가나?</h2>
     <div class="prompt"><span class="lbl">똑같은 프롬프트를 양쪽에</span>
 화살표로 움직이는 공이 위에서 떨어지는 블록을
 피하는 게임을 만들어줘. 점수를 화면에 보여줘.
-<span class="val">HTML 한 파일</span>로 만들어줘.
+<span class="val">HTML 한 파일</span>로.
 
-<span class="lbl">설정</span>  가 = <span class="val">Haiku 4.5</span>      나 = <span class="val">Opus 5</span></div>
-    <div class="kicker">여기서 볼 것은 예쁜 코드가 아니다 — <span class="hi">처음에 돌아갔나 · 몇 번 고쳐서 돌아갔나 · 버그 몇 개.</span><br>우리가 1년 동안 해온 일이라 <span class="hi-t">차이가 바로 느껴진다.</span></div>
+<span class="lbl">가</span>  Haiku 4.5        <span class="lbl">나</span>  Opus 5</div>
+    <div class="kicker">볼 것은 예쁜 코드가 아니다 — <span class="hi">처음에 돌아갔나 · 몇 번 고쳐서 돌아갔나.</span></div>
   </section>
 
   <section class="slide">
-    <div class="eyebrow gold">실험 4 · 판정</div>
-    <h2>어느 쪽이<br><span class="hi-g">큰 모델</span>이었을까</h2>
-    <p class="lead">세 실험의 결과를 <b class="hi-t">라벨을 뗀 채</b> 늘어놓는다.<br>각자 ‘가’와 ‘나’ 중 큰 모델을 고르고, <b class="hi-t">근거를 한 줄</b> 적는다.</p>
+    <div class="eyebrow gold">기록지</div>
+    <h2>세 가지만 <span class="hi-g">적는다</span></h2>
+    <div class="prompt"><span class="lbl">실험</span>        <span class="lbl">내 예상</span>    <span class="lbl">걸린 시간</span>   <span class="lbl">정말 달랐나</span>
+4행시        <span class="val">?</span>          <span class="val">가 ?초 / 나 ?초</span>   <span class="val">?</span>
+함정 문제     <span class="val">?</span>          <span class="val">low ?초 / max ?초</span>  <span class="val">?</span>
+게임         <span class="val">?</span>          <span class="val">가 ?번 / 나 ?번 고침</span> <span class="val">?</span></div>
+    <div class="kicker">“느낌이 좋다” 말고 <span class="hi">맞았나 · 몇 초 · 몇 번</span>으로 적는다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">값 매기기</div>
+    <h2>비싼 걸 쓰면<br>얼마나 <span class="hi">빨리 닳나</span></h2>
+    <div class="prompt"><span class="lbl">확실한 것</span>
+Claude 안내 문서 — “effort와 thinking을 올리면
+토큰을 더 쓰고 <span class="val">사용 한도에 더 빨리 닿는다</span>”
+
+<span class="lbl">모르는 것</span>
+정확히 <span class="val">몇 배</span>인지는 공개하지 않는다
+
+<span class="lbl">그래서</span>  가격으로 짐작한다 — Haiku <span class="val">$5</span> ↔ Opus <span class="val">$25</span> = <span class="val">5배</span></div>
+    <div class="kicker">4행시에 Opus·max를 쓰면 <span class="hi">5배 값을 치르고 같은 시를 받는다.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">오늘의 결론</div>
+    <h2>고르는 <span class="hi-t">기준</span>을<br>직접 써보자</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">맞혔다면</div><h3>어디를 보고 알았나</h3><p>그 지점이 곧 “크기가 하는 일”이다.</p></div>
-      <div class="card clay"><div class="k">못 맞혔다면</div><h3>그게 오늘의 발견이다</h3><p>실패가 아니다. 그 과제에는 차이가 없었다는 증거다.</p></div>
+      <div class="card teal"><div class="k">작고 빠른 걸로 충분한 일</div><h3>우리가 찾은 것</h3><p>예: 짧은 글, 번역, 정리, 답이 뻔한 질문 …</p></div>
+      <div class="card clay"><div class="k">크고 오래 생각해야 하는 일</div><h3>우리가 찾은 것</h3><p>예: 게임 만들기, 여러 단계 문제, 함정 있는 질문 …</p></div>
     </div>
+    <div class="kicker">이 두 칸을 채우면 오늘 수업은 끝이다. <span class="hi">다음부터는 누르기 전에 한 번 고른다.</span></div>
   </section>
-
-  <section class="slide">
-    <div class="eyebrow clay">실험 5 · 값 매기기</div>
-    <h2>이 일에 <span class="hi">max</span>를<br>쓸 만했나?</h2>
-    <div class="prompt"><span class="lbl">과제</span>        <span class="lbl">low</span>      <span class="lbl">max</span>      <span class="lbl">차이가 있었나</span>
-4행시          <span class="val">?초</span>       <span class="val">?초</span>       <span class="val">?</span>
-함정 문제       <span class="val">?초</span>       <span class="val">?초</span>       <span class="val">?</span>
-게임 만들기     <span class="val">?초</span>       <span class="val">?초</span>       <span class="val">?</span></div>
-    <div class="kicker">effort와 thinking을 올리면 <span class="hi">토큰을 더 쓰고 사용 한도가 더 빨리 닳는다.</span><br>W11에서 센 그 토큰이다 — 이제 <span class="hi-t">내가 켜고 끌 수 있는 손잡이</span>가 됐다.</div>
-  </section>
-
 
   <section class="slide">
     <div class="eyebrow">2시간 진행표</div>
-    <h2>개념은 <span class="hi">절반</span>,<br>나머지는 손으로</h2>
+    <h2>절반은 알고,<br>절반은 <span class="hi">해본다</span></h2>
     <div class="timeline">
-      <div class="slot"><div class="time">0:00–0:40</div><h3>AI의 크기</h3><p>파라미터 · 메모리 · 양자화 · GPU. 내 기기는 몇 B까지?</p></div>
-      <div class="slot"><div class="time">0:40–0:55</div><h3>데이터와 학습</h3><p>손잡이만 많으면 똑똑해지나 · 만들 때와 쓸 때의 차이.</p></div>
-      <div class="slot"><div class="time">0:55–1:05</div><h3>설정 열기</h3><p>모델 · Effort · Thinking이 어디 있는지 각자 찾아본다.</p></div>
-      <div class="slot"><div class="time">1:05–1:15</div><h3>실험 1 — 쉬운 일</h3><p>예상부터 적고, 시간을 잰다.</p></div>
-      <div class="slot"><div class="time">1:15–1:30</div><h3>실험 2 — 함정 문제</h3><p>우리가 먼저 풀고, low와 max를 비교한다.</p></div>
-      <div class="slot"><div class="time">1:30–1:50</div><h3>실험 3 — 게임</h3><p>몇 번 고쳐야 돌아가나.</p></div>
-      <div class="slot"><div class="time">1:50–2:00</div><h3>판정 · 값 매기기</h3><p>어느 쪽이 큰 모델이었나. 쓸 만했나.</p></div>
+      <div class="slot"><div class="time">0:00–0:25</div><h3>AI의 크기</h3><p>숫자 표 · 파라미터 · 학습 토큰.</p></div>
+      <div class="slot"><div class="time">0:25–0:50</div><h3>우리 모델 비교</h3><p>tiny vs small vs large. 발견 두 가지.</p></div>
+      <div class="slot"><div class="time">0:50–1:10</div><h3>어디서 도나</h3><p>그래픽카드 · DGX Spark · Claude는 어디에.</p></div>
+      <div class="slot"><div class="time">1:10–1:20</div><h3>가격과 Effort</h3><p>사다리 · 생각 시간 · 설정 여는 법.</p></div>
+      <div class="slot"><div class="time">1:20–1:50</div><h3>실험 세 가지</h3><p>예상 먼저, 그다음 바꿔보기.</p></div>
+      <div class="slot"><div class="time">1:50–2:00</div><h3>기준 만들기</h3><p>두 칸을 채운다.</p></div>
     </div>
   </section>
 
   <section class="slide">
     <div class="eyebrow gold">한 줄로 정리</div>
-    <h2 style="max-width:24ch">크기는 <span class="hi-g">메모리</span>가 정하고,<br>실력은 <span class="hi-g">데이터</span>가 정한다</h2>
-    <p class="lead">파라미터가 많으면 메모리가 많이 필요하고,<br>그만큼 <b class="hi">읽힌 글</b>이 있어야 제값을 한다.<br>둘 다 있어야 “큰 모델”이 된다.</p>
+    <div class="banner"><p class="big">AI는 하나가 아니라 <span class="hi">여러 개</span>고,<br>어느 걸 쓸지는 <span class="hi">내가 고른다.</span></p></div>
+    <p class="lead" style="margin-top:24px">크기는 <b class="hi-t">할 수 있는 일</b>을 정하고,<br>고르는 일은 <b class="hi-t">치르는 값</b>을 정한다.</p>
   </section>
 
   <section class="slide">
-    <div class="eyebrow">나가기 전에</div>
-    <h2>어디서 갈렸나?</h2>
+    <div class="eyebrow teal">나가기 전에</div>
+    <h2>오늘 가장<br>뜻밖이었던 건?</h2>
     <div class="grid g2">
-      <div class="card teal"><div class="k">우리가 찾은 경계</div><h3>어디부터 갈렸나?</h3><p>어떤 종류의 일에서 차이가 벌어졌는지 한 문장으로.</p></div>
-      <div class="card clay"><div class="k">놀란 점</div><h3>예상과 달랐던 것</h3><p>작은 모델이 의외로 잘한 일이 있었나?</p></div>
+      <div class="card teal"><div class="k">발견</div><h3>차이가 없던 곳</h3><p>큰 걸 써도 똑같았던 일이 있었나. 어떤 일이었나.</p></div>
+      <div class="card clay"><div class="k">발견</div><h3>차이가 컸던 곳</h3><p>거기선 무엇이 달랐나 — 답이? 속도가? 고친 횟수가?</p></div>
     </div>
-    <div class="kicker">혼자 더 파볼 것 — 집에서 쓰는 AI의 <span class="hi-g">설정을 열어보기</span>. 무엇을 바꿀 수 있나. 로컬 모델 돌려보기 · 내 게임기엔 메모리가 얼마나 있나. 끌리는 것만.</div>
+    <div class="kicker">혼자 더 파볼 것 — 집에서 쓰는 AI의 <span class="hi-g">설정을 열어보기.</span> 무엇을 고를 수 있나. 끌릴 때만.</div>
   </section>
 </div>
+
 <script>
-  const slides=Array.from(document.querySelectorAll('.slide'));const bar=document.getElementById('bar'),count=document.getElementById('count');let i=0;const pad=n=>String(n).padStart(2,'0');function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));bar.style.width=((i+1)/slides.length*100)+'%';count.textContent=pad(i+1)+' / '+pad(slides.length)}
-  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});document.getElementById('deck').addEventListener('click',e=>show(e.clientX<window.innerWidth*.28?i-1:i+1));let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)show(dx<0?i+1:i-1);x0=null},{passive:true});show(0);
+  const slides=Array.from(document.querySelectorAll('.slide'));
+  const bar=document.getElementById('bar'), count=document.getElementById('count');
+  let i=0; const pad=n=>String(n).padStart(2,'0');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    count.textContent=pad(i+1)+' / '+pad(slides.length);
+  }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1);}
+    if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1);}
+    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+  });
+  document.getElementById('deck').addEventListener('click',e=>{show(e.clientX<window.innerWidth*0.28?i-1:i+1);});
+  let x0=null;
+  document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>45)show(dx<0?i+1:i-1); x0=null;
+  },{passive:true});
+  show(0);
 </script>
 </body>
 </html>
