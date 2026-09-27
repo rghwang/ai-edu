@@ -104,6 +104,21 @@
 
   @media (max-width:780px){ .g3,.g4,.gates{grid-template-columns:1fr;} .g2{grid-template-columns:1fr;} .vs{grid-template-columns:1fr;} .vs .mid{margin:6px 0;} }
   @media (prefers-reduced-motion:reduce){ .slide.active{animation:none;} .bar{transition:none;} }
+  .wviz{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,26px);margin-top:20px;max-width:840px}
+  .wviz figure{margin:0}
+  .wviz img{width:100%;aspect-ratio:1;display:block;border:1px solid var(--line);
+    image-rendering:pixelated;background:var(--card)}
+  .wviz figcaption{font-family:var(--mono);font-size:clamp(11px,1.2vw,14px);margin-top:9px;color:var(--mute)}
+  .wviz b{color:var(--clay-deep)}
+  .zoomrow{display:flex;align-items:center;gap:clamp(12px,2vw,24px);margin-top:18px;flex-wrap:wrap}
+  .zoomrow img{width:clamp(110px,14vw,168px);aspect-ratio:1;border:1px solid var(--line);image-rendering:pixelated}
+  @media(max-height:520px) and (orientation:landscape){.wviz{margin-top:8px;gap:10px}.wviz figcaption{margin-top:4px;font-size:11px}}
+  .sizechart{width:100%;max-width:880px;margin-top:18px;height:auto}
+  .sizechart .ax{font-family:var(--mono);font-size:11px;fill:var(--mute)}
+  .sizechart .nm{font-family:var(--sans);font-size:14px;font-weight:600;fill:var(--ink)}
+  .sizechart .vl{font-family:var(--mono);font-size:13px;fill:var(--mute)}
+  .sizechart .qm{font-family:var(--mono);font-size:15px;font-weight:700;fill:var(--clay-deep);letter-spacing:.2em}
+  .sizechart .note{font-family:var(--mono);font-size:11.5px;fill:var(--mute)}
 </style>
 </head>
 <body>
@@ -132,11 +147,51 @@
   <section class="slide">
     <div class="eyebrow teal">01 · AI 안에는</div>
     <h2>거대한 <span class="hi-t">숫자 표</span>가<br>들어 있다</h2>
-    <p class="lead">AI는 글자를 보고 <b class="hi-t">다음에 올 글자</b>를 고른다.<br>무엇을 고를지는 안에 저장된 <b class="hi-t">숫자들</b>이 정한다.</p>
-    <div class="grid g2">
-      <div class="card teal"><div class="k">배운다는 건</div><h3>숫자를 조금씩 고치는 일</h3><p>글을 잔뜩 읽히면서, 틀릴 때마다 숫자를 아주 조금 바꾼다. 수억 번 반복한다.</p></div>
-      <div class="card clay"><div class="k">다 배우고 나면</div><h3>숫자는 고정된다</h3><p>우리가 쓸 때는 그 숫자가 바뀌지 않는다. 읽기만 한다.</p></div>
+    <p class="lead">우리가 만든 tiny 모델을 열어본 것이다.<br>이게 <b class="hi-t">진짜로</b> 그 안에 들어 있는 숫자다.</p>
+    <div class="prompt">-0.015  -0.002  -0.014  -0.005  +0.001  -0.001  +0.014  -0.009
++0.001  +0.003  +0.003  +0.003  -0.009  +0.005  -0.018  -0.002
++0.003  +0.000  -0.011  -0.014  +0.009  +0.006  +0.004  +0.005
++0.010  +0.009  +0.001  -0.004  -0.004  -0.000  +0.029  +0.011</div>
+    <div class="kicker">특별한 숫자가 아니다. <span class="hi">대부분 0에 가까운 아주 작은 수</span>다.<br>이런 게 tiny 안에만 <span class="hi-t">3,500만 개</span> 있다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow teal">01 · 색으로 칠하면</div>
+    <h2>숫자 하나를<br><span class="hi-t">점 하나</span>로</h2>
+    <div class="zoomrow">
+      <img src="img/w16-weights-zoom.png" alt="8x8 숫자를 색으로 칠한 것">
+      <p class="lead" style="flex:1;min-width:240px">위 표의 <b class="hi-t">왼쪽 위 구석</b>을 색으로 칠했다.<br>
+        <span style="color:var(--clay-deep)">■ 주황</span> = 플러스 &nbsp;
+        <span style="color:var(--teal)">■ 청록</span> = 마이너스 &nbsp;
+        <span style="color:var(--mute)">■ 옅은 색</span> = 0에 가까움</p>
     </div>
+    <div class="kicker">이제 숫자를 <span class="hi">읽지 않고 봐도</span> 된다. 수만 개를 한눈에 볼 수 있다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow gold">01 · 배운다는 것</div>
+    <h2>글을 읽히면<br>숫자에 <span class="hi-g">무늬가 생긴다</span></h2>
+    <div class="wviz">
+      <figure>
+        <img src="img/w16-weights-before.png" alt="학습 전 — 무작위 숫자">
+        <figcaption><b>학습 전</b> — 아무 숫자나 채워둔 상태</figcaption>
+      </figure>
+      <figure>
+        <img src="img/w16-weights-after.png" alt="학습 후 — 무늬가 생긴 숫자">
+        <figcaption><b>학습 후</b> — 위키백과를 읽힌 뒤</figcaption>
+      </figure>
+    </div>
+    <div class="kicker">같은 자리, 같은 개수다. <span class="hi">숫자 값만 바뀌었다.</span><br>왼쪽은 아무 무늬가 없고, 오른쪽엔 <span class="hi-t">세로줄과 가로띠</span>가 보인다 — 저게 배운 흔적이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">01 · 정리</div>
+    <h2>학습과 사용은<br><span class="hi">다른 일</span>이다</h2>
+    <div class="grid g2">
+      <div class="card teal"><div class="k">만들 때 (학습)</div><h3>숫자를 조금씩 고친다</h3><p>글을 읽히고, 다음 글자를 틀릴 때마다 숫자를 아주 조금 바꾼다. 수억 번 반복한다. 여기에 시간과 돈이 든다.</p></div>
+      <div class="card clay"><div class="k">쓸 때 (사용)</div><h3>숫자는 그대로다</h3><p>우리가 말을 걸어도 안의 숫자는 하나도 안 바뀐다. 읽어서 계산만 한다.</p></div>
+    </div>
+    <div class="kicker">그래서 <span class="hi-t">우리가 한 말로 AI가 똑똑해지지는 않는다.</span> 학습은 만드는 사람만 한다.</div>
   </section>
 
   <section class="slide">
@@ -148,9 +203,45 @@ tiny    <span class="val">2,300만 개</span>      짧게 <span class="val">23M<
 small   <span class="val">1억 1,000만 개</span>  짧게 <span class="val">110M</span>
 large   <span class="val">3억 3,600만 개</span>  짧게 <span class="val">336M</span>
 
-<span class="lbl">M</span> = 백만    <span class="lbl">B</span> = 10억
-회사들이 만드는 큰 모델은 <span class="val">7B · 70B</span> 처럼 부른다 = 70억 · 700억 개</div>
+<span class="lbl">M</span> = 백만(million)    <span class="lbl">B</span> = 10억(billion)
+그래서 <span class="val">7B</span> 라고 하면 70억 개, <span class="val">70B</span> 면 700억 개다</div>
     <div class="kicker">숫자 하나하나가 대단한 게 아니다. <span class="hi">몇 개나 있느냐</span>가 다를 뿐이다.</div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow clay">02 · 얼마나 차이 나냐면</div>
+    <h2>우리 것과 <span class="hi">회사 것</span></h2>
+      <svg class="sizechart" viewBox="0 0 860 300" role="img" aria-label="모델 크기 비교">
+      <line x1="150" y1="26" x2="150" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <line x1="270" y1="26" x2="270" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <line x1="390" y1="26" x2="390" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <line x1="510" y1="26" x2="510" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <line x1="630" y1="26" x2="630" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <line x1="750" y1="26" x2="750" y2="250" stroke="var(--line)" stroke-width="1"/>
+      <text x="150" y="18" text-anchor="middle" class="ax">1천만</text>
+      <text x="270" y="18" text-anchor="middle" class="ax">1억</text>
+      <text x="390" y="18" text-anchor="middle" class="ax">10억</text>
+      <text x="510" y="18" text-anchor="middle" class="ax">100억</text>
+      <text x="630" y="18" text-anchor="middle" class="ax">1천억</text>
+      <text x="750" y="18" text-anchor="middle" class="ax">1조</text>
+      <text x="142" y="60" text-anchor="end" class="nm">우리 tiny</text>
+      <rect x="150" y="44" width="43" height="22" fill="var(--teal)"/>
+      <text x="203" y="60" class="vl">2,300만</text>
+      <text x="142" y="102" text-anchor="end" class="nm">우리 large</text>
+      <rect x="150" y="86" width="183" height="22" fill="var(--teal)"/>
+      <text x="343" y="102" class="vl">3억 3,600만</text>
+      <text x="142" y="144" text-anchor="end" class="nm">노트북용 모델</text>
+      <rect x="150" y="128" width="348" height="22" fill="var(--clay)"/>
+      <text x="508" y="144" class="vl">80억 (8B)</text>
+      <text x="142" y="186" text-anchor="end" class="nm">DeepSeek R1</text>
+      <rect x="150" y="170" width="579" height="22" fill="var(--clay)"/>
+      <text x="739" y="186" class="vl">6,710억 (671B)</text>
+      <text x="142" y="228" text-anchor="end" class="nm">Claude · ChatGPT</text>
+      <rect x="150" y="212" width="600" height="22" fill="none" stroke="var(--clay-deep)" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <text x="450" y="228" text-anchor="middle" class="qm">? ? ?</text>
+      <text x="150" y="268" class="note">막대가 한 칸 갈 때마다 10배 — 눈에 보이는 길이보다 훨씬 크게 벌어진다</text>
+      </svg>
+    <div class="kicker">DeepSeek 하나는 우리 tiny <span class="hi">2만 9천 개</span>를 합친 크기다.<br>그런데 <span class="hi-t">Claude와 ChatGPT는 몇 개인지 아무도 모른다</span> — 회사가 공개하지 않는다.</div>
   </section>
 
   <section class="slide">
@@ -191,13 +282,24 @@ small  110M  ·  3억 토큰   →  훨씬 멀쩡하다</div>
   </section>
 
   <section class="slide">
+    <div class="eyebrow teal">잠깐 · ppl이 뭐냐면</div>
+    <h2>다음 글자를 맞힐 때<br><span class="hi-t">몇 개를 놓고</span> 헷갈렸나</h2>
+    <p class="lead">모델에게 “오늘 날씨가 참 ___” 를 주고 다음 글자를 맞히게 한다.<br>그때 <b class="hi-t">몇 개쯤 놓고 고민했는지</b>를 숫자로 적은 것이 ppl이다.</p>
+    <div class="grid g2">
+      <div class="card clay"><div class="k">ppl 45</div><h3>45개를 놓고 헷갈렸다</h3><p>확신이 없다. 아무 말이나 튀어나오기 쉽다.</p></div>
+      <div class="card teal"><div class="k">ppl 23</div><h3>23개면 충분했다</h3><p>훨씬 확신이 있다. 낮을수록 잘 맞힌 것.</p></div>
+    </div>
+    <div class="kicker">단, ppl이 낮다고 <span class="hi">꼭 좋은 글</span>은 아니다 — 숫자로 순위를 매기지 말고 <span class="hi-t">나온 글을 읽고</span> 판단하자.</div>
+  </section>
+
+  <section class="slide">
     <div class="eyebrow clay">발견 2</div>
     <h2>그럼 <span class="hi">large</span>는<br>얼마나 더 좋을까?</h2>
     <div class="prompt">small  110M  ·   3억 토큰  ·  ppl <span class="val">24.2</span>
 large  336M  ·  76억 토큰  ·  ppl <span class="val">23.3</span>
 
 크기 <span class="val">3배</span> · 읽은 글 <span class="val">25배</span> … 그런데 거의 <span class="val">비슷하다</span></div>
-    <div class="kicker">large는 글을 <span class="hi">끝까지 다 읽지 못했다</span>(0.26에폭). 재료가 많아도 <span class="hi-t">공부를 덜 하면</span> 소용없다.<br>ppl은 낮을수록 잘 맞힌 것 — 숫자가 아니라 <span class="hi-t">나온 글을 읽고</span> 판단하자.</div>
+    <div class="kicker">large는 글을 <span class="hi">끝까지 다 읽지 못했다</span>(0.26에폭). 재료가 많아도 <span class="hi-t">공부를 덜 하면</span> 소용없다.</div>
   </section>
 
   <section class="slide">
