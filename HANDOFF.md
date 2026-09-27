@@ -50,6 +50,8 @@
 | `examples/lego-heritage-dogam.pdf` | W7 도감 예시(교사가 보여줌). |
 | `README.md` | (구버전 설명이 남아 있음 — 이 HANDOFF가 최신) |
 
+> **주차를 옮길 때는 세 곳을 같이 고친다** — ① 파일명(`git mv`) ② 파일 안 `W<n>` 표기 ③ `index.html`의 `wk`와 **`href`**. 셋 중 하나만 빠져도 엉뚱한 자료가 열린다(실제로 W16↔W18 교체 때 `href`를 빠뜨려 링크가 엇갈렸다). `node tools/check-index.js`가 이걸 잡는다.
+
 > **파일명 = 표시 주차번호 규칙.** 예: `w6.html`은 화면에 "W6"으로 뜬다. (초기에 w1/w2였던 걸 git mv로 맞춤.) 새 주차 자료는 `wN.html` + `wN-slides.html` 패턴.
 
 
@@ -126,12 +128,9 @@
 
 ## 9. 검증 체크리스트 (커밋 전)
 ```bash
-# index.html 스크립트 문법
-node -e "const fs=require('fs');const m=fs.readFileSync('index.html','utf8').match(/<script>([\s\S]*)<\/script>/);new Function(m[1]);console.log('JS OK')"
-# 내부 링크 깨짐 확인
-for f in $(grep -ohE 'href=\"[a-z0-9/-]+\.(html|pdf)\"' *.html | sed 's/href=\"//;s/\"//' | sort -u); do [ -f \"$f\" ] || echo \"MISSING: $f\"; done
-# 대시보드 주차 순서
-grep -oE \"wk:'W[0-9]+'\" index.html | sed \"s/[^0-9]//g\" | sort -n | tr '\\n' ' '
+# 대시보드 검증 (문법 + 링크 + 주차↔파일 내용 일치)
+node tools/check-index.js
+
 ```
 
 ---
