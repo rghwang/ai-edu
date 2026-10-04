@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W18 · JavaScript 기초 실습장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6efe1;--card:#fffaf0;--ink:#23201a;--mute:#5a5347;--line:#d8cbb1;--clay:#bd5a32;--clay2:#9c4622;--amber:#d8973a;--teal:#3f6b63;--teal2:#e4ece8;--sans:'IBM Plex Sans KR',sans-serif;--disp:'Hahmlet',serif;--mono:'Space Mono',monospace}*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 90% 0,rgba(63,107,99,.1),transparent 60%),var(--paper);color:var(--ink);font-family:var(--sans)}header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px clamp(20px,5vw,70px);border-bottom:1px solid var(--line)}h1,h2{margin:0;font-family:var(--disp)}h1{font-size:clamp(25px,4vw,44px)}.back{color:var(--clay2);font-weight:700;text-decoration:none}.intro{max-width:1100px;margin:28px auto 0;padding:0 22px;color:var(--mute);line-height:1.65}.tabs{display:flex;gap:8px;max-width:1100px;margin:22px auto 0;padding:0 22px;overflow-x:auto}.tab{flex:none;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--mute);font:700 12px var(--mono);cursor:pointer}.tab.active{border-color:var(--teal);background:var(--teal2);color:var(--teal)}main{max-width:1100px;margin:14px auto 50px;padding:0 22px}.lesson{display:none}.lesson.active{display:block}.mission{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:18px}.panel{padding:clamp(18px,2.5vw,30px);border:1px solid var(--line);border-radius:16px;background:var(--card)}.eyebrow{margin-bottom:8px;color:var(--clay2);font:700 12px var(--mono);letter-spacing:.1em}.panel h2{font-size:clamp(24px,3.5vw,38px)}.task{margin:14px 0 18px;color:var(--mute);line-height:1.6}.rule{padding:12px 14px;border-left:4px solid var(--amber);background:#fbf6e8;color:var(--mute);line-height:1.55}textarea{width:100%;min-height:330px;margin-top:16px;padding:18px;resize:vertical;border:1px solid #c8baa0;border-radius:12px;outline:none;background:#25231f;color:#f8f0df;font:15px/1.7 var(--mono);tab-size:2}textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(63,107,99,.14)}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}button{padding:10px 15px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:700 14px var(--sans);cursor:pointer}.run{border-color:var(--teal);background:var(--teal);color:white}.reset{color:var(--clay2)}.output{min-height:155px;margin-top:15px;padding:16px;border-radius:12px;background:#25231f;color:#dce9e3;font:14px/1.7 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.output.error{color:#ffc3ad}.concepts{display:grid;gap:10px}.concept{padding:14px;border:1px solid var(--line);border-radius:12px;background:#fffcf5}.concept code{color:var(--teal);font-family:var(--mono);font-weight:700}.concept p{margin:5px 0 0;color:var(--mute);font-size:14px;line-height:1.5}.done{margin-top:14px;color:var(--teal);font-weight:700}.footer-note{max-width:1100px;margin:0 auto 40px;padding:0 22px;color:var(--mute);font-size:14px}@media(max-width:760px){header{align-items:flex-start}.mission{grid-template-columns:1fr}textarea{min-height:270px}.tabs{padding-bottom:5px}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">W18 · 직접 고치고 실행하기</div><h1>JavaScript 기초 실습장</h1></div><a class="back" href="w18-slides.html">수업 슬라이드 ↗</a></header>
+<p class="intro">왼쪽 코드를 고친 뒤 <b>실행</b>을 누르세요. 오류가 나도 괜찮습니다. 오류가 난 줄을 읽고 한 글자씩 확인하는 것이 오늘의 실습입니다.</p>
+<nav class="tabs" id="tabs"></nav>
+<main id="lessons"></main>
+<p class="footer-note">팁: AI에게 정답 전체를 달라고 하기보다 “오류가 난 이유만 설명해줘”, “힌트 하나만 줘”라고 물어보세요.</p>
+<script>
+const lessons=[
+ {name:'01 변수',title:'값에 이름 붙이기',task:'name과 age의 값을 나에게 맞게 바꾸고 두 문장을 출력하세요.',rule:'let은 바꿀 값, const는 바꾸지 않을 값에 쓴다.',code:`let name = "민준";
+const className = "AI 영재교육원";
+let age = 12;
+
+console.log("이름:", name);
+console.log("나이:", age);
+console.log("수업:", className);`,concepts:[['let name = "민준"','바뀔 수 있는 값을 저장'],['const className = "AI"','바꾸지 않을 값을 저장'],['console.log(name)','결과를 출력']]},
+ {name:'02 연산자',title:'계산하고 비교하기',task:'문제 수와 맞힌 수를 바꾸고 점수와 통과 여부를 확인하세요.',rule:'+ - * /는 계산, === > >= < <=는 비교에 쓴다. 비교 결과는 true 또는 false다.',code:`const total = 10;
+const correct = 7;
+const score = correct / total * 100;
+const passed = score >= 70;
+
+console.log("점수:", score);
+console.log("통과:", passed);`,concepts:[['correct / total * 100','사칙연산으로 점수 계산'],['score >= 70','70 이상인지 비교'],['true / false','맞다 또는 아니다']]},
+ {name:'03 조건문',title:'조건에 따라 다른 길',task:'score를 여러 값으로 바꿔 보세요. 90 이상이면 “최고!”, 70 이상이면 “통과!”, 아니면 “다시 도전!”을 출력하게 완성하세요.',rule:'if의 조건이 true이면 그 블록을 실행한다. 조건은 위에서부터 검사한다.',code:`const score = 85;
+
+if (score >= 90) {
+  console.log("최고!");
+} else if (score >= 70) {
+  console.log("통과!");
+} else {
+  console.log("다시 도전!");
+}`,concepts:[['if (조건) { }','첫 번째 조건 검사'],['else if (조건) { }','앞 조건이 아닐 때 다시 검사'],['else { }','모든 조건이 아닐 때 실행']]},
+ {name:'04 반복문',title:'같은 일을 여러 번',task:'1부터 5까지 출력한 뒤 합계를 구합니다. 5를 10으로 바꾸면 어떻게 될지 먼저 예상해 보세요.',rule:'for (시작; 계속할 조건; 변화) 순서로 쓴다. i++는 i를 1 늘린다는 뜻이다.',code:`let sum = 0;
+
+for (let i = 1; i <= 5; i++) {
+  console.log("현재 숫자:", i);
+  sum = sum + i;
+}
+
+console.log("합계:", sum);`,concepts:[['let i = 1','반복을 1에서 시작'],['i <= 5','5 이하인 동안 계속'],['i++','한 번마다 1 증가']]},
+ {name:'05 함수',title:'자주 하는 일을 묶기',task:'greet 함수를 다른 이름으로 두 번 더 호출하세요. multiply 함수도 만들어 두 수의 곱을 반환해 보세요.',rule:'함수는 입력을 받아 일을 하고 결과를 돌려주는 이름 붙은 코드 묶음이다.',code:`function greet(name) {
+  return "안녕, " + name + "!";
+}
+
+console.log(greet("서준"));
+console.log(greet("지우"));
+
+function multiply(a, b) {
+  return a * b;
+}
+
+console.log("3 × 4 =", multiply(3, 4));`,concepts:[['function greet(name)','name을 입력받는 함수 정의'],['return 결과','함수 밖으로 결과 전달'],['greet("서준")','함수를 실제로 실행']]},
+ {name:'06 종합',title:'미니 퀴즈 채점기',task:'answers 배열의 답을 반복해서 검사하고, 함수로 점수를 계산한 뒤 조건문으로 결과 메시지를 출력합니다. 답을 바꾸고 결과를 예측해 보세요.',rule:'큰 프로그램도 변수·연산자·조건문·반복문·함수를 조합해서 만든다.',code:`const answers = ["A", "B", "C", "A"];
+const correctAnswers = ["A", "B", "B", "A"];
+
+function countCorrect(answers, correctAnswers) {
+  let count = 0;
+  for (let i = 0; i < answers.length; i++) {
+    if (answers[i] === correctAnswers[i]) {
+      count = count + 1;
+    }
+  }
+  return count;
+}
+
+const correct = countCorrect(answers, correctAnswers);
+const score = correct / answers.length * 100;
+console.log("맞힌 개수:", correct);
+console.log("점수:", score);
+
+if (score >= 70) {
+  console.log("통과!");
+} else {
+  console.log("다시 도전!");
+}`,concepts:[['배열[index]','여러 값 중 한 칸을 꺼냄'],['for + if','모든 답을 반복하며 비교'],['함수 + return','채점 결과를 돌려줌']]}
+];
+const tabs=document.getElementById('tabs'),root=document.getElementById('lessons');
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+lessons.forEach((l,i)=>{const tab=document.createElement('button');tab.className='tab';tab.textContent=l.name;tab.onclick=()=>show(i);tabs.appendChild(tab);const section=document.createElement('section');section.className='lesson';section.innerHTML=`<div class="mission"><div class="panel"><div class="eyebrow">${l.name}</div><h2>${l.title}</h2><p class="task">${l.task}</p><div class="rule"><b>문법:</b> ${l.rule}</div><textarea spellcheck="false">${esc(l.code)}</textarea><div class="actions"><button class="run">▶ 실행</button><button class="reset">처음 코드로</button></div><div class="output">실행 결과가 여기에 나옵니다.</div></div><aside class="panel"><div class="eyebrow">코드 읽기</div><div class="concepts">${l.concepts.map(c=>`<div class="concept"><code>${esc(c[0])}</code><p>${c[1]}</p></div>`).join('')}</div><p class="done">실행 전 결과를 먼저 예상해 보세요.</p></aside></div>`;root.appendChild(section);const area=section.querySelector('textarea'),out=section.querySelector('.output');section.querySelector('.run').onclick=()=>run(area.value,out);section.querySelector('.reset').onclick=()=>{area.value=l.code;out.className='output';out.textContent='처음 코드로 돌아왔습니다.'}});
+function run(code,out){const lines=[];const fake={log:(...xs)=>lines.push(xs.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' '))};try{new Function('console',code)(fake);out.className='output';out.textContent=lines.length?lines.join('\n'):'실행은 됐지만 출력이 없습니다. console.log를 확인하세요.'}catch(e){out.className='output error';out.textContent='오류: '+e.message+'\n\n괄호 ( ), 중괄호 { }, 따옴표, 철자를 확인하세요.'}}
+function show(i){[...tabs.children].forEach((e,j)=>e.classList.toggle('active',i===j));[...root.children].forEach((e,j)=>e.classList.toggle('active',i===j));scrollTo({top:0,behavior:'smooth'})}show(0);
+</script>
+</body>
+</html>
